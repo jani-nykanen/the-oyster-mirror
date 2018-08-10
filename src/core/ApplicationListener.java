@@ -13,7 +13,7 @@ public class ApplicationListener extends WindowListener {
 
 
 	/** Input manager, handles input */
-	private InputManager input;
+	protected InputManager input;
 	
 	
 	/**
@@ -74,6 +74,7 @@ public class ApplicationListener extends WindowListener {
 		
 		// Update input
 		input.update();
+		
 	}
 	
 	

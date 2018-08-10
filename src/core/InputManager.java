@@ -102,10 +102,11 @@ public class InputManager {
 	/**
 	 * Get a key state
 	 * @param key Key
+	 * @return Key state
 	 */
-	public void getKeyState(int key) {
+	public State getKeyState(int key) {
 		
-		getStateArrayValue(keyStates, key);
+		return getStateArrayValue(keyStates, key);
 	}
 	
 	

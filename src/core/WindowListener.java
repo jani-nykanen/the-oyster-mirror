@@ -17,6 +17,9 @@ public class WindowListener extends ApplicationEvents {
 	/** Configuration data */
 	private Configuration conf = new Configuration();
 	
+	/** Full screen manager */
+	private FullScreenManager fsManager;
+
 	
 	/**
 	 * Initialize window-related context
@@ -51,6 +54,9 @@ public class WindowListener extends ApplicationEvents {
 			
 			throw new RuntimeException("Failed to create a window!");
 		}
+		
+		// Create full screen manager
+		fsManager = new FullScreenManager(window, true);
 		
 		// Register event callbacks
 		registerEvents(window);
@@ -97,5 +103,14 @@ public class WindowListener extends ApplicationEvents {
 	public void bindConfiguration(Configuration conf) {
 		
 		this.conf = conf.clone();
+	}
+	
+	
+	/**
+	 * Toggle full screen mode
+	 */
+	public void toggleFullScreen() {
+		
+		fsManager.toggleFullScreen();
 	}
 }
