@@ -1,6 +1,7 @@
 package application;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 
 import core.ApplicationListener;
 import core.Configuration;
@@ -12,6 +13,10 @@ import core.State;
  *
  */
 public class Game extends ApplicationListener {
+	
+	
+	/** Temporary timer, for testing */
+	private float tempTimer = 0.0f;
 	
 	
 	/**
@@ -46,6 +51,7 @@ public class Game extends ApplicationListener {
 		conf.setParameter("window_height", "450");
 		conf.setParameter("window_caption", "Game");
 		conf.setParameter("frame_rate", "30");
+		conf.setParameter("full_screen", "0");
 		
 		// Bind configuration
 		bindConfiguration(conf);
@@ -69,15 +75,22 @@ public class Game extends ApplicationListener {
 	@Override
 	protected void onUpdate(float tm) {
 		
+		final float TIMER_SPEED = 0.05f;
+		
 		// Check default key commands
 		defaultKeyCommands();
+		
+		// Update timer
+		tempTimer += TIMER_SPEED * tm;
 	}
 	
 	
 	@Override
 	protected void onDraw() {
 		
-
+		// Clear screen
+		glClearColor(0.5f + 0.5f*(float)Math.sin(tempTimer), 0.75f, 0.75f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 	
 	

@@ -3,6 +3,8 @@ package core;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import org.lwjgl.opengl.GL;
+
 
 /**
  * Handles window-related behavior
@@ -15,7 +17,7 @@ public class WindowListener extends ApplicationEvents {
 	private long window;
 	
 	/** Configuration data */
-	private Configuration conf = new Configuration();
+	protected Configuration conf = new Configuration();
 	
 	/** Full screen manager */
 	private FullScreenManager fsManager;
@@ -47,6 +49,7 @@ public class WindowListener extends ApplicationEvents {
 		int winWidth = conf.getParameterValueInt("window_width", DEFAULT_WIN_WIDTH);
 		int winHeight = conf.getParameterValueInt("window_height", DEFAULT_WIN_HEIGHT);
 		String caption = conf.getParameterValueString("window_caption", DEFAULT_WIN_CAPTION);
+		boolean windowed = conf.getParameterValueInt("full_screen", 0) == 0;
 		
 		// Create a window
 		window = glfwCreateWindow(winWidth, winHeight, caption, NULL, NULL);
@@ -56,7 +59,7 @@ public class WindowListener extends ApplicationEvents {
 		}
 		
 		// Create full screen manager
-		fsManager = new FullScreenManager(window, true);
+		fsManager = new FullScreenManager(window, windowed);
 		
 		// Register event callbacks
 		registerEvents(window);
@@ -65,6 +68,9 @@ public class WindowListener extends ApplicationEvents {
 		glfwMakeContextCurrent(window);
 		// Enable VSync
 		glfwSwapInterval(1);
+		
+		// Create capabilities
+		GL.createCapabilities();
 	}
 	
 	

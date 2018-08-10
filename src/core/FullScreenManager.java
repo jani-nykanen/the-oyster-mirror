@@ -65,7 +65,15 @@ public class FullScreenManager {
 	public FullScreenManager(long window, boolean windowed) {
 		
 		this.window = window;
-		this.windowed = windowed;
+		if(!windowed) {
+			
+			this.windowed = !windowed;
+			toggleFullScreen();
+		}
+		else {
+		
+			this.windowed = windowed;
+		}
 	}
 	
 	

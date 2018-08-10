@@ -11,9 +11,19 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class ApplicationListener extends WindowListener {
 
+	/** Frame rate where 'time' is compared to */
+	static final int COMPARABLE_FRAME_RATE = 60;
+	/** Default frame rate */
+	static final int DEFALT_FRAME_RATE = 30;
 
 	/** Input manager, handles input */
 	protected InputManager input;
+	
+	/** Frame rate */
+	private int frameRate;
+	
+	/** Time sum */
+	private double timeSum;
 	
 	
 	/**
@@ -31,6 +41,9 @@ public class ApplicationListener extends WindowListener {
 		// Create a window and its context
 		initWindowContext();
 		
+		// Read certain data from configuration
+		frameRate = conf.getParameterValueInt("frame_rate", DEFALT_FRAME_RATE);
+		
 		// Call user-defined initialization method now
 		onInit();
 		
@@ -40,6 +53,10 @@ public class ApplicationListener extends WindowListener {
 		// Loading finished, call post-loading initialization
 		// method
 		onLoaded();
+		
+		// Reset timer
+		glfwSetTime(0.0);
+		timeSum = 0.0;
 	}
 	
 	
@@ -93,13 +110,32 @@ public class ApplicationListener extends WindowListener {
 	 */
 	private void loop() {
 		
+		// We update only certain amount of frames
+		// per refresh. This way we can make sure
+		// there won't be a hundred frames waiting
+		// to be updated.
+		final int MAX_FRAME_UPDATE = 5;
+		
 		boolean redraw = true;
+		final double frameWait = 1.0 / frameRate; 
 		
-		// If enough time passed, update frame
-		// if(...) {
-		update(0.0f);
-		// }
-		
+		// Wait until enough time has passed, 
+		// then update the frame
+		timeSum += glfwGetTime();
+		glfwSetTime(0.0);
+		int updateCount = 0;
+		while(timeSum >= frameWait) {
+
+			// Update frame and set frame to be redrawable
+			update((float)COMPARABLE_FRAME_RATE / (float)frameRate);
+			redraw = true;
+			
+			timeSum -= frameWait;
+			
+			if(++ updateCount >= MAX_FRAME_UPDATE)
+				break;
+		}
+
 		// Draw frame, if necessary
 		if(redraw) {
 			
