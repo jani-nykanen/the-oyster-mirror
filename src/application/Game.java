@@ -44,14 +44,26 @@ public class Game extends ApplicationListener {
 		
 		System.out.println("Starting...");
 		
+		Configuration conf = new Configuration();;
+		
 		// Create configuration
-		Configuration conf = new Configuration();
-		// Set parameters
-		conf.setParameter("window_width", "800");
-		conf.setParameter("window_height", "450");
-		conf.setParameter("window_caption", "Game");
-		conf.setParameter("frame_rate", "30");
-		conf.setParameter("full_screen", "0");
+		try {
+			
+			conf.parseXML("/config.xml");
+		}
+		catch(Exception e) {
+			
+			System.out.println("Failed to read configuration file: " +
+				e.getMessage());
+			
+			// If fails, set default parameters
+			conf.setParameter("window_width", "800");
+			conf.setParameter("window_height", "450");
+			conf.setParameter("window_caption", "Game");
+			conf.setParameter("frame_rate", "30");
+			conf.setParameter("full_screen", "0");
+		
+		}
 		
 		// Bind configuration
 		bindConfiguration(conf);

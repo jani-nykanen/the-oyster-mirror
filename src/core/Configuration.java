@@ -1,7 +1,20 @@
 package core;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * Configuration information
@@ -64,6 +77,19 @@ public class Configuration implements Cloneable {
 	
 	
 	/**
+	 * Constructor, parses from XML file
+	 * @param path XML file path
+	 * @throws Exception If something goes wrong 
+	 * (e.g. file does not exist)
+	 */
+	public Configuration(String path) throws Exception {
+		
+		super();
+		parseXML(path);
+	}
+	
+	
+	/**
 	 * Add (or change an existing) a parameter
 	 * @param key Parameter name
 	 * @param value Parameter value
@@ -118,6 +144,46 @@ public class Configuration implements Cloneable {
 		else
 			return Integer.parseInt(v);
 		
+	}
+	
+	
+	/**
+	 * Read configuration data from an XML file
+	 * @param path File path
+	 * @throws NullPointerException Unknown
+	 * @throws ParserConfigurationException If parsing fails
+	 * @throws IOException If file does not exist
+	 * @throws SAXException Unknown
+	 */
+	public void parseXML(String path) 
+			throws NullPointerException, ParserConfigurationException, SAXException, IOException {
+		
+		// Open the file
+		InputStream input = this.getClass().getResourceAsStream(path);
+		// Ready for parsing
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(input);
+		
+		// Get root element
+		Element root = doc.getDocumentElement();
+		// Get parameters elements, if exist
+		NodeList params = root.getElementsByTagName("param");
+		// Go through every parameter and get their keys and values
+		Node n;
+		String key, value;
+		for(int i = 0; i < params.getLength(); ++ i) {
+			
+			n = params.item(i);
+			key = n.getAttributes().getNamedItem("key").getTextContent();
+			value = n.getAttributes().getNamedItem("value").getTextContent();
+			
+			// Add parameter
+			setParameter(key, value);
+		}
+		
+		// Close file readers etc
+		input.close();
 	}
 	
 	
