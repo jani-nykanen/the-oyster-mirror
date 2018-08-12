@@ -2,6 +2,8 @@ package core;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import renderer.Graphics;
+
 
 /**
  * Application listener, handles base application
@@ -19,6 +21,9 @@ public class ApplicationListener extends WindowListener {
 	/** Input manager, handles input */
 	protected InputManager input;
 	
+	/** Graphics context */
+	protected Graphics graph;
+	
 	/** Frame rate */
 	private int frameRate;
 	
@@ -29,7 +34,7 @@ public class ApplicationListener extends WindowListener {
 	/**
 	 * Initialize application
 	 */
-	private void init() {
+	private void init() throws Exception {
 		
 		// Call user-defined starting method before
 		// anything is initialized
@@ -41,6 +46,9 @@ public class ApplicationListener extends WindowListener {
 		// Create a window and its context
 		initWindowContext();
 		
+		// Initialize graphics
+		graph = new Graphics();
+
 		// Read certain data from configuration
 		frameRate = conf.getParameterValueInt("frame_rate", DEFALT_FRAME_RATE);
 		
