@@ -3,6 +3,7 @@ package core.renderer;
 import static org.lwjgl.opengl.GL20.*;
 
 import core.types.Matrix3;
+import core.types.Vector2;
 
 
 /**
@@ -112,7 +113,6 @@ public class Shader {
 	}
 	
 	
-	
 	/**
 	 * Get uniforms
 	 */
@@ -147,6 +147,9 @@ public class Shader {
 		
 		// Set default uniforms
 		setTransformationUniforms(new Matrix3(), new Matrix3());
+		setVertexUniforms(new Vector2(), new Vector2(1, 1));
+		setUVUniforms(new Vector2(), new Vector2(1, 1));
+		setColorUniform(1, 1, 1, 1);
 	}
 	
 	
@@ -158,6 +161,43 @@ public class Shader {
 		
 		glUniformMatrix3fv(unifModel, false, model.toArray());
 	    glUniformMatrix3fv(unifView, false, view.toArray());
+	}
+	
+	
+	/**
+	 * Set vertex uniforms (positions & size)
+	 * @param pos Position
+	 * @param size Size
+	 */
+	public void setVertexUniforms(Vector2 pos, Vector2 size) {
+		
+		glUniform2f(unifPos, pos.x, pos.y);
+	    glUniform2f(unifSize,size.x, size.y);
+	}
+	
+	
+	/**
+	 * Set UV uniforms (positions & size)
+	 * @param pos Position
+	 * @param size Size
+	 */
+	public void setUVUniforms(Vector2 pos, Vector2 size) {
+		
+		glUniform2f(unifTexPos, pos.x, pos.y);
+	    glUniform2f(unifTexSize,size.x, size.y);
+	}
+	
+	
+	/**
+	 * Set color uniform
+	 * @param r Red
+	 * @param g Green
+	 * @param b Blue
+	 * @param a Alpha
+	 */
+	public void setColorUniform(float r, float g, float b, float a) {
+		
+		glUniform4f(unifColor, r, g, b, a);
 	}
 	
 }
