@@ -1,7 +1,7 @@
 package application;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 
 import core.ApplicationListener;
 import core.Configuration;

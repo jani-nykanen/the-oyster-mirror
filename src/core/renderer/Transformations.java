@@ -27,6 +27,9 @@ public class Transformations {
 	/** A stack of matrices */
 	private Stack<Matrix3> stack; 
 	
+	/** Active shader */
+	private Shader activeShader;
+	
 	
 	/**
 	 * Constructor
@@ -68,5 +71,100 @@ public class Transformations {
 		float w = ratio * h;
 		
 		setView(w, h);
+	}
+	
+	
+	/**
+	 * Set model matrix to identity
+	 */
+	public void identity() {
+		
+		model.identity();
+	}
+	
+	
+	/**
+	 * Translate model space
+	 * @param x X translation
+	 * @param y Y translation
+	 */
+	public void translate(float x, float y) {
+		
+		operand.translate(x, y);
+		model = model.multiply(operand);
+	}
+	
+	
+	/**
+	 * Scale model space
+	 * @param x X scaling
+	 * @param y Y scaling
+	 */
+	public void scale(float x, float y) {
+		
+		operand.scale(x, y);
+		model = model.multiply(operand);
+	}
+	
+	
+	/**
+	 * Rotate model space
+	 * @param angle Angle
+	 */
+	public void rotate(float angle) {
+		
+		operand.rotate(angle);
+		model = model.multiply(operand);
+	}
+	
+	
+	/**
+	 * Push current model matrix to a stack
+	 */
+	public void push() {
+		
+		stack.push(model.clone());
+	}
+	
+	
+	/**
+	 * Pop model stack
+	 */
+	public void pop() {
+		
+		model = stack.pop().clone();
+		use();
+	}
+	
+	
+	/**
+	 * Use the current transformations
+	 * @param shader Shader
+	 */
+	public void use() {
+		
+		// ...
+	}
+	
+	
+	/**
+	 * Update the framebuffer size info
+	 * @param w
+	 * @param h
+	 */
+	public void updateFrameBufferSize(int w, int h) {
+		
+		frameBufferSize.x = w;
+		frameBufferSize.y = h;
+	}
+	
+	
+	/**
+	 * Set active shader
+	 * @param sh Shader
+	 */
+	public void setActiveShader(Shader sh) {
+		
+		activeShader = sh;
 	}
 }

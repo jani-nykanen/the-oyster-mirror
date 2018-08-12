@@ -5,7 +5,7 @@ package core.types;
  * @author Jani Nykänen
  *
  */
-public class Matrix3 {
+public class Matrix3 implements Cloneable {
 
 	/** Matrix elements */
 	private float 
@@ -89,7 +89,7 @@ public class Matrix3 {
 	 * Set to rotation matrix
 	 * @param angle Angle
 	 */
-	public void scale(float angle) {
+	public void rotate(float angle) {
 		
 		float c = (float)Math.cos(angle);
 	    float s = (float)Math.sin(angle);
@@ -129,5 +129,17 @@ public class Matrix3 {
 		    this.m21 , this.m22 , this.m23,
 		    this.m31 , this.m32 , this.m33,
 		};
+	}
+	
+	
+	@Override
+	public Matrix3 clone() {
+		
+		Matrix3 A = new Matrix3();
+		A.m11 = this.m11; A.m21 = this.m21; A.m31 = this.m31;
+		A.m12 = this.m12; A.m22 = this.m22; A.m32 = this.m32;
+		A.m13 = this.m13; A.m23 = this.m23; A.m33 = this.m33;
+
+		return A;
 	}
 }
