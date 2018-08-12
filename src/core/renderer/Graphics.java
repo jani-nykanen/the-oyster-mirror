@@ -1,4 +1,4 @@
-package renderer;
+package core.renderer;
 
 
 /**
@@ -9,9 +9,11 @@ package renderer;
  */
 public final class Graphics {
 
-	
 	/** Default shader */
 	private Shader shaderDefault;
+	
+	/** Transformations */
+	private Transformations transf;
 	
 	
 	/**
@@ -22,6 +24,9 @@ public final class Graphics {
 		
 		// Create the default shader
 		shaderDefault = new Shader(DefaultShader.VERTEX, DefaultShader.FRAGMENT);
+		
+		// Create components
+		transf = new Transformations();
 	}
 	
 	

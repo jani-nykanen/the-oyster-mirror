@@ -2,7 +2,7 @@ package core;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-import renderer.Graphics;
+import core.renderer.Graphics;
 
 
 /**

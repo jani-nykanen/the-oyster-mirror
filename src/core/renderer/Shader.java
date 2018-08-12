@@ -1,4 +1,4 @@
-package renderer;
+package core.renderer;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -30,6 +30,7 @@ public class Shader {
 	 * @return Error info
 	 */
 	private String getErrorLog(int object) {
+		
 		
 		return glGetInfoLogARB(object, 
 				glGetObjectParameteriARB(object, GL_OBJECT_INFO_LOG_LENGTH_ARB));

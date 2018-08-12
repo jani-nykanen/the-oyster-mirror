@@ -1,4 +1,4 @@
-package renderer;
+package core.renderer;
 
 /**
  * Includes default shaders. Required, so external
