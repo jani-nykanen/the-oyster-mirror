@@ -15,6 +15,9 @@ public final class Graphics {
 	/** Transformations */
 	private Transformations transf;
 	
+	/** White bitmap for rectangle rendering */
+	private Bitmap bmpWhite;
+	
 	
 	/**
 	 * Initialize graphics
@@ -27,6 +30,9 @@ public final class Graphics {
 		
 		// Create components
 		transf = new Transformations();
+		bmpWhite = new Bitmap(new byte[] {
+				(byte)255,(byte)255,(byte)255,(byte)255
+				}, 1, 1);
 	}
 	
 	
