@@ -5,6 +5,8 @@ import static org.lwjgl.opengl.GL20.*;
 
 import java.nio.ByteBuffer;
 
+import org.lwjgl.BufferUtils;
+
 /**
  * Bitmap class
  * @author Jani Nykänen
@@ -39,8 +41,11 @@ public class Bitmap {
 	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	    
+	    ByteBuffer bytes = BufferUtils.createByteBuffer(w*h);
+	    bytes.wrap(data);
+	    
 	    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA,
-	        GL_UNSIGNED_BYTE, ByteBuffer.wrap(data));
+	        GL_UNSIGNED_BYTE,bytes);
 	}
 	
 	

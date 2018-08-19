@@ -30,6 +30,7 @@ public final class Graphics {
 		
 		// Create components
 		transf = new Transformations();
+		
 		bmpWhite = new Bitmap(new byte[] {
 				(byte)255,(byte)255,(byte)255,(byte)255
 				}, 1, 1);
