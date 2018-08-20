@@ -22,6 +22,15 @@ public class WindowListener extends ApplicationEvents {
 	/** Full screen manager */
 	private FullScreenManager fsManager;
 
+	/**
+	 * Get the current window size
+	 * @return Window size
+	 */
+	protected int[] getWindowSize() {
+		
+		return fsManager.getWindowSize();
+	}
+	
 	
 	/**
 	 * Initialize window-related context
@@ -119,4 +128,15 @@ public class WindowListener extends ApplicationEvents {
 		
 		fsManager.toggleFullScreen();
 	}
+	
+	
+	/**
+	 * Is the full screen mode enabled
+	 * @return True or false
+	 */
+	public boolean isFullscreenEnabled() {
+		
+		return fsManager.getState();
+	}
+	
 }

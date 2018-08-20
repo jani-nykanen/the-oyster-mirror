@@ -73,6 +73,12 @@ public class FullScreenManager {
 		else {
 		
 			this.windowed = windowed;
+			
+			// Store current window size so we have
+			// something to pass to the graphics object
+			getWindowProp();
+			currentWindowSize[0] = previousWindowSize[0];
+			currentWindowSize[1] = previousWindowSize[1];
 		}
 	}
 	
@@ -114,4 +120,23 @@ public class FullScreenManager {
 		}
 	}
 	
+	
+	/**
+	 * Get full screen state
+	 * @return True or false
+	 */
+	public boolean getState() {
+		
+		return !windowed;
+	}
+	
+	
+	/**
+	 * Get the current window size
+	 * @return Window size
+	 */
+	public int[] getWindowSize() {
+		
+		return currentWindowSize.clone();
+	}
 }

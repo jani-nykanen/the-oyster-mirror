@@ -14,6 +14,9 @@ import org.lwjgl.BufferUtils;
  */
 public class Bitmap {
 
+	/** Previously bound texture */
+	static private int prevTex = -1;
+	
 	/** Bitmap width */
 	private int width;
 	/** Bitmap height */
@@ -41,11 +44,16 @@ public class Bitmap {
 	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	    
-	    ByteBuffer bytes = BufferUtils.createByteBuffer(w*h);
-	    bytes.wrap(data);
-	    
+	    // Set data to a buffer
+	    ByteBuffer bytes = BufferUtils.createByteBuffer(data.length);
+	    bytes.put(data);
+	    bytes.flip();
+
+	    // Pass data to the texture
 	    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA,
 	        GL_UNSIGNED_BYTE,bytes);
+	    
+	    
 	}
 	
 	
@@ -66,6 +74,19 @@ public class Bitmap {
 	public int getHeight() {
 		
 		return height;
+	}
+	
+	
+	/**
+	 * Bind this texture
+	 */
+	public void bind() {
+		
+		if(texture != prevTex) {
+			
+			prevTex = texture;
+			glBindTexture(GL_TEXTURE_2D, texture);
+		}
 	}
 	
 }

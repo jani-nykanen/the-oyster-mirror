@@ -48,6 +48,8 @@ public class ApplicationListener extends WindowListener {
 		
 		// Initialize graphics
 		graph = new Graphics();
+		int[] winSize = getWindowSize();
+		graph.setViewport(winSize[0], winSize[1]);
 
 		// Read certain data from configuration
 		frameRate = conf.getParameterValueInt("frame_rate", DEFALT_FRAME_RATE);
@@ -71,6 +73,7 @@ public class ApplicationListener extends WindowListener {
 	@Override
 	protected void eventResize(int w, int h) { 
 		
+		graph.setViewport(w, h);
 	}
 
 
@@ -204,7 +207,7 @@ public class ApplicationListener extends WindowListener {
 		}
 		catch(Exception e) {
 			
-			System.out.println(e.getMessage());
+			System.out.println("ERROR: " + e.getMessage());
 			success = false;
 			
 		}

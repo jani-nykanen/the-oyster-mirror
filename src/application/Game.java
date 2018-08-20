@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL20.*;
 import core.ApplicationListener;
 import core.Configuration;
 import core.State;
+import core.renderer.Transformations;
 
 /**
  * Base game class
@@ -101,8 +102,23 @@ public class Game extends ApplicationListener {
 	protected void onDraw() {
 		
 		// Clear screen
-		glClearColor(0.5f + 0.5f*(float)Math.sin(tempTimer), 0.75f, 0.75f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		graph.clearScreen(0.67f, 0.67f, 0.67f);
+		
+		// Set transformations
+		float s1 = (float)Math.sin(tempTimer);
+		float s2 = (float)Math.sin(tempTimer/2.0f);
+		Transformations t = graph.transform();
+		t.fitViewHeight(720.0f);
+		t.identity();
+		t.translate(320.0f + (1.0f+s1)*128.0f, 240.0f);
+		t.rotate(tempTimer);
+		t.scale(2.0f+s2,2.0f+s2);
+		t.translate(-64, -64);
+		
+		t.use();
+		
+		graph.setColor(1,0,0,1);
+		graph.fillRect(0, 0, 128, 128);
 	}
 	
 	

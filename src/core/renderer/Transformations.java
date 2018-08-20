@@ -143,7 +143,7 @@ public class Transformations {
 	 */
 	public void use() {
 		
-		// ...
+		activeShader.setTransformationUniforms(model, view);
 	}
 	
 	
@@ -163,7 +163,7 @@ public class Transformations {
 	 * Set active shader
 	 * @param sh Shader
 	 */
-	public void setActiveShader(Shader sh) {
+	public void bindShader(Shader sh) {
 		
 		activeShader = sh;
 	}
