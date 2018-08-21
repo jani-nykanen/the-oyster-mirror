@@ -3,12 +3,14 @@ package application;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL20.*;
 
+import application.gamefield.GameField;
 import core.ApplicationListener;
 import core.Configuration;
 import core.State;
 import core.renderer.Bitmap;
 import core.renderer.Flip;
 import core.renderer.Transformations;
+
 
 /**
  * Base game class
@@ -17,16 +19,12 @@ import core.renderer.Transformations;
  */
 public class Game extends ApplicationListener {
 	
-	
-	/** Temporary timer, for testing */
-	private float tempTimer = 0.0f;
-	
-	/** Test bitmap */
-	private Bitmap bmpTest;
+	/** Scene manager */
+	private SceneManager scenes;
 	
 	
 	/**
-	 * Check default key commands (quit, full screen etc.)
+	 * Check default key commands/shortcuts (quit, full screen etc.)
 	 */
 	private void defaultKeyCommands() {
 		
@@ -73,68 +71,51 @@ public class Game extends ApplicationListener {
 		
 		// Bind configuration
 		bindConfiguration(conf);
+		
 	}
 	
 	
 	@Override
 	protected void onInit() {
 		
-		System.out.println("Initializing...");
-		
-		// Load test bitmap
-		bmpTest = new Bitmap("/assets/bitmaps/test.png");
+		// Create scene manager and add scenes
+		scenes = new SceneManager();
+		scenes.addGlobalScene(new Global());
+		scenes.addScene(new GameField(), true);
 	}
 	
 	
 	@Override
 	protected void onLoaded() {
 		
-		System.out.println("'Loading'...");
+		// Initialize scenes
+		scenes.init();
 	}
 	
 	
 	@Override
 	protected void onUpdate(float tm) {
 		
-		final float TIMER_SPEED = 0.05f;
-		
 		// Check default key commands
 		defaultKeyCommands();
-		
-		// Update timer
-		tempTimer += TIMER_SPEED * tm;
+	
+		// Update scene(s)
+		scenes.update(input, tm);
 	}
 	
 	
 	@Override
 	protected void onDraw() {
 		
-		// Clear screen
-		graph.clearScreen(0.67f, 0.67f, 0.67f);
-		
-		// Set transformations
-		float s1 = (float)Math.sin(tempTimer);
-		float s2 = (float)Math.sin(tempTimer/2.0f);
-		Transformations t = graph.transform();
-		t.fitViewHeight(720.0f);
-		t.identity();
-		t.translate(320.0f + (1.0f+s1)*128.0f, 240.0f);
-		t.rotate(tempTimer);
-		t.scale(2.0f+s2,2.0f+s2);
-		t.translate(-64, -64);
-		
-		t.use();
-		
-		graph.setColor(1,1,1,1);
-		graph.fillRect(-16, -16, 128+32, 128+32);
-		
-		graph.drawScaledBitmapRegion(bmpTest, 0, 0, 256, 256, 0, 0, 128, 128, Flip.NONE);
+		// Draw scene(s)
+		scenes.draw(graph);
 	}
 	
 	
 	@Override
 	protected void onDestroy() {
 		
-		System.out.println("KABOOM!");
+		// Destroy scenes
+		scenes.destroy();
 	}
 }

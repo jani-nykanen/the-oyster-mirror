@@ -207,7 +207,7 @@ public class ApplicationListener extends WindowListener {
 		}
 		catch(Exception e) {
 			
-			System.out.println("ERROR: " + e.getMessage());
+			e.printStackTrace();
 			success = false;
 			
 		}
