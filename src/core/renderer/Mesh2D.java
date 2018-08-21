@@ -2,7 +2,6 @@ package core.renderer;
 
 import static org.lwjgl.opengl.GL20.*;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
@@ -23,21 +22,7 @@ public class Mesh2D {
 	
 	/** Index count */
 	private int indexCount;
-	
-	
-	/**
-	 * Copy float array data to a float buffer
-	 * @param arr Array
-	 * @param buf Buffer
-	 */
-	private void copyToFloatBuffer(float[] arr, FloatBuffer buf) {
-		
-		for(int i = 0; i < arr.length; ++ i) {
-			
-			buf.put(i, arr[i]);
-		}
-	}
-	
+
 	
 	/**
 	 * Construct a 2D mesh from the given data

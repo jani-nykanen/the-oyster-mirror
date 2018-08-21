@@ -4,6 +4,7 @@ package core.renderer;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -78,7 +79,12 @@ public class Bitmap {
 	public Bitmap(String path) {
 		
 		// Get the absolute path
-		String absPath = this.getClass().getResource(path).getPath();
+		URL url = this.getClass().getClassLoader().getResource(path);
+		if(url == null) {
+			
+			throw new RuntimeException("No asset in path " + path + "!");
+		}
+		String absPath = url.getPath();
 
 		// Create buffers
 		IntBuffer width, height, components;

@@ -25,7 +25,7 @@ public class GameField implements Scene {
 	public void init() {
 		
 		// Load test bitmap
-		bmpTest = new Bitmap("/assets/bitmaps/test.png");
+		bmpTest = new Bitmap("assets/bitmaps/test.png");
 		
 	}
 	
@@ -51,6 +51,11 @@ public class GameField implements Scene {
 		Transformations tr = g.transform();
 		tr.fitViewHeight(720.0f);
 		tr.identity();
+		
+		g.setColor();
+		g.drawBitmap(bmpTest, 32, 32, Flip.VERTICAL);
+		
+		tr.push();
 		tr.translate(320.0f + (1.0f+s1)*128.0f, 240.0f);
 		tr.rotate(timer);
 		tr.scale(2.0f+s2,2.0f+s2);
@@ -58,10 +63,13 @@ public class GameField implements Scene {
 		
 		tr.use();
 		
-		g.setColor(1,1,1,1);
-		g.fillRect(-16, -16, 128+32, 128+32);
+		g.setColor(0.0f, 1.0f, 0.0f, 0.67f);
+		g.drawScaledBitmap(bmpTest, 0, 0, 128, 128, Flip.NONE);
 		
-		g.drawScaledBitmapRegion(bmpTest, 0, 0, 256, 256, 0, 0, 128, 128, Flip.NONE);
+		tr.pop();
+		
+		g.setColor(1,0,1);
+		g.drawBitmapRegion(bmpTest,16,16,128,64, 256, 32, Flip.BOTH);
 		
 		
 	}

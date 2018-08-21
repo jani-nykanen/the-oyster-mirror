@@ -157,6 +157,57 @@ public final class Graphics {
 	
 	
 	/**
+	 * Draw a bitmap region
+	 * @param bmp Bitmap
+	 * @param sx Source x
+	 * @param sy Source y
+	 * @param sw Source width
+	 * @param sh Source height
+	 * @param dx Destination x
+	 * @param dy Destination y
+	 * @param flip Flipping flag
+	 */
+	public void drawBitmapRegion(Bitmap bmp, int sx, int sy, int sw, int sh,
+			float dx, float dy, int flip) {
+		
+		drawScaledBitmapRegion(bmp,sx,sy,sw,sh,dx,dy,sw,sh,flip);
+	}
+	
+	
+	/**
+	 * Draw a scaled bitmap
+	 * @param bmp Bitmap
+	 * @param dx Destination x
+	 * @param dy Destination y
+	 * @param dx Destination width
+	 * @param dy Destination height
+	 * @param flip Flipping flag
+	 */
+	public void drawScaledBitmap(Bitmap bmp, float dx, float dy, 
+			float dw, float dh, int flip) {
+		
+		int sw = bmp.getWidth();
+		int sh = bmp.getHeight();
+		drawScaledBitmapRegion(bmp,0,0,sw,sh,dx,dy,dw,dh,flip);
+	}
+	
+	
+	/**
+	 * Draw a bitmap
+	 * @param bmp Bitmap
+	 * @param dx Destination x
+	 * @param dy Destination y
+	 * @param flip Flipping flag
+	 */
+	public void drawBitmap(Bitmap bmp, float dx, float dy, int flip) {
+		
+		int sw = bmp.getWidth();
+		int sh = bmp.getHeight();
+		drawScaledBitmapRegion(bmp,0,0,sw,sh,dx,dy,sw,sh,flip);
+	}
+	
+	
+	/**
 	 * Set global rendering color
 	 * @param r Red channel
 	 * @param g Green channel
@@ -166,6 +217,26 @@ public final class Graphics {
 	public void setColor(float r, float g, float b, float a) {
 		
 		shaderDefault.setColorUniform(r, g, b, a);
+	}
+
+	/**
+	 * Set global rendering color
+	 * @param r Red channel
+	 * @param g Green channel
+	 * @param b Blue channel
+	 */
+	public void setColor(float r, float g, float b) {
+		
+		setColor(r, g, b, 1.0f);
+	}
+	
+	
+	/**
+	 * Set global rendering color to opaque white
+	 */
+	public void setColor() {
+		
+		setColor(1,1,1,1);
 	}
 	
 	

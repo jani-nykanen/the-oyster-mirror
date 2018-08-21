@@ -1,15 +1,11 @@
 package application;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL20.*;
 
 import application.gamefield.GameField;
 import core.ApplicationListener;
 import core.Configuration;
 import core.State;
-import core.renderer.Bitmap;
-import core.renderer.Flip;
-import core.renderer.Transformations;
 
 
 /**
