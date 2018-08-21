@@ -6,6 +6,8 @@ import static org.lwjgl.opengl.GL20.*;
 import core.ApplicationListener;
 import core.Configuration;
 import core.State;
+import core.renderer.Bitmap;
+import core.renderer.Flip;
 import core.renderer.Transformations;
 
 /**
@@ -18,6 +20,9 @@ public class Game extends ApplicationListener {
 	
 	/** Temporary timer, for testing */
 	private float tempTimer = 0.0f;
+	
+	/** Test bitmap */
+	private Bitmap bmpTest;
 	
 	
 	/**
@@ -75,6 +80,9 @@ public class Game extends ApplicationListener {
 	protected void onInit() {
 		
 		System.out.println("Initializing...");
+		
+		// Load test bitmap
+		bmpTest = new Bitmap("/assets/bitmaps/test.png");
 	}
 	
 	
@@ -117,8 +125,10 @@ public class Game extends ApplicationListener {
 		
 		t.use();
 		
-		graph.setColor(1,0,0,1);
-		graph.fillRect(0, 0, 128, 128);
+		graph.setColor(1,1,1,1);
+		graph.fillRect(-16, -16, 128+32, 128+32);
+		
+		graph.drawScaledBitmapRegion(bmpTest, 0, 0, 256, 256, 0, 0, 128, 128, Flip.NONE);
 	}
 	
 	

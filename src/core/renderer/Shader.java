@@ -125,8 +125,6 @@ public class Shader {
 	    unifTexPos = glGetUniformLocation(program, "texPos");
 	    unifTexSize = glGetUniformLocation(program, "texSize");
 	    unifColor = glGetUniformLocation(program, "color");
-	    
-	    System.out.println(unifColor);
 	}
 	
 

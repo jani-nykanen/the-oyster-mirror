@@ -117,6 +117,46 @@ public final class Graphics {
 	
 	
 	/**
+	 * Draw a scaled bitmap region
+	 * @param bmp Bitmap
+	 * @param sx Source x
+	 * @param sy Source y
+	 * @param sw Source width
+	 * @param sh Source height
+	 * @param dx Destination x
+	 * @param dy Destination y
+	 * @param dw Destination width
+	 * @param dh Destination height
+	 * @param flip Flipping flag
+	 */
+	public void drawScaledBitmapRegion(Bitmap bmp, int sx, int sy, int sw, int sh,
+			float dx, float dy, float dw, float dh, int flip) {
+		
+		// Bind bitmap
+		bmp.bind();
+		
+		// Flip
+		float w = (float)bmp.getWidth();
+	    float h = (float)bmp.getHeight();
+	    if( (flip & Flip.HORIZONTAL) != 0) {
+
+	        dx += dw;
+	        dw *= -1;
+	    }
+	    if( (flip & Flip.VERTICAL) != 0) {
+
+	        dy += dh;
+	        dh *= -1;
+	    }
+	    
+	    // Pass size data to the shader
+	    shaderDefault.setVertexUniforms(new Vector2(dx, dy), new Vector2(dw, dh));
+	    shaderDefault.setUVUniforms(new Vector2(sx / w, sy / h), new Vector2(sw / w, sh / h));
+	    meshRect.draw();
+	}
+	
+	
+	/**
 	 * Set global rendering color
 	 * @param r Red channel
 	 * @param g Green channel
