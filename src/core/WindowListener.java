@@ -68,7 +68,7 @@ public class WindowListener extends ApplicationEvents {
 		}
 		
 		// Hide cursor
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 		
 		// Create full screen manager
 		fsManager = new FullScreenManager(window, windowed);
