@@ -1,6 +1,5 @@
 package application;
 
-import core.InputManager;
 import core.renderer.Graphics;
 
 /**
@@ -24,7 +23,7 @@ public interface Scene {
 	 * @param input Input manager
 	 * @param tm Time multiplier
 	 */
-	public void update(InputManager input, float tm); 
+	public void update(Gamepad gamepad, float tm); 
 	
 	
 	/** 

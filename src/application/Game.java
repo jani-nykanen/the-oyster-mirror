@@ -18,6 +18,9 @@ public class Game extends ApplicationListener {
 	/** Scene manager */
 	private SceneManager scenes;
 	
+	/** Virtual game pad */
+	private Gamepad vpad;
+	
 	
 	/**
 	 * Check default key commands/shortcuts (quit, full screen etc.)
@@ -78,6 +81,9 @@ public class Game extends ApplicationListener {
 		scenes = new SceneManager();
 		scenes.addGlobalScene(new Global());
 		scenes.addScene(new GameField(), true);
+		
+		// Create virtual gamepad
+		vpad = new Gamepad();
 	}
 	
 	
@@ -95,8 +101,11 @@ public class Game extends ApplicationListener {
 		// Check default key commands
 		defaultKeyCommands();
 	
+		// Update the virtual gamepad
+		vpad.update(input);
+		
 		// Update scene(s)
-		scenes.update(input, tm);
+		scenes.update(vpad, tm);
 	}
 	
 	

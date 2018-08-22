@@ -208,6 +208,76 @@ public final class Graphics {
 	
 	
 	/**
+	 * Draw text using a bitmap font
+	 * @param bmp Bitmap
+	 * @param text Text to be drawn
+	 * @param dx Destination x
+	 * @param dy Destination y
+	 * @param xoff X offset
+	 * @param yoff Y offset
+	 * @param center Center the text or not
+	 * @param scale Scale
+	 */
+	public void drawText(Bitmap bmp, String text, 
+			float dx, float dy, float xoff, float yoff, boolean center, float scale) {
+		
+	    if(bmp == null) return;
+	    
+	    center = center == false ? false : center;
+
+	    int cw = (bmp.getWidth()) / 16;
+	    int ch = cw;
+	    int len = text.length();
+	    float x = dx;
+	    float y = dy;
+	    char c;
+	    
+	    int sx, sy;
+	    
+	    if(center) {
+
+	        dx -= ( (len+1)/2.0f * (cw+xoff) * scale );
+	        x = dx;
+	    }
+
+	    for(int i = 0; i < len;  ++ i) {
+
+	        c = text.charAt(i);
+	        if(c == '\n') {
+
+	            x = dx;
+	            y += (yoff + ch) * scale;
+	            continue;
+	        }
+
+	        sx = c % 16;
+	        sy = (c / 16) | 0;
+
+	        drawScaledBitmapRegion(bmp,sx*cw,sy*ch,cw,ch,x,y, cw* scale, ch* scale, Flip.NONE);
+
+	        x += (cw + xoff)* scale;
+	    }
+	}
+	
+	
+	/**
+	 * Draw text using a bitmap font
+	 * @param bmp Bitmap
+	 * @param text Text to be drawn
+	 * @param dx Destination x
+	 * @param dy Destination y
+	 * @param xoff X offset
+	 * @param yoff Y offset
+	 * @param center Center the text or not
+	 */
+	public void drawText(Bitmap bmp, String text, 
+			float dx, float dy, float xoff, float yoff, boolean center) {
+		
+		drawText(bmp, text, dx, dy, xoff, yoff, center, 1.0f);
+	}
+	
+	
+	/**
 	 * Set global rendering color
 	 * @param r Red channel
 	 * @param g Green channel
@@ -219,6 +289,7 @@ public final class Graphics {
 		shaderDefault.setColorUniform(r, g, b, a);
 	}
 
+	
 	/**
 	 * Set global rendering color
 	 * @param r Red channel

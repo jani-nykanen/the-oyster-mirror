@@ -3,8 +3,8 @@ package application;
 import java.util.ArrayList;
 import java.util.List;
 
-import core.InputManager;
 import core.renderer.Graphics;
+
 
 /**
  * A scene manager. Handles scene
@@ -90,14 +90,14 @@ public class SceneManager implements Scene {
 
 
 	@Override
-	public void update(InputManager input, float tm) {
+	public void update(Gamepad vpad, float tm) {
 		
 		// Update the current and global scenes, if not null
 		if(current != null)
-			current.update(input, tm);
+			current.update(vpad, tm);
 		
 		if(global != null)
-			global.update(input, tm);
+			global.update(vpad, tm);
 	}
 
 

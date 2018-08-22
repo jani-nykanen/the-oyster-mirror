@@ -5,7 +5,7 @@ package core.types;
  * @author Jani Nykänen
  *
  */
-public class Vector2 {
+public class Vector2 implements Cloneable {
 
 	
 	/** Components */
@@ -41,5 +41,14 @@ public class Vector2 {
 	public Vector2 add(Vector2 v) {
 		
 		return new Vector2(x + v.x, y + v.y);
+	}
+	
+	
+	/**
+	 * Clone
+	 */
+	public Vector2 clone() {
+		
+		return new Vector2(x, y);
 	}
 }

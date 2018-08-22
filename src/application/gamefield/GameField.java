@@ -1,11 +1,13 @@
 package application.gamefield;
 
+import application.Gamepad;
 import application.Scene;
 import core.InputManager;
 import core.renderer.Bitmap;
 import core.renderer.Flip;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
+import core.types.Vector2;
 
 /**
  * A game field scene.
@@ -16,9 +18,14 @@ public class GameField implements Scene {
 
 	/** Test bitmap */
 	private Bitmap bmpTest;
+	/** Test font */
+	private Bitmap bmpFont;
 	
 	/** Test timer */
 	private float timer = 0.0f;
+	
+	/** Test position */
+	private Vector2 testPos = new Vector2(400,360);
 	
 	
 	@Override
@@ -26,16 +33,25 @@ public class GameField implements Scene {
 		
 		// Load test bitmap
 		bmpTest = new Bitmap("assets/bitmaps/test.png");
+		bmpFont = new Bitmap("assets/bitmaps/font.png");
 		
 	}
 	
 
 	@Override
-	public void update(InputManager input, float tm) {
+	public void update(Gamepad vpad, float tm) {
 		
 		final float TIMER_SPEED = 0.05f;
+		final float MOVE_TIMER = 12.0f;
 		
+		// Update timer
 		timer += TIMER_SPEED * tm;
+		
+		// Update test position
+		Vector2 stick = vpad.getStick();
+		testPos.x += stick.x * MOVE_TIMER * tm;
+		testPos.y += stick.y * MOVE_TIMER * tm;
+		
 	}
 	
 
@@ -70,7 +86,13 @@ public class GameField implements Scene {
 		
 		g.setColor(1,0,1);
 		g.drawBitmapRegion(bmpTest,16,16,128,64, 256, 32, Flip.BOTH);
+	
+		g.setColor(0.5f, 0, 1.0f, 0.67f);
+		g.fillRect(testPos.x-32, testPos.y-32, 64, 64);
+		g.setColor();
 		
+		g.drawText(bmpFont, "Hello world!", 8, 8, -16, 0, false);
+		g.drawText(bmpFont, "World, hello!", 256, 72, -16, 0, true, 0.75f);
 		
 	}
 	

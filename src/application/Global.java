@@ -1,6 +1,5 @@
 package application;
 
-import core.InputManager;
 import core.renderer.Graphics;
 
 /**
@@ -19,7 +18,7 @@ public class Global implements Scene {
 
 	
 	@Override
-	public void update(InputManager input, float tm) {
+	public void update(Gamepad vpad, float tm) {
 		// TODO Auto-generated method stub
 		
 	}

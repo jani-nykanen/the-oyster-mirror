@@ -67,6 +67,9 @@ public class WindowListener extends ApplicationEvents {
 			throw new RuntimeException("Failed to create a window!");
 		}
 		
+		// Hide cursor
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		
 		// Create full screen manager
 		fsManager = new FullScreenManager(window, windowed);
 		
