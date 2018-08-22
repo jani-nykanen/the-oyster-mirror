@@ -28,8 +28,9 @@ public class ApplicationEvents extends EventListener {
 	
 	/**
 	 * Called when the data is loaded
+	 * @throws Exception 
 	 */
-	protected void onLoaded() {};
+	protected void onLoaded() throws Exception {};
 	
 	
 	/**

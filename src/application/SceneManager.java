@@ -79,7 +79,7 @@ public class SceneManager implements Scene {
 
 
 	@Override
-	public void init() {
+	public void init() throws Exception {
 		
 		// Initialize all the scenes
 		for(Scene s : scenes) {

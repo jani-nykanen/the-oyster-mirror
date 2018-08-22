@@ -82,7 +82,7 @@ public class Game extends ApplicationListener {
 	
 	
 	@Override
-	protected void onLoaded() {
+	protected void onLoaded() throws Exception {
 		
 		// Initialize scenes
 		scenes.init();

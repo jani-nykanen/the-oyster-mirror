@@ -14,8 +14,9 @@ public interface Scene {
 	public final String name = "";
 	
 	
-	/** Initialize */
-	public void init();
+	/** Initialize 
+	 * @throws Exception */
+	public void init() throws Exception;
 	
 	
 	/**

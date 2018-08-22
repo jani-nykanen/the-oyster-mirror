@@ -22,7 +22,7 @@ public class GameField implements Scene {
 	
 	
 	@Override
-	public void init() {
+	public void init() throws Exception {
 		
 		// Load test bitmap
 		bmpTest = new Bitmap("assets/bitmaps/test.png");

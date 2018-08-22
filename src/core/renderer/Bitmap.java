@@ -2,15 +2,16 @@ package core.renderer;
 
 
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.system.MemoryStack.stackPush;
 
-import java.net.URL;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
+import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
+import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.MemoryStack;;
+
 
 /**
  * Bitmap class
@@ -75,39 +76,30 @@ public class Bitmap {
 	/**
 	 * Construct a bitmap by loading a file
 	 * @param path File path
+	 * @throws IOException If file is not found
 	 */
-	public Bitmap(String path) {
+	public Bitmap(String path) throws IOException {
 		
-		// Get the absolute path
-		URL url = this.getClass().getClassLoader().getResource(path);
-		if(url == null) {
+		// Load image
+		BufferedImage imgBuf = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(path));
+		
+		// Get bytes
+		WritableRaster raster = imgBuf.getRaster();
+		DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
+		byte[] bytes = data.getData();
+		
+		// Reorder the bytes
+		byte[] ordered = new byte[bytes.length];
+		for(int i = 0; i < bytes.length; i += 4) {
 			
-			throw new RuntimeException("No asset in path " + path + "!");
-		}
-		String absPath = url.getPath();
-
-		// Create buffers
-		IntBuffer width, height, components;
-		ByteBuffer data;
-		try ( MemoryStack stack = stackPush() ) {
-			
-			width = stack.mallocInt(1);
-		    height = stack.mallocInt(1);
-		    components = stack.mallocInt(1);
-			
-		    // Read file
-			data = STBImage.stbi_load(absPath, width, height, components, 4);
-			if(data == null) {
-			
-				throw new RuntimeException("STBI image error: " + STBImage.stbi_failure_reason());
-			}
-			
+			ordered[i] = bytes[i+3];
+			ordered[i+1] = bytes[i+2];
+			ordered[i+2] = bytes[i+1];
+			ordered[i+3] = bytes[i];
 		}
 		
-		// Now, create the texture
-		byte[] arr = new byte[data.remaining()];
-		data.get(arr);
-		createTexture(arr, width.get(0), height.get(0));
+		createTexture(ordered, imgBuf.getWidth(), imgBuf.getHeight());
+		
 	}
 	
 	
