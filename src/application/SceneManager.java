@@ -13,7 +13,7 @@ import core.renderer.Graphics;
  * @author Jani Nykänen
  *
  */
-public class SceneManager implements Scene {
+public class SceneManager extends Scene {
 
 	/** A list of scenes */
 	private List<Scene> scenes;
@@ -45,6 +45,7 @@ public class SceneManager implements Scene {
 	 */
 	public void addScene(Scene s, boolean makeCurrent) {
 		
+		s.setSceneManager(this);
 		scenes.add(s);
 		if(makeCurrent || current == null) {
 			
@@ -76,7 +77,36 @@ public class SceneManager implements Scene {
 			addScene(global);
 		}
 	}
+	
+	
+	/**
+	 * Change to a scene
+	 * @param name Name of the new scene
+	 */
+	public void changeScene(String name) {
+		
+		// Find a scene with the same name
+		for(Scene s : scenes) {
+			
+			if(s.getName() == name) {
+				
+				current = s;
+				s.changeTo();
+				return;
+			}
+		}
+ 	}
 
+	
+	/**
+	 * Get the global scene
+	 * @return Global scene
+	 */
+	public Scene getGlobalScene() {
+		
+		return global;
+	}
+	
 
 	@Override
 	public void init() throws Exception {

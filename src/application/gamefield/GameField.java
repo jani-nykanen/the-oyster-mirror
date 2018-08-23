@@ -15,8 +15,11 @@ import core.types.Vector2;
  * @author Jani Nykänen
  *
  */
-public class GameField implements Scene {
+public class GameField extends Scene {
 
+	/** Scene name */
+	public String name = "game";
+	
 	/** Test bitmap */
 	private Bitmap bmpTest;
 	/** Test font */
@@ -53,6 +56,7 @@ public class GameField implements Scene {
 		testPos.x += stick.x * MOVE_TIMER * tm;
 		testPos.y += stick.y * MOVE_TIMER * tm;
 		
+		// Test
 		if(vpad.getButtonByName("fire1") == State.Pressed) {
 			
 			System.out.println("Beep!");

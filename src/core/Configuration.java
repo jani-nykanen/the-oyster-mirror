@@ -1,19 +1,17 @@
 package core;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+
 
 /**
  * Configuration information
@@ -149,13 +147,10 @@ public class Configuration implements Cloneable {
 	/**
 	 * Read configuration data from an XML file
 	 * @param path File path
-	 * @throws NullPointerException Unknown
-	 * @throws ParserConfigurationException If parsing fails
-	 * @throws IOException If file does not exist
-	 * @throws SAXException Unknown
+	 * @throws Exception If something goes wrong
 	 */
 	public void parseXML(String path) 
-			throws NullPointerException, ParserConfigurationException, SAXException, IOException {
+			throws Exception {
 		
 		// Open the file
 		InputStream input = this.getClass().getResourceAsStream(path);

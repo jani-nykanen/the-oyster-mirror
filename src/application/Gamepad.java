@@ -1,7 +1,19 @@
 package application;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import core.InputManager;
 import core.State;
@@ -73,6 +85,45 @@ public class Gamepad {
 	public void addButton(String name, int key, int joybutton) {
 		
 		buttons.add(new Button(name, key, joybutton));
+	}
+	
+	
+	/**
+	 * Parse a key configuration file
+	 * @param path File path
+	 * @throws Exception If something goes wrong
+	 * TODO: A lot of same code as in Configuration.
+	 * A super class for reading stuff or something?
+	 */
+	public void parseXML(String path) throws Exception {
+	
+		// Open the file
+		InputStream input = this.getClass().getClassLoader().getResourceAsStream(path);
+		// Ready for parsing
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(input);
+				
+		// Get root element
+		Element root = doc.getDocumentElement();
+		// Get parameters elements, if exist
+		NodeList params = root.getElementsByTagName("button");
+		// Go through every parameter and get their keys and values
+		Node n;
+		String name ,key, button;
+		for(int i = 0; i < params.getLength(); ++ i) {
+					
+			n = params.item(i);
+			name = n.getAttributes().getNamedItem("name").getTextContent();
+			key = n.getAttributes().getNamedItem("key").getTextContent();
+			button = n.getAttributes().getNamedItem("joy").getTextContent();
+			
+			// Add button
+			addButton(name, Integer.parseInt(key), Integer.parseInt(button));
+		}
+				
+		// Close file readers etc
+		input.close();
 	}
 	
 	

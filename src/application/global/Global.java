@@ -9,8 +9,11 @@ import core.renderer.Graphics;
  * @author Jani Nykänen
  *
  */
-public class Global implements Scene {
+public class Global extends Scene {
 
+	/** Scene name */
+	public String name = "game";
+	
 	
 	@Override
 	public void init() {

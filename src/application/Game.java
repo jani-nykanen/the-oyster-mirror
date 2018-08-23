@@ -2,6 +2,12 @@ package application;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 import application.gamefield.GameField;
 import application.global.Global;
 import core.ApplicationListener;
@@ -85,7 +91,14 @@ public class Game extends ApplicationListener {
 		
 		// Create virtual gamepad
 		vpad = new Gamepad();
-		vpad.addButton("fire1", GLFW_KEY_Z, 0);
+		try {
+			vpad.parseXML("keyconfig.xml");
+			
+		} 
+		catch (Exception e) {
+			
+			e.printStackTrace();
+		}
 	}
 	
 	

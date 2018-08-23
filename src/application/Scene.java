@@ -3,19 +3,22 @@ package application;
 import core.renderer.Graphics;
 
 /**
- * Application scene
+ * A scene class.
  * @author Jani Nykänen
  *
  */
-public interface Scene {
+public abstract class Scene {
 
 	/** Scene name */
-	public final String name = "";
+	private String name = "";
+	
+	/** Scene manager reference */
+	protected SceneManager sceneMan;
 	
 	
 	/** Initialize 
 	 * @throws Exception */
-	public void init() throws Exception;
+	public abstract void init() throws Exception;
 	
 	
 	/**
@@ -23,20 +26,40 @@ public interface Scene {
 	 * @param input Input manager
 	 * @param tm Time multiplier
 	 */
-	public void update(Gamepad gamepad, float tm); 
+	public abstract void update(Gamepad gamepad, float tm); 
 	
 	
 	/** 
 	 * Draw frame 
 	 * @param g Graphics object 
 	 */
-	public void draw(Graphics g);
+	public abstract void draw(Graphics g);
 	
 	
 	/** Destroy scene */
-	public void destroy();
+	public abstract void destroy();
 	
 	
 	/** Change to to this scene */
-	public void changeTo();
+	public abstract void changeTo();
+	
+	
+	/**
+	 * Get scene name
+	 * @return Name
+	 */
+	public String getName() {
+		
+		return name;
+	}
+	
+	
+	/**
+	 * Set scene manager reference
+	 * @param s Scene manager
+	 */
+	public void setSceneManager(SceneManager s) {
+		
+		sceneMan = s;
+	}
 }
