@@ -2,12 +2,13 @@ package application.gamefield;
 
 import application.Gamepad;
 import application.Scene;
-import core.InputManager;
+import core.State;
 import core.renderer.Bitmap;
 import core.renderer.Flip;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
 import core.types.Vector2;
+
 
 /**
  * A game field scene.
@@ -34,7 +35,7 @@ public class GameField implements Scene {
 		// Load test bitmap
 		bmpTest = new Bitmap("assets/bitmaps/test.png");
 		bmpFont = new Bitmap("assets/bitmaps/font.png");
-		
+
 	}
 	
 
@@ -51,6 +52,11 @@ public class GameField implements Scene {
 		Vector2 stick = vpad.getStick();
 		testPos.x += stick.x * MOVE_TIMER * tm;
 		testPos.y += stick.y * MOVE_TIMER * tm;
+		
+		if(vpad.getButtonByName("fire1") == State.Pressed) {
+			
+			System.out.println("Beep!");
+		}
 		
 	}
 	

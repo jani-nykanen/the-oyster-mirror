@@ -91,6 +91,27 @@ public class ApplicationListener extends WindowListener {
 	}
 
 	
+	@Override
+	protected void eventJoyAxis(float x, float y) {
+		
+		input.onJoyAxis(x, y);
+	}
+	
+	
+	@Override
+	protected void eventJoyDown(int button) { 
+		
+		input.onJoyPressed(button);
+	}
+	
+	
+	@Override
+	protected void eventJoyUp(int button) { 
+		
+		input.onJoyReleased(button);
+	}
+	
+	
 	/**
 	 * Update loop
 	 * @param tm Time multiplier
@@ -164,6 +185,8 @@ public class ApplicationListener extends WindowListener {
 		
 		// Poll events
 		glfwPollEvents();
+		// Call update event
+		updateJoyEvents();
 	}
 	
 	

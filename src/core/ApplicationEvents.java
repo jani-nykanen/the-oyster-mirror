@@ -64,6 +64,18 @@ public class ApplicationEvents extends EventListener {
 	protected void eventKeyUp(int key) { }
 	
 	
+	@Override
+	protected void eventJoyAxis(float x, float y) { }
+	
+	
+	@Override
+	protected void eventJoyDown(int button) { }
+
+
+	@Override
+	protected void eventJoyUp(int button) { }
+	
+	
 	/**
 	 * Is the application running
 	 * @return True, if running
@@ -82,5 +94,4 @@ public class ApplicationEvents extends EventListener {
 		isRunning = false;
 	}
 
-	
 }

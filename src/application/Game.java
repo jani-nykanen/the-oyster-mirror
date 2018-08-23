@@ -3,6 +3,7 @@ package application;
 import static org.lwjgl.glfw.GLFW.*;
 
 import application.gamefield.GameField;
+import application.global.Global;
 import core.ApplicationListener;
 import core.Configuration;
 import core.State;
@@ -84,6 +85,7 @@ public class Game extends ApplicationListener {
 		
 		// Create virtual gamepad
 		vpad = new Gamepad();
+		vpad.addButton("fire1", GLFW_KEY_Z, 0);
 	}
 	
 	

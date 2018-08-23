@@ -2,6 +2,8 @@ package core;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import core.types.Vector2;
+
 /**
  * Input manager
  * @author Jani Nykänen
@@ -11,9 +13,16 @@ public class InputManager {
 
 	/** The maximum amount of keys */
 	static private final int KEY_COUNT = GLFW_KEY_LAST;
+	/** The maximum allowed joystick button index */
+	static public final int MAX_JOY_BUTTON = 16;
 	
 	/** Keyboard key states */
 	private State[] keyStates = new State[KEY_COUNT];
+	
+	/** Joystick axis */
+	private Vector2 joyAxis;
+	/** Joystick buttons */
+	private State[] joyStates = new State[MAX_JOY_BUTTON];
 	
 	
 	/**
@@ -90,12 +99,54 @@ public class InputManager {
 	
 	
 	/**
+	 * Handle joystick axis changed event
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 */
+	public void onJoyAxis(float x, float y) {
+		
+		joyAxis.x = x;
+		joyAxis.y = y;
+	}
+	
+	
+	/**
+	 * Handle joystick button pressed event
+	 * @param button
+	 */
+	public void onJoyPressed(int button) {
+		
+		// If the button is out of range or already down, ignore
+		if(button < 0 || button >= MAX_JOY_BUTTON || joyStates[button] == State.Down) 
+			return;
+				
+		joyStates[button] = State.Pressed;
+	}
+	
+	
+	/**
+	 * Handle joystick button released event
+	 * @param button
+	 */
+	public void onJoyReleased(int button) {
+		
+		// If the button is out of range or already down, ignore
+		if(button < 0 || button >= MAX_JOY_BUTTON || joyStates[button] == State.Up) 
+			return;
+				
+		joyStates[button] = State.Released;
+	}
+	
+	
+	/**
 	 * Update states
 	 */
 	public void update() {
 		
 		// Update keyboard states
 		updateStateArray(keyStates);
+		// Update joystick button states
+		updateStateArray(joyStates);
 	}
 
 
@@ -111,11 +162,35 @@ public class InputManager {
 	
 	
 	/**
+	 * Get joystick axes
+	 * @return Axes
+	 */
+	public Vector2 getJoyAxes() {
+		
+		return joyAxis;
+	}
+	
+	
+	/**
+	 * Get joystick button state
+	 * @param button Button
+	 * @return Button state
+	 */
+	public State getButtonState(int button) {
+		
+		return getStateArrayValue(joyStates, button);
+	}
+	
+	
+	/**
 	 * Constructor
 	 */
 	public InputManager() {
 		
 		// Initialize all input state arrays
 		initStateArray(keyStates);
+		
+		// Initialize other components
+		joyAxis = new Vector2();
 	}
 }

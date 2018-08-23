@@ -3,6 +3,9 @@ package core;
 import org.lwjgl.glfw.*;
 import static org.lwjgl.glfw.GLFW.*;
 
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+
 
 /**
  * Event listener
@@ -11,6 +14,10 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public abstract class EventListener {
 
+	/** Joystick button buffer. We have it here because we want
+	 * to emulate event-driven joystick handling that GLFW
+	 * does not support yet. */
+	private int[] joyButtonBuffer = new int[InputManager.MAX_JOY_BUTTON];
 	
 	
 	/**
@@ -33,6 +40,28 @@ public abstract class EventListener {
 	 * @param key
 	 */
 	protected abstract void eventKeyUp(int key);
+	
+	
+	/**
+	 * Joystick axis moved event
+	 * @param x X axis
+	 * @param y Y axis
+	 */
+	protected abstract void eventJoyAxis(float x, float y);
+	
+	
+	/**
+	 * Joystick button pressed event
+	 * @param button Button
+	 */
+	protected abstract void eventJoyDown(int button);
+	
+	
+	/**
+	 * Joystick button released event
+	 * @param button Button
+	 */
+	protected abstract void eventJoyUp(int button);
 	
 	
 	/**
@@ -70,6 +99,51 @@ public abstract class EventListener {
 	}
 	
 	
+	
+	/**
+	 * Update joystick, try to emulate
+	 * event-driven joystick input handling.
+	 */
+	protected void updateJoyEvents() {
+		
+		// If not present, ignore
+		if(!(glfwJoystickPresent(GLFW_JOYSTICK_1))) return;
+		
+		// Get joystick axes & buttons
+		FloatBuffer abuf = glfwGetJoystickAxes(GLFW_JOYSTICK_1);
+		ByteBuffer bbuf = glfwGetJoystickButtons(GLFW_JOYSTICK_1);
+		try {
+			
+			// Send axis event request
+			if(abuf != null)
+				eventJoyAxis(abuf.get(), abuf.get());
+			
+			// Send button event request
+			if(bbuf != null) {
+				
+				// Get buttons
+				int state = 0;
+				for(int i = 0; i < InputManager.MAX_JOY_BUTTON; ++ i) {
+					
+					// Compare to the previous 
+					state = (int)bbuf.get();
+					if(state != joyButtonBuffer[i]) {
+						
+						if(state == 1)
+							eventJoyDown(i);
+						
+						else if(state == 0)
+							eventJoyUp(i);
+					}
+					joyButtonBuffer[i] = state;
+				}
+			}
+		}
+		catch(Exception e) {}
+		
+	}
+	
+	
 	/**
 	 * Register event callbacks
 	 * @param window Window
@@ -93,6 +167,12 @@ public abstract class EventListener {
 				resizeEvent(win, w, h);
 			}
 		});
+		
+		// Clear joystick buffer
+		for(int i = 0; i < joyButtonBuffer.length; ++ i) {
+			
+			joyButtonBuffer[i] = 0;
+		}
 		
 	}
 }

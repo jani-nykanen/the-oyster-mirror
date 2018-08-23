@@ -22,6 +22,8 @@ public class Gamepad {
 	/** Gamepad button */
 	private final class Button {
 		
+		/** Name */
+		public String name;
 		/** Key */
 		public int key;
 		/** Joystick button */
@@ -35,8 +37,9 @@ public class Gamepad {
 		 * @param key Key
 		 * @param button Joystick button
 		 */
-		public Button(int key, int button) {
+		public Button(String name, int key, int button) {
 			
+			this.name = name;
 			this.key = key;
 			this.button = button;
 			this.state = State.Up;
@@ -67,9 +70,9 @@ public class Gamepad {
 	 * @param key Keyboard key
 	 * @param joybutton Joystick button
 	 */
-	public void addButton(int key, int joybutton) {
+	public void addButton(String name, int key, int joybutton) {
 		
-		buttons.add(new Button(key, joybutton));
+		buttons.add(new Button(name, key, joybutton));
 	}
 	
 	
@@ -78,7 +81,8 @@ public class Gamepad {
 	 * @param input Input manager
 	 */
 	public void update(InputManager input) {
-;
+
+		final float JOY_DELTA = 0.1f;
 		
 		// Go through every button and update
 		// state
@@ -87,46 +91,81 @@ public class Gamepad {
 			
 			b = buttons.get(i);
 			b.state = input.getKeyState(b.key);
+			if(b.state == State.Up) {
+				
+				b.state = input.getButtonState(b.button);
+			}
 		}
 		
 		// Update stick
 		stick.x = 0.0f;
 		stick.y = 0.0f;
 		
-		if(input.getKeyState(GLFW_KEY_LEFT) == State.Down)
-			stick.x = -1.0f;
-		
-		else if(input.getKeyState(GLFW_KEY_RIGHT) == State.Down)
-			stick.x = 1.0f;
-		
-		if(input.getKeyState(GLFW_KEY_UP) == State.Down)
-			stick.y = -1.0f;
-		
-		else if(input.getKeyState(GLFW_KEY_DOWN) == State.Down)
-			stick.y = 1.0f;
-		
-		// Normalize if needed
-		float dist = (float)Math.hypot(stick.x, stick.y);
-		if(dist >= 1.0f) {
+		// Check joystick first
+		Vector2 joy = input.getJoyAxes();
+		if((float)Math.hypot(joy.x, joy.y) > JOY_DELTA) {
 			
-			stick.x /= dist;
-			stick.y /= dist;
+			stick.x = joy.x;
+			stick.y = joy.y;
+		}
+		// If no joystick activity, check keyboard
+		else {
+		
+			if(input.getKeyState(GLFW_KEY_LEFT) == State.Down)
+				stick.x = -1.0f;
+			
+			else if(input.getKeyState(GLFW_KEY_RIGHT) == State.Down)
+				stick.x = 1.0f;
+			
+			if(input.getKeyState(GLFW_KEY_UP) == State.Down)
+				stick.y = -1.0f;
+			
+			else if(input.getKeyState(GLFW_KEY_DOWN) == State.Down)
+				stick.y = 1.0f;
+			
+			// Normalize if needed
+			float dist = (float)Math.hypot(stick.x, stick.y);
+			if(dist >= 1.0f) {
+				
+				stick.x /= dist;
+				stick.y /= dist;
+			}
+		
 		}
 	}
 	
 	
 	/**
-	 * Get a button state
-	 * @param id Button ID
+	 * Get a button state by button index
+	 * @param id Button index
 	 * @return Button state
 	 */
-	public State getButtonState(int id) {
+	public State getButtonByIndex(int id) {
 		
 		// If out of range, return up
 		if(id < 0 || id >= buttons.size())
 			return State.Up;
 		
 		return buttons.get(id).state;
+	}
+	
+	
+	/**
+	 * Get a button state by button name
+	 * @param name Button name
+	 * @return Button state
+	 */
+	public State getButtonByName(String name) {
+		
+		// Find the button with corresponding name.
+		// If does not exist, return up
+		for(Button b : buttons) {
+			
+			if(name.equals(b.name))
+				return b.state;
+		}
+		
+		return State.Up;
 	}
 	
 	

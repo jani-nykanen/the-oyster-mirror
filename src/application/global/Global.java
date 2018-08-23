@@ -1,5 +1,7 @@
-package application;
+package application.global;
 
+import application.Gamepad;
+import application.Scene;
 import core.renderer.Graphics;
 
 /**
