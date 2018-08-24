@@ -8,6 +8,7 @@ import core.renderer.Flip;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
 import core.types.Vector2;
+import core.utility.AssetPack;
 
 
 /**
@@ -33,11 +34,11 @@ public class GameField extends Scene {
 	
 	
 	@Override
-	public void init() throws Exception {
+	public void init(AssetPack assets) throws Exception {
 		
 		// Load test bitmap
-		bmpTest = new Bitmap("assets/bitmaps/test.png");
-		bmpFont = new Bitmap("assets/bitmaps/font.png");
+		bmpTest = assets.getBitmap("test");
+		bmpFont = assets.getBitmap("font");
 
 	}
 	

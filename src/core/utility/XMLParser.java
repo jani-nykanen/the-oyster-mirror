@@ -69,11 +69,28 @@ public class XMLParser {
 	
 	
 	/**
-	 * Get root and do nothing with it
+	 * Get root and prepare it to be used
+	 * (or ignored)
 	 */
 	public void getRoot() {
 		
 		root = doc.getDocumentElement();
+	}
+	
+	
+	/**
+	 * Get a root attribute
+	 * @param key Key
+	 * @param def Default value
+	 * @return Value, or default, if not found
+	 */
+	public String getRootAttribute(String key, String def) {
+		
+		String ret = root.getAttributes().getNamedItem(key).getTextContent();
+		if(ret == null)
+			return def;
+		else
+			return ret;
 	}
 	
 	

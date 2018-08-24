@@ -3,6 +3,7 @@ package application.global;
 import application.Gamepad;
 import application.Scene;
 import core.renderer.Graphics;
+import core.utility.AssetPack;
 
 /**
  * The global scene
@@ -16,7 +17,7 @@ public class Global extends Scene {
 	
 	
 	@Override
-	public void init() {
+	public void init(AssetPack assets) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}

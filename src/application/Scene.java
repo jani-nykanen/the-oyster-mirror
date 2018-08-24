@@ -1,6 +1,7 @@
 package application;
 
 import core.renderer.Graphics;
+import core.utility.AssetPack;
 
 /**
  * A scene class.
@@ -18,7 +19,7 @@ public abstract class Scene {
 	
 	/** Initialize 
 	 * @throws Exception */
-	public abstract void init() throws Exception;
+	public abstract void init(AssetPack assets) throws Exception;
 	
 	
 	/**

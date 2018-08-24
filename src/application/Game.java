@@ -100,7 +100,7 @@ public class Game extends ApplicationListener {
 	protected void onLoaded() throws Exception {
 		
 		// Initialize scenes
-		scenes.init();
+		scenes.init(assets);
 	}
 	
 	

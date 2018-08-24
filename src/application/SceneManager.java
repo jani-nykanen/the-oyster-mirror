@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.renderer.Graphics;
+import core.utility.AssetPack;
 
 
 /**
@@ -109,12 +110,12 @@ public class SceneManager extends Scene {
 	
 
 	@Override
-	public void init() throws Exception {
+	public void init(AssetPack assets) throws Exception {
 		
 		// Initialize all the scenes
 		for(Scene s : scenes) {
 			
-			s.init();
+			s.init(assets);
 		}
 	}
 
@@ -156,4 +157,5 @@ public class SceneManager extends Scene {
 
 	@Override
 	public void changeTo() { }
+
 }

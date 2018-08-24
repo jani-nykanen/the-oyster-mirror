@@ -85,7 +85,7 @@ public class Bitmap {
 		
 		// Get bytes
 		WritableRaster raster = imgBuf.getRaster();
-		DataBufferByte data   = (DataBufferByte) raster.getDataBuffer();
+		DataBufferByte data  = (DataBufferByte) raster.getDataBuffer();
 		byte[] bytes = data.getData();
 		
 		// Reorder the bytes

@@ -3,6 +3,7 @@ package core;
 import static org.lwjgl.glfw.GLFW.*;
 
 import core.renderer.Graphics;
+import core.utility.AssetPack;
 
 
 /**
@@ -20,9 +21,10 @@ public class ApplicationListener extends WindowListener {
 
 	/** Input manager, handles input */
 	protected InputManager input;
-	
 	/** Graphics context */
 	protected Graphics graph;
+	/** Global assets */
+	protected AssetPack assets;
 	
 	/** Frame rate */
 	private int frameRate;
@@ -57,8 +59,9 @@ public class ApplicationListener extends WindowListener {
 		// Call user-defined initialization method now
 		onInit();
 		
-		// Load data
-		// ...
+		// Load assets
+		assets = new AssetPack();
+		assets.parseXML(conf.getParameterValueString("asset_path", "assets/assets.xml"));
 		
 		// Loading finished, call post-loading initialization
 		// method

@@ -5,4 +5,5 @@
     <param key="window_caption" value="Game"/>
     <param key="full_screen" value="0" />
     <param key="frame_rate" value="30" />
+    <param key="asset_path" value="assets/assets.xml" />
 </config>
