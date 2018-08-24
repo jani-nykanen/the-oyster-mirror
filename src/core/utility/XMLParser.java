@@ -7,6 +7,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
@@ -72,11 +73,11 @@ public class XMLParser {
 	 * Get root and prepare it to be used
 	 * (or ignored)
 	 */
-	public void getRoot() {
+	public void readyRoot() {
 		
 		root = doc.getDocumentElement();
 	}
-	
+
 	
 	/**
 	 * Get a root attribute
@@ -116,14 +117,27 @@ public class XMLParser {
 	
 	
 	/**
-	 * Get text content of a "parameter"
+	 * Get text content of a node
 	 * @param name Parameter name
 	 * @return Text content
 	 */
 	public String getTextContent(String name) {
 		
-		return nodes.item(nodePointer-1).getAttributes().getNamedItem(name).getTextContent();
+		return getTextContent(nodes.item(nodePointer-1), name);
 	}
+	
+	
+	/**
+	 * Get text content of a node
+	 * @param n Node
+	 * @param name Name
+	 * @return Text content
+	 */
+	public String getTextContent(Node n, String name) {
+		
+		return n.getAttributes().getNamedItem(name).getTextContent();
+	}
+	
 	
 	/**
 	 * Stop parsing
@@ -132,5 +146,25 @@ public class XMLParser {
 	public void close() throws Exception {
 		
 		input.close();
+	}
+	
+	
+	/**
+	 * Get document builder
+	 * @return Document builder
+	 */
+	public DocumentBuilder getDocumentBuilder() {
+		
+		return db;
+	}
+	
+	
+	/**
+	 * Get the root element
+	 * @return Root element
+	 */
+	public Element getRoot() {
+		
+		return root;
 	}
 }

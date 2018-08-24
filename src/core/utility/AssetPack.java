@@ -14,6 +14,8 @@ public class AssetPack {
 
 	/** Bitmaps */
 	private List< Asset<Bitmap> > bitmaps;
+	/** Tilemaps */
+	private List< Asset<Tilemap> > tilemaps;
 	
 	
 	/**
@@ -22,7 +24,8 @@ public class AssetPack {
 	public AssetPack() {
 		
 		// Initialize components
-		bitmaps = new ArrayList<Asset<Bitmap> > ();
+		bitmaps = new ArrayList< Asset<Bitmap> > ();
+		tilemaps = new ArrayList< Asset<Tilemap> > ();
 	}
 	
 	
@@ -36,10 +39,11 @@ public class AssetPack {
 		
 		// Open an XML parser
 		XMLParser parser = new XMLParser(xmlPath);
-		parser.getRoot();
+		parser.readyRoot();
 				
 		// Get root info
 		String bmpPath = parser.getRootAttribute("bitmap_path", "assets/bitmaps/");
+		String mapPath = parser.getRootAttribute("tilemap_path", "assets/bitmaps/");
 		
 		
 		// Read bitmaps
@@ -52,6 +56,17 @@ public class AssetPack {
 			
 			// Load bitmap
 			bitmaps.add(new Asset<Bitmap> (new Bitmap(bmpPath + path), name));
+		}
+		
+		// Read tilemaps
+		parser.readyNodeList("tilemap");
+		while(parser.getNextParam()) {
+							
+			name = parser.getTextContent("name");
+			path = parser.getTextContent("path");
+					
+			// Load bitmap
+			tilemaps.add(new Asset<Tilemap> (new Tilemap(mapPath + path), name));
 		}
 				
 		// Close

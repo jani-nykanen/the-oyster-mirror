@@ -147,7 +147,7 @@ public class Configuration implements Cloneable {
 
 		// Open an XML parser
 		XMLParser parser = new XMLParser(this.getClass().getResourceAsStream(path));
-		parser.getRoot();
+		parser.readyRoot();
 		parser.readyNodeList("param");
 				
 		// Get content

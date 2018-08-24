@@ -87,7 +87,7 @@ public class Gamepad {
 	
 		// Open an XML parser
 		XMLParser parser = new XMLParser(path);
-		parser.getRoot();
+		parser.readyRoot();
 		parser.readyNodeList("button");
 		
 		// Get content
