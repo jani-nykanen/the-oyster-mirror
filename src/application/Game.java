@@ -1,12 +1,6 @@
 package application;
 
-import static org.lwjgl.glfw.GLFW.*;
-
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
+import static org.lwjgl.glfw.GLFW.*; 
 
 import application.gamefield.GameField;
 import application.global.Global;

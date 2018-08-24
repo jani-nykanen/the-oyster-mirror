@@ -1,16 +1,9 @@
 package core;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import core.utility.XMLParser;
 
 
 /**
@@ -151,33 +144,25 @@ public class Configuration implements Cloneable {
 	 */
 	public void parseXML(String path) 
 			throws Exception {
-		
-		// Open the file
-		InputStream input = this.getClass().getResourceAsStream(path);
-		// Ready for parsing
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(input);
-		
-		// Get root element
-		Element root = doc.getDocumentElement();
-		// Get parameters elements, if exist
-		NodeList params = root.getElementsByTagName("param");
-		// Go through every parameter and get their keys and values
-		Node n;
+
+		// Open an XML parser
+		XMLParser parser = new XMLParser(this.getClass().getResourceAsStream(path));
+		parser.getRoot();
+		parser.readyNodeList("param");
+				
+		// Get content
 		String key, value;
-		for(int i = 0; i < params.getLength(); ++ i) {
-			
-			n = params.item(i);
-			key = n.getAttributes().getNamedItem("key").getTextContent();
-			value = n.getAttributes().getNamedItem("value").getTextContent();
-			
+		while(parser.getNextParam()) {
+					
+			key = parser.getTextContent("key");
+			value = parser.getTextContent("value");
+					
 			// Add parameter
 			setParameter(key, value);
 		}
 		
-		// Close file readers etc
-		input.close();
+		// Close
+		parser.close();
 	}
 	
 	

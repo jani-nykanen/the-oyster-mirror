@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <param key="window_width" value="800"/>
-    <param key="window_height" value="450"/>
+    <param key="window_height" value="600"/>
     <param key="window_caption" value="Game"/>
     <param key="full_screen" value="0" />
     <param key="frame_rate" value="30" />
