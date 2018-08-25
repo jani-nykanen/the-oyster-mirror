@@ -5,3 +5,5 @@ git add README.md
 git add .classpath
 git add .project
 git add res
+git add dev
+
