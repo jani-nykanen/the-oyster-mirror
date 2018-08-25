@@ -4,7 +4,6 @@ import application.Gamepad;
 import application.Scene;
 import core.State;
 import core.renderer.Bitmap;
-import core.renderer.Flip;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
 import core.types.Vector2;
@@ -21,14 +20,9 @@ public class GameField extends Scene {
 	/** Scene name */
 	public String name = "game";
 	
-	/** Test bitmap */
-	private Bitmap bmpTest;
 	/** Test font */
 	private Bitmap bmpFont;
-	
-	/** Test timer */
-	private float timer = 0.0f;
-	
+
 	/** Test position */
 	private Vector2 testPos = new Vector2(400,360);
 	
@@ -40,7 +34,6 @@ public class GameField extends Scene {
 	public void init(AssetPack assets) throws Exception {
 		
 		// Load test bitmap
-		bmpTest = assets.getBitmap("test");
 		bmpFont = assets.getBitmap("font");
 		
 		// Initialzie components
@@ -53,12 +46,8 @@ public class GameField extends Scene {
 	@Override
 	public void update(Gamepad vpad, float tm) {
 		
-		final float TIMER_SPEED = 0.05f;
 		final float MOVE_TIMER = 12.0f;
-		
-		// Update timer
-		timer += TIMER_SPEED * tm;
-		
+
 		// Update test position
 		Vector2 stick = vpad.getStick();
 		testPos.x += stick.x * MOVE_TIMER * tm;

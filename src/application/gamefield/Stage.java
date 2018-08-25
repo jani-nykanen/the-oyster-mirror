@@ -18,6 +18,10 @@ public class Stage {
 	/** An assumed tile size */
 	static final int TILE_SIZE = 128;
 	
+	static final boolean[] SOLID_TILES = new boolean[] {
+		true,false,true,true,false,false,true	
+	};
+	
 	
 	/** Stage map */
 	private Tilemap map;
@@ -40,6 +44,21 @@ public class Stage {
 	
 	/** Lava phase */
 	private float lavaPhase = 0.0f;
+	
+	
+	/**
+	 * Is the tile in (X,Y) solid
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @return True or false
+	 */
+	private boolean isSolid(int x, int y) {
+		
+		int t = getTile(x, y);
+		if(t <= 0 || t-1 >= SOLID_TILES.length) return false;
+		
+		return SOLID_TILES[t-1];
+	}
 	
 	
 	/**
@@ -179,43 +198,43 @@ public class Stage {
 		float dy = y * sh;
 		
 		// Right
-		if(getTile(x+1,y) == 0) {
+		if(!isSolid(x+1,y)) {
 			
 			g.fillRect(dx + sw-bsize, dy, bsize, sh);
 		}
 		// Left
-		if(getTile(x-1,y) == 0) {
+		if(!isSolid(x-1,y)) {
 			
 			g.fillRect(dx, dy, bsize, sh);
 		}
 		// Bottom
-		if(getTile(x,y+1) == 0) {
+		if(!isSolid(x,y+1)) {
 					
 			g.fillRect(dx , dy + sh-bsize, sw, bsize);
 		}
 		// Up
-		if(getTile(x,y-1) == 0) {
+		if(!isSolid(x,y-1)) {
 					
 			g.fillRect(dx , dy, sw, bsize);
 		}
 		
 		// Bottom-right
-		if(getTile(x+1,y+1) == 0) {
+		if(!isSolid(x+1,y+1)) {
 			
 			g.fillRect(dx + sw-bsize, dy + sh-bsize, bsize, bsize);
 		}
 		// Bottom-left
-		if(getTile(x-1,y+1) == 0) {
+		if(!isSolid(x-1,y+1)) {
 			
 			g.fillRect(dx, dy + sh-bsize, bsize, bsize);
 		}
 		// Top-right
-		if(getTile(x+1,y-1) == 0) {
+		if(!isSolid(x+1,y-1)) {
 			
 			g.fillRect(dx + sw-bsize, dy, bsize, bsize);
 		}
 		// Top-left
-		if(getTile(x-1,y-1) == 0) {
+		if(!isSolid(x-1,y-1) ) {
 			
 			g.fillRect(dx, dy, bsize, bsize);
 		}	
@@ -230,7 +249,6 @@ public class Stage {
 	 */
 	private void drawFloor(Graphics g, int x, int y) {
 		
-		g.setColor();
 		g.drawScaledBitmapRegion(bmpStatic, 0, 128, 128, 128, 
 				x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE, Flip.NONE);
 	}
@@ -272,14 +290,19 @@ public class Stage {
 	 */
 	private void drawTile(Graphics g, int tile, int x, int y) {
 		
+		final float LOCK_BORDER_WIDTH = 8.0f;
+		
+		float dx = x * TILE_SIZE;
+		float dy = y * TILE_SIZE;
+		
+		g.setColor();
 		switch(tile) {
 
 		// Wall
 		case 1:
 			
 			// Draw background white
-			g.setColor();
-			g.fillRect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+			g.fillRect(dx, dy, TILE_SIZE, TILE_SIZE);
 			
 			// Draw borders
 			drawConnectedTile(g, x, y, 1, TILE_SIZE, TILE_SIZE);
@@ -290,9 +313,45 @@ public class Stage {
 		case 3:
 			drawLava(g, x, y, lavaPhase);
 			break;
-		
+			
+		// Lock
+		case 4:
+			
+			// Tile background
+			g.drawScaledBitmapRegion(bmpStatic, 256, 128, 128, 128, 
+					dx, dy, TILE_SIZE, TILE_SIZE, Flip.NONE);
+			
+			// Borders
+			g.setColor(0.25f,0.10f,0.0f);
+			drawBorders(g, x, y, TILE_SIZE, TILE_SIZE, LOCK_BORDER_WIDTH);
+			
+			break;
+			
+		// Purple wall, not active
+		case 6:
+			
+			
+			g.drawScaledBitmapRegion(bmpStatic, 128, 128, 128, 128, 
+					dx, dy, TILE_SIZE, TILE_SIZE, Flip.NONE);
+			break;
+			
+		// Purple wall, active
+		case 7:
+			
+			// Draw background
+			g.drawScaledBitmapRegion(bmpStatic, 288, 32, 64, 64, 
+					dx, dy, TILE_SIZE, TILE_SIZE, Flip.NONE);
+
+			// Draw borders
+			g.setSourceTranslation(256, 0);
+			drawConnectedTile(g, x, y, 7, TILE_SIZE, TILE_SIZE);
+			g.setSourceTranslation(0, 0);
+
+			break;
+			
 		// Floor
 		default:
+			
 			drawFloor(g, x, y);
 			break;
 		}
@@ -335,7 +394,7 @@ public class Stage {
 		for(int i = 0; i < width*height; ++ i) {
 			
 			tile = map.getTileValue(0, i % width, i / width);
-			if(tile == 1 || tile == 3)
+			if(tile == 1 || tile == 3 || tile == 4 || tile == 6 || tile == 7)
 				tileData[i] = tile;
 			else
 				tileData[i] = 0;

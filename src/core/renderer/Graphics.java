@@ -1,5 +1,6 @@
 package core.renderer;
 
+import core.types.Point;
 import core.types.Vector2;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -27,6 +28,8 @@ public final class Graphics {
 	/** Rectangle mesh */
 	private Mesh2D meshRect;
 	
+	/** Source translation */
+	private Point sourceTranslation;
 	
 	/**
 	 * Initialize graphics
@@ -40,6 +43,7 @@ public final class Graphics {
 		// Create components
 		transf = new Transformations();
 		transf.bindShader(shaderDefault);
+		sourceTranslation = new Point();
 		
 		// Create "white texture" used for rendering
 		// rectangles
@@ -151,6 +155,10 @@ public final class Graphics {
 	        dh *= -1;
 	    }
 	    
+	    // Translate source
+	    sx += sourceTranslation.x;
+	    sy += sourceTranslation.y;
+	    
 	    float deltaX = DELTA_JUMP / bmp.getWidth() * (sw / (float)bmp.getWidth());
 	    float deltaY = DELTA_JUMP / bmp.getHeight() * (sh / (float)bmp.getHeight());
 	    
@@ -237,6 +245,9 @@ public final class Graphics {
 	    float x = dx;
 	    float y = dy;
 	    char c;
+	    
+	    // No source translation here!
+	    setSourceTranslation(0, 0);
 	    
 	    int sx, sy;
 	    
@@ -339,5 +350,17 @@ public final class Graphics {
 		
 		glViewport(0,0,w,h);
 		transf.updateFrameBufferSize(w, h);
+	}
+	
+	
+	/**
+	 * Set source translation for bitmap rendering
+	 * @param x X
+	 * @param y Y
+	 */
+	public void setSourceTranslation(int x, int y) {
+		
+		sourceTranslation.x = x;
+		sourceTranslation.y = y;
 	}
 }
