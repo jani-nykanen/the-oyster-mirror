@@ -3,6 +3,7 @@ package core;
 import java.util.ArrayList;
 import java.util.List;
 
+import core.utility.StringPair;
 import core.utility.XMLParser;
 
 
@@ -13,26 +14,6 @@ import core.utility.XMLParser;
  */
 public class Configuration implements Cloneable {
 
-	/**
-	 * A key-value pair, both in string format
-	 */
-	private class StringPair {
-		
-		public String key;
-		public String value;
-		
-
-		/**
-		 * Constructor
-		 * @param a Key
-		 * @param b Value
-		 */
-		public StringPair(String a, String b) {
-			
-			key = a;
-			value = b;
-		}
-	}
 	
 	/** Configuration parameters and their values */
 	private List<StringPair> parameters;
@@ -47,7 +28,7 @@ public class Configuration implements Cloneable {
 		
 		for(StringPair p : parameters) {
 			
-			if(p.key.equals(key)) {
+			if(p.getKey().equals(key)) {
 				
 				return p;
 			}
@@ -92,7 +73,7 @@ public class Configuration implements Cloneable {
 		if(p != null) {
 			
 			// If so, just change the value
-			p.value = value;
+			p.setValue(value);
 		}
 		else {
 		
@@ -115,7 +96,7 @@ public class Configuration implements Cloneable {
 			return def;
 		
 		else
-			return p.value;
+			return p.getValue();
 	}
 	
 	
@@ -172,7 +153,7 @@ public class Configuration implements Cloneable {
 		Configuration c = new Configuration();
 		for(StringPair p : parameters) {
 			
-			c.setParameter(p.key, p.value);
+			c.setParameter(p.getKey(), p.getValue());
 		}
 		return c;
 	}

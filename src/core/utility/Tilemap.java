@@ -17,11 +17,11 @@ public class Tilemap {
 	private int width;
 	/** Height */
 	private int height;
-	/** Name */
-	private String name;
 	
 	/** Layers */
 	private List<int[]> data;
+	/** Properties */
+	private List<StringPair> properties;
 	
 	
 	/**
@@ -40,12 +40,8 @@ public class Tilemap {
 			name = parser.getTextContent(n, "name");
 			value = parser.getTextContent(n, "value");
 			
-			// If "name"
-			if(name.equals("name")) {
-				
-				// Set name
-				this.name = value;
-			}
+			properties.add(new StringPair(name, value));
+
 		}
 	}
 	
@@ -60,7 +56,8 @@ public class Tilemap {
 		
 		// Initialize
 		data = new ArrayList<int[]> ();
-		
+		properties = new ArrayList<StringPair> ();
+ 		
 		// Open file
 		XMLParser parser = new XMLParser(path);
 		parser.readyRoot();
@@ -113,15 +110,24 @@ public class Tilemap {
 		return height;
 	}
 	
+
 	
 	/**
-	 * Get name
-	 * @return Name
+	 * Get a property value
+	 * @param key Key
+	 * @return Value, or null, if key does not exist
 	 */
-	public String getName() {
+	public String getProperty(String key) {
 		
-		return name;
+		for(StringPair p : properties) {
+			
+			if(p.getKey().equals(key))
+				return p.getValue();
+		}
+		
+		return null;
 	}
+	
 	
 	/**
 	 * Get a tile value in the given layer in the 

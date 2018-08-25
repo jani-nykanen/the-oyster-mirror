@@ -35,6 +35,11 @@ public class Stage {
 	
 	/** Static tile bitmap */
 	private Bitmap bmpStatic;
+	/** Lava bitmap */
+	private Bitmap bmpLava;
+	
+	/** Lava phase */
+	private float lavaPhase = 0.0f;
 	
 	
 	/**
@@ -55,107 +60,165 @@ public class Stage {
 	
 	/**
 	 * Draw a piece of wall
-	 * TODO: This is so very ugly...
+	 * TODO: Missing things, do it! (...what?)
 	 * @param g Graphics object
 	 * @param x X coordinate in tiles
 	 * @param y Y coordinate in tiles
+	 * @param value Value where to compare
+	 * @param sw Tile width
+	 * @param th Tile height
 	 */
-	private void drawWall(Graphics g, int x, int y) {
+	private void drawConnectedTile(Graphics g, int x, int y, int value, int sw, int sh) {
 		
-		float dx = x * TILE_SIZE;
-		float dy = y * TILE_SIZE;
-		
-		// Draw background white
-		g.setColor();
-		g.fillRect(dx, dy, TILE_SIZE, TILE_SIZE);
+		float dx = x * sw;
+		float dy = y * sh;
 		
 		// Bottom-right corner
-		if(getTile(x,y+1) != 1 && getTile(x+1,y) != 1) {
+		if(getTile(x,y+1) != value && getTile(x+1,y) != value) {
 					
-			g.drawBitmapRegion(bmpStatic, 64, 64, 64, 64, dx+64, dy+64, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, sw / 2, sh / 2, sw / 2, sh / 2, dx+sw/2, dy+sh/2, Flip.NONE);
 		}
-		else if(getTile(x+1,y) == 1 && getTile(x,y+1) != 1) {
+		else if(getTile(x+1,y) == value && getTile(x,y+1) != value) {
 			
-			g.drawBitmapRegion(bmpStatic, 32, 64, 64, 64, dx+64, dy+64, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, sw / 4, sw / 2, sw / 2, sh/2, dx+sw/2, dy+sh/2, Flip.NONE);
 		}
-		else if(getTile(x,y+1) == 1 && getTile(x+1,y) != 1) {
+		else if(getTile(x,y+1) == value && getTile(x+1,y) != value) {
 			
-			g.drawBitmapRegion(bmpStatic, 64, 32, 64, 64, dx+64, dy+64, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, sw / 2, sh / 4, sw / 2, sh / 2, dx+sw/2, dy+sh/2, Flip.NONE);
 		}
 		
 		
 		
 		// Bottom-left
-		if(getTile(x,y+1) != 1 && getTile(x-1,y) != 1) {
+		if(getTile(x,y+1) != value && getTile(x-1,y) != value) {
 			
-			g.drawBitmapRegion(bmpStatic, 0, 64, 64, 64, dx, dy+64, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, 0, sh / 2, sw / 2, sh / 2, dx, dy+sh/2, Flip.NONE);
 		}
-		else if(getTile(x-1,y) == 1 && getTile(x,y+1) != 1) {
+		else if(getTile(x-1,y) == value && getTile(x,y+1) != value) {
 			
-			g.drawBitmapRegion(bmpStatic, 32, 64, 64, 64, dx, dy+64, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, sw / 4, sh / 2, sw / 2, sh / 2, dx, dy+sh/2, Flip.NONE);
 		}
-		else if(getTile(x,y+1) == 1 && getTile(x-1,y) != 1) {
+		else if(getTile(x,y+1) == value && getTile(x-1,y) != value) {
 			
-			g.drawBitmapRegion(bmpStatic, 0, 32, 64, 64, dx, dy+64, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, 0, sh / 4, sw / 2, sh / 2, dx, dy+sh/2, Flip.NONE);
 		}
 		
 		
 		// Upper-right
-		if(getTile(x,y-1) != 1 && getTile(x+1,y) != 1) {
+		if(getTile(x,y-1) != value && getTile(x+1,y) != value) {
 					
-			g.drawBitmapRegion(bmpStatic, 64, 0, 64, 64, dx+64, dy, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, sw / 2, 0, sw / 2, sh / 2, dx+sw/2, dy, Flip.NONE);
 		}
-		else if(getTile(x+1,y) == 1 && getTile(x,y-1) != 1) {
+		else if(getTile(x+1,y) == value && getTile(x,y-1) != value) {
 			
-			g.drawBitmapRegion(bmpStatic, 32, 0, 64, 64, dx+64, dy, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, sw / 4, 0, sw / 2, sh / 2, dx+sw/2, dy, Flip.NONE);
 		}
-		else if(getTile(x,y-1) == 1 && getTile(x+1,y) != 1) {
+		else if(getTile(x,y-1) == value && getTile(x+1,y) != value) {
 			
-			g.drawBitmapRegion(bmpStatic, 64, 32, 64, 64, dx+64, dy, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, sw / 2, sh / 4, sw / 2, sh / 2, dx+sw/2, dy, Flip.NONE);
 		}
 		
 		
 		// Upper-left
-		if(getTile(x,y-1) != 1 && getTile(x-1,y) != 1) {
+		if(getTile(x,y-1) != value && getTile(x-1,y) != value) {
 							
-			g.drawBitmapRegion(bmpStatic, 0, 0, 64, 64, dx, dy, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, 0, 0, sw / 2, sh / 2, dx, dy, Flip.NONE);
 		}
-		else if(getTile(x-1,y) == 1 && getTile(x,y-1) != 1) {
+		else if(getTile(x-1,y) == value && getTile(x,y-1) != value) {
 			
-			g.drawBitmapRegion(bmpStatic, 32, 0, 64, 64, dx, dy, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, sw / 4, 0, sw / 2, sh / 2, dx, dy, Flip.NONE);
 		}
-		else if(getTile(x,y-1) == 1 && getTile(x-1,y) != 1) {
+		else if(getTile(x,y-1) == value && getTile(x-1,y) != value) {
 			
-			g.drawBitmapRegion(bmpStatic, 0, 32, 64, 64, dx, dy, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, 0, sh / 4, sw / 2, sh / 2, dx, dy, Flip.NONE);
 		}
 		
 		
 		
 		// Bottom-right corner empty, but tiles close to it not
-		if(getTile(x,y+1) == 1 && getTile(x+1,y) == 1
-		&& getTile(x+1,y+1) != 1) {
+		if(getTile(x,y+1) == value && getTile(x+1,y) == value
+		&& getTile(x+1,y+1) != value) {
 							
-			g.drawBitmapRegion(bmpStatic, 128+ 64, 64, 64, 64, dx+64, dy+64, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, sw + sw/2, sh / 2, sw / 2, sh / 2, dx+sw/2, dy+sh/2, Flip.NONE);
 		}
 		// Bottom-left corner empty ...
-		if(getTile(x,y+1) == 1 && getTile(x-1,y) == 1
-		&& getTile(x-1,y+1) != 1) {
+		if(getTile(x,y+1) == value && getTile(x-1,y) == value
+		&& getTile(x-1,y+1) != value) {
 									
-			g.drawBitmapRegion(bmpStatic, 128, 64, 64, 64, dx, dy+64, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, sw, sh  / 2, sw / 2, sh / 2, dx, dy+sh/2, Flip.NONE);
 		}
 		// Upper-right ...
-		if(getTile(x,y-1) == 1 && getTile(x+1,y) == 1
-		&& getTile(x+1,y-1) != 1) {
+		if(getTile(x,y-1) == value && getTile(x+1,y) == value
+		&& getTile(x+1,y-1) != value) {
 							
-			g.drawBitmapRegion(bmpStatic, 128+ 64, 0, 64, 64, dx+64, dy, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, sw + sw/2, 0, sw / 2, sh / 2, dx+sw/2, dy, Flip.NONE);
 		}
 		// Upper-left ...
-		if(getTile(x,y-1) == 1 && getTile(x-1,y) == 1
-		&& getTile(x-1,y-1) != 1) {
+		if(getTile(x,y-1) == value && getTile(x-1,y) == value
+		&& getTile(x-1,y-1) != value) {
 									
-			g.drawBitmapRegion(bmpStatic, 128, 0, 64, 64, dx, dy, Flip.NONE);
+			g.drawBitmapRegion(bmpStatic, sw, 0, sw / 2, sh / 2, dx, dy, Flip.NONE);
+		}
+	}
+	
+	
+	
+	/**
+	 * Draw borders
+	 * Draw lava tile
+	 * @param g Graphics object
+	 * @param x X coordinate in tiles
+	 * @param y Y coordinate in tiles
+	 * @param sw Tile width
+	 * @param th Tile height
+	 * @param bsize Border size
+	 */
+	private void drawBorders(Graphics g, int x, int y, int sw, int sh, float bsize) {
+		
+		float dx = x * sw;
+		float dy = y * sh;
+		
+		// Right
+		if(getTile(x+1,y) == 0) {
+			
+			g.fillRect(dx + sw-bsize, dy, bsize, sh);
+		}
+		// Left
+		if(getTile(x-1,y) == 0) {
+			
+			g.fillRect(dx, dy, bsize, sh);
+		}
+		// Bottom
+		if(getTile(x,y+1) == 0) {
+					
+			g.fillRect(dx , dy + sh-bsize, sw, bsize);
+		}
+		// Up
+		if(getTile(x,y-1) == 0) {
+					
+			g.fillRect(dx , dy, sw, bsize);
 		}
 		
+		// Bottom-right
+		if(getTile(x+1,y+1) == 0) {
+			
+			g.fillRect(dx + sw-bsize, dy + sh-bsize, bsize, bsize);
+		}
+		// Bottom-left
+		if(getTile(x-1,y+1) == 0) {
+			
+			g.fillRect(dx, dy + sh-bsize, bsize, bsize);
+		}
+		// Top-right
+		if(getTile(x+1,y-1) == 0) {
+			
+			g.fillRect(dx + sw-bsize, dy, bsize, bsize);
+		}
+		// Top-left
+		if(getTile(x-1,y-1) == 0) {
+			
+			g.fillRect(dx, dy, bsize, bsize);
+		}	
 	}
 	
 	
@@ -167,9 +230,38 @@ public class Stage {
 	 */
 	private void drawFloor(Graphics g, int x, int y) {
 		
-		g.setColor(0.75f,0.75f,0.75f);
-		g.fillRect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+		g.setColor();
+		g.drawScaledBitmapRegion(bmpStatic, 0, 128, 128, 128, 
+				x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE, Flip.NONE);
 	}
+	
+	
+	/**
+	 * Draw lava tile
+	 * @param g Graphics object
+	 * @param x X coordinate in tiles
+	 * @param y Y coordinate in tiles
+	 * @param phase Movement phase
+	 */
+	private void drawLava(Graphics g, int x, int y, float phase) {
+		
+		final float COLOR_MOD = 0.125f;
+		final float BORDER_WIDTH = 8.0f;
+		
+		// Draw lava tile
+		int tw = (int) (phase * (bmpLava.getWidth() / 2.0f));
+		int th = (int) ( (1.0f-phase) * (bmpLava.getHeight() / 2.0f));
+		float color = 1.0f + COLOR_MOD * (float)Math.sin(phase * Math.PI * 2.0f);
+
+		g.setColor(color, color, color);
+		g.drawScaledBitmapRegion(bmpLava, tw, th, 128, 128, 
+				x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE, Flip.NONE);
+		
+		// Draw borders
+		g.setColor(0.40f,0.0f,0.0f);
+		drawBorders(g, x, y, TILE_SIZE, TILE_SIZE, BORDER_WIDTH);
+	}
+	
 	
 	/**
 	 * Draw a single tile
@@ -184,7 +276,19 @@ public class Stage {
 
 		// Wall
 		case 1:
-			drawWall(g, x, y);
+			
+			// Draw background white
+			g.setColor();
+			g.fillRect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+			
+			// Draw borders
+			drawConnectedTile(g, x, y, 1, TILE_SIZE, TILE_SIZE);
+			
+			break;
+			
+		// Lava
+		case 3:
+			drawLava(g, x, y, lavaPhase);
 			break;
 		
 		// Floor
@@ -203,6 +307,7 @@ public class Stage {
 	
 		// Get assets
 		bmpStatic = assets.getBitmap("static");
+		bmpLava = assets.getBitmap("lava");
 	}
 	
 	
@@ -224,7 +329,17 @@ public class Stage {
 		height = map.getHeight();
 		
 		// Copy bottom layer to tile data
-		tileData = map.copyLayer(0);
+		// (note: copy only static data)
+		tileData = new int[width*height];
+		int tile = 0;
+		for(int i = 0; i < width*height; ++ i) {
+			
+			tile = map.getTileValue(0, i % width, i / width);
+			if(tile == 1 || tile == 3)
+				tileData[i] = tile;
+			else
+				tileData[i] = 0;
+		}
 	}
 	
 	
@@ -234,7 +349,12 @@ public class Stage {
 	 */
 	public void update(float tm) {
 		
-		// ...
+		final float LAVA_SPEED = 0.005f;
+		
+		// Update lava
+		lavaPhase += LAVA_SPEED * tm;
+		if(lavaPhase >= 1.0f)
+			lavaPhase -= 1.0f;
 	}
 	
 	

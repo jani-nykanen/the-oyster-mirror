@@ -2,5 +2,5 @@
 <assets bitmap_path="assets/bitmaps/" tilemap_path="assets/tilemaps/">
     <bitmap name="font" path="font.png" />
     <bitmap name="static" path="static.png" />
-   
+   	<bitmap name="lava" path="lava.png" />
 </assets>

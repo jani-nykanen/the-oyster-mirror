@@ -132,6 +132,8 @@ public final class Graphics {
 	public void drawScaledBitmapRegion(Bitmap bmp, int sx, int sy, int sw, int sh,
 			float dx, float dy, float dw, float dh, int flip) {
 		
+		final float DELTA_JUMP = 2.0f;
+		
 		// Bind bitmap
 		bmp.bind();
 		
@@ -149,8 +151,8 @@ public final class Graphics {
 	        dh *= -1;
 	    }
 	    
-	    float deltaX = 1.0f / bmp.getWidth();
-	    float deltaY = 1.0f / bmp.getHeight();
+	    float deltaX = DELTA_JUMP / bmp.getWidth() * (sw / (float)bmp.getWidth());
+	    float deltaY = DELTA_JUMP / bmp.getHeight() * (sh / (float)bmp.getHeight());
 	    
 	    // Pass size data to the shader
 	    shaderDefault.setVertexUniforms(new Vector2(dx, dy), new Vector2(dw, dh));
