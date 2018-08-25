@@ -32,6 +32,9 @@ public class GameField extends Scene {
 	/** Test position */
 	private Vector2 testPos = new Vector2(400,360);
 	
+	/** Stage manager */
+	private Stage stage;
+	
 	
 	@Override
 	public void init(AssetPack assets) throws Exception {
@@ -39,6 +42,10 @@ public class GameField extends Scene {
 		// Load test bitmap
 		bmpTest = assets.getBitmap("test");
 		bmpFont = assets.getBitmap("font");
+		
+		// Initialzie components
+		stage = new Stage(assets);
+		stage.loadMap(1);
 
 	}
 	
@@ -63,6 +70,9 @@ public class GameField extends Scene {
 			System.out.println("Beep!");
 		}
 		
+		// Update components
+		stage.update(tm);
+		
 	}
 	
 
@@ -70,41 +80,22 @@ public class GameField extends Scene {
 	public void draw(Graphics g) {
 		
 		// Clear screen
-		g.clearScreen(0.67f, 0.67f, 0.67f);
+		g.clearScreen(1,1,1);
 		
 		// Set transformations
-		float s1 = (float)Math.sin(timer);
-		float s2 = (float)Math.sin(timer/2.0f);
 		Transformations tr = g.transform();
+
+		// Draw stage
+		stage.setTransform(g);
+		stage.draw(g);
+		
+		// Hello world!
 		tr.fitViewHeight(720.0f);
 		tr.identity();
-		
-		g.setColor();
-		g.drawBitmap(bmpTest, 32, 32, Flip.VERTICAL);
-		
-		tr.push();
-		tr.translate(320.0f + (1.0f+s1)*128.0f, 240.0f);
-		tr.rotate(timer);
-		tr.scale(2.0f+s2,2.0f+s2);
-		tr.translate(-64, -64);
-		
 		tr.use();
-		
-		g.setColor(0.0f, 1.0f, 0.0f, 0.67f);
-		g.drawScaledBitmap(bmpTest, 0, 0, 128, 128, Flip.NONE);
-		
-		tr.pop();
-		
-		g.setColor(1,0,1);
-		g.drawBitmapRegion(bmpTest,16,16,128,64, 256, 32, Flip.BOTH);
-	
-		g.setColor(0.5f, 0, 1.0f, 0.67f);
-		g.fillRect(testPos.x-32, testPos.y-32, 64, 64);
+		g.setColor(1,1,0);
+		g.drawText(bmpFont, "Hello world!", 8, 8, -16, 0, false, 0.75f);
 		g.setColor();
-		
-		g.drawText(bmpFont, "Hello world!", 8, 8, -16, 0, false);
-		g.drawText(bmpFont, "World, hello!", 256, 72, -16, 0, true, 0.75f);
-		
 	}
 	
 

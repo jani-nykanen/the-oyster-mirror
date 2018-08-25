@@ -167,4 +167,14 @@ public class Transformations {
 		
 		activeShader = sh;
 	}
+	
+	
+	/**
+	 * Get viewport dimensions
+	 * @return Viewport dimensions
+	 */
+	public Vector2 getViewport() {
+		
+		return viewport;
+	}
 }

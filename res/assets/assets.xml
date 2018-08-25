@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <assets bitmap_path="assets/bitmaps/" tilemap_path="assets/tilemaps/">
     <bitmap name="font" path="font.png" />
-    <bitmap name="test" path="test.png" />
-    
-    <tilemap name="test" path="test.tmx" />
+    <bitmap name="static" path="static.png" />
+   
 </assets>

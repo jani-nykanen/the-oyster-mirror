@@ -129,15 +129,44 @@ public class Tilemap {
 	 * @param layer Layer index
 	 * @param x X coordinate
 	 * @param y Y coordinate
-	 * @return Tile value, 0 if incorrect coordinate/layer
+	 * @param def "Default tile value", returned if incorrect coordinates/layer
+	 * @return Tile value, def if incorrect coordinate/layer
 	 */
-	public int getTileValue(int layer, int x, int y) {
+	public int getTileValue(int layer, int x, int y, int def) {
 	
 		if(layer < 0 || layer >= data.size() 
 		|| x < 0 || x >= width || y < 0 || y >= height)
-			return 0;
+			return def;
 		
 		return data.get(layer) [y*width+x];
+	}
+	
+	
+	/**
+	 * Get a tile value in the given layer in the 
+	 * given coordinate
+	 * @param layer Layer index
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @return Tile value, 0 if incorrect coordinate/layer
+	 */
+	public int getTileValue(int layer, int x, int y) {
+		
+		return getTileValue(layer, x, y, 0);
+	}
+	
+	
+	/**
+	 * Get a copy of a layer
+	 * @param index Layer index
+	 * @return A copy
+	 */
+	public int[] copyLayer(int index) {
+		
+		if(index < 0 || index >= data.size())
+			return data.size() > 0 ? data.get(0).clone() : null;
+			
+		return data.get(index).clone();
 	}
 	
 }

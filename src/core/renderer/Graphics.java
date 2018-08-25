@@ -149,9 +149,13 @@ public final class Graphics {
 	        dh *= -1;
 	    }
 	    
+	    float deltaX = 1.0f / bmp.getWidth();
+	    float deltaY = 1.0f / bmp.getHeight();
+	    
 	    // Pass size data to the shader
 	    shaderDefault.setVertexUniforms(new Vector2(dx, dy), new Vector2(dw, dh));
-	    shaderDefault.setUVUniforms(new Vector2(sx / w, sy / h), new Vector2(sw / w, sh / h));
+	    shaderDefault.setUVUniforms(new Vector2(sx / w + deltaX, sy / h + deltaY), 
+	    		new Vector2(sw / w - deltaX*2, sh / h- deltaY*2));
 	    meshRect.draw();
 	}
 	
