@@ -28,6 +28,8 @@ public class GameField extends Scene {
 	
 	/** Stage manager */
 	private Stage stage;
+	/** Time manager */
+	private TimeManager timeMan;
 	
 	
 	@Override
@@ -39,6 +41,7 @@ public class GameField extends Scene {
 		// Initialzie components
 		stage = new Stage(assets);
 		stage.loadMap(1);
+		timeMan = new TimeManager();
 
 	}
 	
@@ -61,6 +64,7 @@ public class GameField extends Scene {
 		
 		// Update components
 		stage.update(tm);
+		timeMan.update(tm);
 		
 	}
 	
