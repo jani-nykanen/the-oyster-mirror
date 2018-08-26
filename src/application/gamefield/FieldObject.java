@@ -5,9 +5,8 @@ import core.renderer.Graphics;
 import core.types.Point;
 import core.types.Vector2;
 
-
 /**
- * An object with at least a position
+ * A generic field object
  * @author Jani Nykänen
  *
  */
@@ -27,7 +26,7 @@ public abstract class FieldObject {
 	protected Vector2 scaleValue;
 	
 	/** Is moving */
-	private boolean moving;
+	protected boolean moving;
 	
 
 	/**
@@ -51,9 +50,9 @@ public abstract class FieldObject {
 		// Set positions & default values
 		this.pos = pos.clone();
 		target = pos.clone();
-		vpos = new Vector2();
+		vpos = new Vector2(pos.x * globalScaleValue.x, pos.y * globalScaleValue.y);
 		moving = false;
-		
+
 		// Set scale value
 		scaleValue = globalScaleValue.clone();
 	}
@@ -107,4 +106,13 @@ public abstract class FieldObject {
 	 */
 	public abstract void draw(Graphics g);
 	
+
+	/**
+	 * Get object position
+	 * @return Position
+	 */
+	public Point getPosition() {
+		
+		return pos;
+	}
 }

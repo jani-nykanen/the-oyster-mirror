@@ -51,4 +51,12 @@ public class Point implements Cloneable {
 		
 		return new Point(x, y);
 	}
+	
+	
+	@Override
+	public boolean equals(Object o) {
+		
+		Point p = (Point)o;
+		return p.x == x && p.y == y;
+	}
 }

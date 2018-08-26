@@ -3,4 +3,6 @@
     <bitmap name="font" path="font.png" />
     <bitmap name="static" path="static.png" />
    	<bitmap name="lava" path="lava.png" />
+   	<bitmap name="movable" path="movable.png" />
+   	<bitmap name="collectibles" path="collectibles.png" />
 </assets>

@@ -2,11 +2,9 @@ package application.gamefield;
 
 import application.Gamepad;
 import application.Scene;
-import core.State;
 import core.renderer.Bitmap;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
-import core.types.Vector2;
 import core.utility.AssetPack;
 
 
@@ -22,14 +20,13 @@ public class GameField extends Scene {
 	
 	/** Test font */
 	private Bitmap bmpFont;
-
-	/** Test position */
-	private Vector2 testPos = new Vector2(400,360);
 	
 	/** Stage manager */
 	private Stage stage;
 	/** Time manager */
 	private TimeManager timeMan;
+	/** Object manager */
+	private ObjectManager objMan;
 	
 	
 	@Override
@@ -38,35 +35,29 @@ public class GameField extends Scene {
 		// Load test bitmap
 		bmpFont = assets.getBitmap("font");
 		
-		// Initialize components
+		// Create stage
 		stage = new Stage(assets);
 		stage.loadMap(1);
+		// Initialize object manager
+		ObjectManager.init(assets);
+		// Create object manager & objects
+		objMan = new ObjectManager();
+		stage.createObjects(objMan);
+		
+		// Create time manager
 		timeMan = new TimeManager();
-
-		// Set initial scale value
-		FieldObject.setScaleValue(Stage.TILE_SIZE, Stage.TILE_SIZE);
 	}
 	
 
 	@Override
 	public void update(Gamepad vpad, float tm) {
 		
-		final float MOVE_TIMER = 12.0f;
-
-		// Update test position
-		Vector2 stick = vpad.getStick();
-		testPos.x += stick.x * MOVE_TIMER * tm;
-		testPos.y += stick.y * MOVE_TIMER * tm;
-		
-		// Test
-		if(vpad.getButtonByName("fire1") == State.Pressed) {
-			
-			System.out.println("Beep!");
-		}
-		
-		// Update components
+		// Update stage
 		stage.update(tm);
+		// Update time manager
 		timeMan.update(tm);
+		// Update game objects
+		objMan.update(vpad, timeMan, tm);
 		
 	}
 	
@@ -83,6 +74,9 @@ public class GameField extends Scene {
 		// Draw stage
 		stage.setTransform(g);
 		stage.draw(g);
+		
+		// Draw game objects
+		objMan.draw(g);
 		
 		// Hello world!
 		tr.fitViewHeight(720.0f);

@@ -12,7 +12,7 @@ import core.utility.AssetPack;
  * @author Jani Nykänen
  *
  */
-public class Crate extends FieldObject {
+public class Crate extends NonPlayerFieldObject {
 
 	/** A bitmap of movable object */
 	private static Bitmap bmpMovable;
@@ -53,6 +53,13 @@ public class Crate extends FieldObject {
 		g.drawScaledBitmapRegion(bmpMovable,0,0,128,128,
 				vpos.x, vpos.y, scaleValue.x, scaleValue.y, Flip.NONE);
 			
+	}
+
+
+	@Override
+	public void playerCollision(Player pl, TimeManager tman) {
+		
+		// ...
 	}
 
 }

@@ -452,4 +452,14 @@ public class Stage {
 			}
 		}
 	}
+	
+	
+	/**
+	 * Create non-static object
+	 * @param oman Object manager
+	 */
+	public void createObjects(ObjectManager oman) {
+		
+		oman.parseMap(map.copyLayer(0), width, height);
+	}
 }
