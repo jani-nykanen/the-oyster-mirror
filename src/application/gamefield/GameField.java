@@ -38,11 +38,13 @@ public class GameField extends Scene {
 		// Load test bitmap
 		bmpFont = assets.getBitmap("font");
 		
-		// Initialzie components
+		// Initialize components
 		stage = new Stage(assets);
 		stage.loadMap(1);
 		timeMan = new TimeManager();
 
+		// Set initial scale value
+		FieldObject.setScaleValue(Stage.TILE_SIZE, Stage.TILE_SIZE);
 	}
 	
 

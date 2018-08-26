@@ -16,9 +16,10 @@ import core.utility.Tilemap;
 public class Stage {
 
 	/** An assumed tile size */
-	static final int TILE_SIZE = 128;
+	static public final int TILE_SIZE = 128;
 	
-	static final boolean[] SOLID_TILES = new boolean[] {
+	/** Static solid tiles */
+	static final boolean[] STATIC_SOLID_TILES = new boolean[] {
 		true,false,true,true,false,false,true	
 	};
 	
@@ -47,17 +48,17 @@ public class Stage {
 	
 	
 	/**
-	 * Is the tile in (X,Y) solid
+	 * Is the tile in (X,Y) solid in static sense
 	 * @param x X coordinate
 	 * @param y Y coordinate
 	 * @return True or false
 	 */
-	private boolean isSolid(int x, int y) {
+	private boolean isStaticSolid(int x, int y) {
 		
 		int t = getTile(x, y);
-		if(t <= 0 || t-1 >= SOLID_TILES.length) return false;
+		if(t <= 0 || t-1 >= STATIC_SOLID_TILES.length) return false;
 		
-		return SOLID_TILES[t-1];
+		return STATIC_SOLID_TILES[t-1];
 	}
 	
 	
@@ -198,43 +199,43 @@ public class Stage {
 		float dy = y * sh;
 		
 		// Right
-		if(!isSolid(x+1,y)) {
+		if(!isStaticSolid(x+1,y)) {
 			
 			g.fillRect(dx + sw-bsize, dy, bsize, sh);
 		}
 		// Left
-		if(!isSolid(x-1,y)) {
+		if(!isStaticSolid(x-1,y)) {
 			
 			g.fillRect(dx, dy, bsize, sh);
 		}
 		// Bottom
-		if(!isSolid(x,y+1)) {
+		if(!isStaticSolid(x,y+1)) {
 					
 			g.fillRect(dx , dy + sh-bsize, sw, bsize);
 		}
 		// Up
-		if(!isSolid(x,y-1)) {
+		if(!isStaticSolid(x,y-1)) {
 					
 			g.fillRect(dx , dy, sw, bsize);
 		}
 		
 		// Bottom-right
-		if(!isSolid(x+1,y+1)) {
+		if(!isStaticSolid(x+1,y+1)) {
 			
 			g.fillRect(dx + sw-bsize, dy + sh-bsize, bsize, bsize);
 		}
 		// Bottom-left
-		if(!isSolid(x-1,y+1)) {
+		if(!isStaticSolid(x-1,y+1)) {
 			
 			g.fillRect(dx, dy + sh-bsize, bsize, bsize);
 		}
 		// Top-right
-		if(!isSolid(x+1,y-1)) {
+		if(!isStaticSolid(x+1,y-1)) {
 			
 			g.fillRect(dx + sw-bsize, dy, bsize, bsize);
 		}
 		// Top-left
-		if(!isSolid(x-1,y-1) ) {
+		if(!isStaticSolid(x-1,y-1) ) {
 			
 			g.fillRect(dx, dy, bsize, bsize);
 		}	
