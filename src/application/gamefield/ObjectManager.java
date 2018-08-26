@@ -62,6 +62,12 @@ public class ObjectManager {
 				
 				objects.add(new Key(new Point(i % w, i / w)));
 				break;
+				
+			// Gem
+			case 8:
+				
+				objects.add(new Gem(new Point(i % w, i / w)));
+				break;
 			
 				
 			default:

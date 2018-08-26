@@ -137,6 +137,7 @@ public final class Graphics {
 			float dx, float dy, float dw, float dh, int flip) {
 		
 		final float DELTA_JUMP = 2.0f;
+		final float DELTA_MAX = 1.0f;
 		
 		// Bind bitmap
 		bmp.bind();
@@ -161,6 +162,9 @@ public final class Graphics {
 	    
 	    float deltaX = DELTA_JUMP / bmp.getWidth() * (sw / (float)bmp.getWidth());
 	    float deltaY = DELTA_JUMP / bmp.getHeight() * (sh / (float)bmp.getHeight());
+	    
+	    if(deltaX > DELTA_MAX) deltaX = DELTA_MAX;
+	    if(deltaY > DELTA_MAX) deltaY = DELTA_MAX;
 	    
 	    // Pass size data to the shader
 	    shaderDefault.setVertexUniforms(new Vector2(dx, dy), new Vector2(dw, dh));
