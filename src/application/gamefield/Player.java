@@ -1,8 +1,11 @@
 package application.gamefield;
 
 import application.Gamepad;
+import core.renderer.Bitmap;
+import core.renderer.Flip;
 import core.renderer.Graphics;
 import core.types.Point;
+import core.utility.AssetPack;
 
 /**
  * Player object
@@ -11,6 +14,20 @@ import core.types.Point;
  */
 public class Player extends FieldObject {
 
+	/** Player bitmap */
+	static private Bitmap bmpPlayer;
+	
+	
+	/**
+	 * Initialize global player content
+	 * @param assets Asset pack
+	 */
+	static public void init(AssetPack assets) {
+	
+		// Get global bitmaps
+		bmpPlayer = assets.getBitmap("player");
+	}
+	
 	
 	/**
 	 * Constructor
@@ -24,15 +41,21 @@ public class Player extends FieldObject {
 
 	@Override
 	public void update(Gamepad vpad, TimeManager tman, float tm) {
-		// TODO Auto-generated method stub
 		
+		// ...
 	}
 	
 
 	@Override
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
 		
+		// Base block
+		g.drawScaledBitmapRegion(bmpPlayer, 0, 0, 128, 128,
+				vpos.x, vpos.y, scaleValue.x, scaleValue.y, Flip.NONE);
+		
+		// Eyes
+		g.drawScaledBitmapRegion(bmpPlayer, 128, 0, 128, 128,
+				vpos.x, vpos.y, scaleValue.x, scaleValue.y, Flip.NONE);
 	}
 
 }

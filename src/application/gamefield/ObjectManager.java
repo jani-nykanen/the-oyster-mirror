@@ -17,6 +17,8 @@ public class ObjectManager {
 
 	/** Non-player field objects */
 	private List<NonPlayerFieldObject> objects;
+	/** Player */
+	private Player player = null;
 	
 	
 	/**
@@ -29,6 +31,7 @@ public class ObjectManager {
 		NonPlayerFieldObject.setScaleValue(Stage.TILE_SIZE, Stage.TILE_SIZE);
 		Crate.init(assets);
 		Collectible.init(assets);
+		Player.init(assets);
 	}
 	
 	
@@ -47,32 +50,41 @@ public class ObjectManager {
 	 */
 	public void parseMap(int[] data, int w, int h) {
 
+		Point p;
+		
 		for(int i = 0; i < data.length; ++ i) {
+
+			p = new Point(i % w, i / w);
 			
 			// Crate
 			switch(data[i]) {
 			
 			case 2:
 				
-				objects.add(new Crate(new Point(i % w, i / w)));
+				objects.add(new Crate(p));
 				break;
 				
 			// Key
 			case 5:
 				
-				objects.add(new Key(new Point(i % w, i / w)));
+				objects.add(new Key(p));
 				break;
 				
 			// Gem
 			case 8:
 				
-				objects.add(new Gem(new Point(i % w, i / w)));
+				objects.add(new Gem(p));
+				break;
+				
+			// Player
+			case 17:
+				player = new Player(p);
 				break;
 				
 			// Star
 			case 18:
 				
-				objects.add(new Star(new Point(i % w, i / w)));
+				objects.add(new Star(p));
 				break;
 			
 				
@@ -100,6 +112,10 @@ public class ObjectManager {
 			// Update position
 			o.updatePosition(tman);
 		}
+	
+		// Update player
+		player.update(vpad, tman, tm);
+		player.updatePosition(tman);
 	}
 	
 	
@@ -114,5 +130,8 @@ public class ObjectManager {
 					
 			o.draw(g);
 		}
+		
+		// Draw player
+		player.draw(g);
 	}
 }
