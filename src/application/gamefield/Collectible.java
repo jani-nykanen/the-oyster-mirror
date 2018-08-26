@@ -19,13 +19,18 @@ public abstract class Collectible extends NonPlayerFieldObject {
 	
 	/** Collectible id */
 	protected int id = 0;
+	/** Animation mode 
+	 * TODO: Enumeration?
+	 */
+	protected int animationMode = 0;
 	
 	/** If exist */
 	protected boolean exist;
 	
 	/** Float timer */
-	private float floatTimer;
-	
+	private float floatTimer = 0.0f;
+	/** Shine timer */
+	private float shineTimer = 0.0f;
 	
 	/**
 	 * Initialize global content
@@ -57,12 +62,13 @@ public abstract class Collectible extends NonPlayerFieldObject {
 	public void update(Gamepad vpad, TimeManager tman, float tm) {
 
 		final float FLOAT_SPEED = 0.05f;
+		final float SHINE_SPEED = 0.025f;
 		
 		if(!exist) return;
 		
-		
-		// Update floating timer
+		// Update timers
 		floatTimer += FLOAT_SPEED * tm;
+		shineTimer += SHINE_SPEED * tm;
 	}
 	
 
@@ -70,16 +76,40 @@ public abstract class Collectible extends NonPlayerFieldObject {
 	public void draw(Graphics g) {
 
 		final float FLOAT_AMPLITUDE = 8.0f;
+		final float SCALE_FACTOR = 0.125f;
+		final float COLOR_MOD = 0.125f;
 		
 		if(!exist) return;
 		
 		
-		// Calculate "floating position"
-		float floatPos = (float)Math.sin(floatTimer) * FLOAT_AMPLITUDE;
+		// Calculate "floating position" & scaling
+		float floatPos = 0.0f;
+		float sx = 1.0f;
+		float sy = 1.0f;
+		
+		float s = (float)Math.sin(floatTimer);
+		float c = 1.0f;
+		if(animationMode == 0) {
+			
+			floatPos = s * FLOAT_AMPLITUDE;
+			c = 1.0f + (float)Math.sin(shineTimer)*COLOR_MOD;
+		}
+		else if(animationMode == 1) {
+			
+			sx = 1.0f + s * SCALE_FACTOR;
+			sy = 1.0f + s * SCALE_FACTOR;
+			c = 1.0f + s*COLOR_MOD;
+		}
+		
+		// Set shining color
+		g.setColor(c,c,c);
 		
 		// Draw
 		g.drawScaledBitmapRegion(bmpCollectibles, id*128, 0, 128, 128, 
-				vpos.x, vpos.y + floatPos, scaleValue.x, scaleValue.y, Flip.NONE);
+				vpos.x - scaleValue.x*(sx-1.0f)/2.0f, vpos.y - scaleValue.y*(sy-1.0f)/2.0f + floatPos, 
+				scaleValue.x*sx, scaleValue.y*sy, Flip.NONE);
+		
+		g.setColor();
 	}
 
 

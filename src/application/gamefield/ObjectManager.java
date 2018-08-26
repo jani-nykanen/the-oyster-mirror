@@ -68,6 +68,12 @@ public class ObjectManager {
 				
 				objects.add(new Gem(new Point(i % w, i / w)));
 				break;
+				
+			// Star
+			case 18:
+				
+				objects.add(new Star(new Point(i % w, i / w)));
+				break;
 			
 				
 			default:
