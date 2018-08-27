@@ -59,7 +59,7 @@ public abstract class Collectible extends NonPlayerFieldObject {
 	
 
 	@Override
-	public void update(Gamepad vpad, TimeManager tman, float tm) {
+	public void update(Gamepad vpad, TimeManager tman, Stage stage, float tm) {
 
 		final float FLOAT_SPEED = 0.05f;
 		final float SHINE_SPEED = 0.025f;

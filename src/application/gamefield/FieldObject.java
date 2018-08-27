@@ -76,13 +76,20 @@ public abstract class FieldObject {
 			else {
 				
 				moving = false;
+				
+				// Move to the target position
+				pos.x = target.x;
+				pos.y = target.y;
+				
+				vpos.x = (float)pos.x;
+				vpos.y = (float)pos.y;
 			}
 
 		}
 		else {
 			
-			vpos.x = (float)target.x;
-			vpos.y = (float)target.y;
+			vpos.x = (float)pos.x;
+			vpos.y = (float)pos.y;
 		}
 		
 		// Scale correctly
@@ -95,9 +102,10 @@ public abstract class FieldObject {
 	 * Update field object
 	 * @param vpad Virtual gamepad
 	 * @param tman Time manager
+	 * @param stage Stage
 	 * @param tm Time mul.
 	 */
-	public abstract void update(Gamepad vpad, TimeManager tman, float tm);
+	public abstract void update(Gamepad vpad, TimeManager tman, Stage stage, float tm);
 	
 	
 	/**

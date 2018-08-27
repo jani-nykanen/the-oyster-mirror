@@ -41,7 +41,7 @@ public class Crate extends NonPlayerFieldObject {
 
 
 	@Override
-	public void update(Gamepad vpad, TimeManager tman, float tm) {
+	public void update(Gamepad vpad, TimeManager tman, Stage stage, float tm) {
 		
 		// ...
 	}

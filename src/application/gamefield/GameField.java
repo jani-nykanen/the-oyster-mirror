@@ -57,7 +57,7 @@ public class GameField extends Scene {
 		// Update time manager
 		timeMan.update(tm);
 		// Update game objects
-		objMan.update(vpad, timeMan, tm);
+		objMan.update(vpad, timeMan, stage, tm);
 		
 	}
 	

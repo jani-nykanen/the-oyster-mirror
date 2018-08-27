@@ -60,6 +60,8 @@ public class TimeManager {
 	 */
 	public void setTimer(boolean playTurn, float time) {
 		
+		if(waiting) return;
+		
 		turnTimer = time;
 		turnLength = time;
 		waiting = true;

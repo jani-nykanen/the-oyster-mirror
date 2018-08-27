@@ -1,6 +1,9 @@
 package core;
 
 import org.lwjgl.glfw.*;
+
+import core.types.Vector2;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 import java.nio.ByteBuffer;
@@ -109,14 +112,51 @@ public abstract class EventListener {
 		// If not present, ignore
 		if(!(glfwJoystickPresent(GLFW_JOYSTICK_1))) return;
 		
-		// Get joystick axes & buttons
+		// Get joystick axes & buttons & hats
 		FloatBuffer abuf = glfwGetJoystickAxes(GLFW_JOYSTICK_1);
 		ByteBuffer bbuf = glfwGetJoystickButtons(GLFW_JOYSTICK_1);
+		ByteBuffer hbuf = glfwGetJoystickHats(GLFW_JOYSTICK_1);
 		try {
 			
 			// Send axis event request
-			if(abuf != null)
+			if(abuf != null) {
+				
+				// Get first two axes
 				eventJoyAxis(abuf.get(), abuf.get());
+			}
+			
+			// Convert hats to axis and send axis event request
+			if(hbuf != null) {
+				
+				Vector2 axis = new Vector2();
+				boolean changed = false;
+				int state = hbuf.get();
+				// TODO: Bitwise operators!
+				if(state == GLFW_HAT_UP || state == GLFW_HAT_RIGHT_UP || state == GLFW_HAT_LEFT_UP) {
+					
+					changed = true; 
+					axis.y = -1.0f; 
+				}
+				if(state == GLFW_HAT_DOWN || state == GLFW_HAT_RIGHT_DOWN  || state == GLFW_HAT_LEFT_DOWN) {
+					
+					changed = true; 
+					axis.y = 1.0f; 
+				}
+				if(state == GLFW_HAT_RIGHT || state == GLFW_HAT_RIGHT_UP || state == GLFW_HAT_RIGHT_DOWN) {
+					
+					changed = true; 
+					axis.x = 1.0f; 
+				}
+				if(state == GLFW_HAT_LEFT || state == GLFW_HAT_LEFT_UP || state == GLFW_HAT_LEFT_DOWN) {
+					
+					changed = true;  
+					axis.x = -1.0f; 
+				}
+				
+				if(changed)
+					eventJoyAxis(axis.x, axis.y);
+				
+			}
 			
 			// Send button event request
 			if(bbuf != null) {

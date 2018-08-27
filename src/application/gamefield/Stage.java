@@ -462,4 +462,24 @@ public class Stage {
 		
 		oman.parseMap(map.copyLayer(0), width, height);
 	}
+
+	
+	/**
+	 * Get width
+	 * @return Width
+	 */
+	public int getWidth() {
+		
+		return width;
+	}
+	
+	
+	/**
+	 * Get height
+	 * @return Height
+	 */
+	public int getHeight() {
+		
+		return height;
+	}
 }
