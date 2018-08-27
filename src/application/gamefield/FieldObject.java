@@ -27,6 +27,8 @@ public abstract class FieldObject {
 	
 	/** Is moving */
 	protected boolean moving;
+	/** Does exist */
+	protected boolean exist = true;
 	
 
 	/**
@@ -52,6 +54,7 @@ public abstract class FieldObject {
 		target = pos.clone();
 		vpos = new Vector2(pos.x * globalScaleValue.x, pos.y * globalScaleValue.y);
 		moving = false;
+		exist = true;
 
 		// Set scale value
 		scaleValue = globalScaleValue.clone();
@@ -62,7 +65,9 @@ public abstract class FieldObject {
 	 * Update field object position
 	 * @param tman Time manager
 	 */
-	public void updatePosition(TimeManager tman) {
+	public void updatePosition(TimeManager tman, Stage stage) {
+		
+		if(!exist) return;
 		
 		if(moving) {
 			
@@ -83,6 +88,9 @@ public abstract class FieldObject {
 				
 				vpos.x = (float)pos.x;
 				vpos.y = (float)pos.y;
+				
+				// Call "moving stopped" method
+				onMovingStopped(stage);
 			}
 
 		}
@@ -96,6 +104,13 @@ public abstract class FieldObject {
 		vpos.x *= scaleValue.x;
 		vpos.y *= scaleValue.y;
 	}
+	
+	
+	/**
+	 * Called when the moving is stopped
+	 * @param stage Stage
+	 */
+	public void onMovingStopped(Stage stage) {};
 	
 	
 	/**
@@ -122,5 +137,15 @@ public abstract class FieldObject {
 	public Point getPosition() {
 		
 		return pos;
+	}
+	
+	
+	/**
+	 * Is the object moving
+	 * @return True, if moving
+	 */
+	public boolean isMoving() {
+		
+		return moving;
 	}
 }

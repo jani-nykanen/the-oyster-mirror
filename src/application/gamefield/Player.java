@@ -4,6 +4,7 @@ import application.Gamepad;
 import core.renderer.Bitmap;
 import core.renderer.Flip;
 import core.renderer.Graphics;
+import core.types.Direction;
 import core.types.Point;
 import core.types.Vector2;
 import core.utility.AssetPack;
@@ -15,6 +16,14 @@ import core.utility.AssetPack;
  */
 public class Player extends FieldObject {
 
+	/** Maximum amount of fadings */
+	static private final int FADING_MAX = 16;
+	/** Fading generation interval */
+	static private final float FADING_INTERVAL = 6.0f;
+	/** The stick movement that is required to be recognized
+	 * as accepted input */
+	static final public float STICK_DELTA = 0.5f;
+	
 	/** Player bitmap */
 	static private Bitmap bmpPlayer;
 	
@@ -23,6 +32,11 @@ public class Player extends FieldObject {
 	
 	/** Eye position */
 	private Vector2 eyePos;
+	
+	/** Fadings */
+	private Fading[] fadings;
+	/** Fading generation timer */
+	private float fadeGenTimer = FADING_INTERVAL;
 	
 	
 	/**
@@ -43,31 +57,33 @@ public class Player extends FieldObject {
 	 * @param stage Stage
 	 */
 	private void control(Gamepad vpad, TimeManager tman, Stage stage) {
-	
-		final float STICK_DELTA = 0.5f;
-		
+
 		if(tman.isWaiting()) return;
 		
-		// Get stick
-		Vector2 stick = vpad.getStick();
+		// Check direction
 		Point t = pos.clone();
-		// Horizontal movement
-		if(stick.x > STICK_DELTA) {
-			
-			++ t.x;
-		}
-		else if(stick.x < -STICK_DELTA) {
-			
-			-- t.x;
-		}
-		// Vertical movement
-		else if(stick.y > STICK_DELTA) {
-			
+		Direction dir = vpad.getDirection();
+		switch(dir) {
+		
+		case Down:		
 			++ t.y;
-		}
-		else if(stick.y < -STICK_DELTA) {
+			break;
 			
+		case Left:
+			-- t.x;
+			break;
+			
+		case Right:
+			++ t.x;
+			break;
+			
+		case Up:
 			-- t.y;
+			break;
+			
+		default:
+			break;
+		
 		}
 		
 		boolean doMove = true;
@@ -85,7 +101,10 @@ public class Player extends FieldObject {
 		}
 		
 		// Check if a free tile
-		// ...
+		if(stage.isSolid(t.x, t.y)) {
+			
+			doMove = false;
+		}
 		
 		// If no obstacles, move
 		if(doMove) {
@@ -98,6 +117,36 @@ public class Player extends FieldObject {
 
 		}
 		
+	}
+	
+	
+	
+	/**
+	 * Generate fadings
+	 * @param tm Time mul-
+	 */
+	private void generateFadings(float tm) {
+		
+		final float FADING_TIME = 30.0f;
+		
+		if(!moving) return;
+		
+		// Update timer
+		fadeGenTimer -= 1.0f * tm;
+		if(fadeGenTimer <= 0.0f) {
+			
+			// Create a fading
+			for(Fading f : fadings) {
+				
+				if(!f.doesExist()) {
+					
+					f.create(vpos, FADING_TIME);
+					break;
+				}
+			}
+			
+			fadeGenTimer += FADING_INTERVAL;
+		}
 	}
 	
 	
@@ -117,7 +166,6 @@ public class Player extends FieldObject {
 		// If distance is high enough, move eyes
 		if(dist > MIN_DIST) {
 			
-			dist -= MIN_DIST;
 			float mod = dist / SPEED_FACTOR;
 			eyePos.x += (float)Math.cos(angle) * mod * tm;
 			eyePos.y += (float)Math.sin(angle) * mod * tm;
@@ -134,24 +182,40 @@ public class Player extends FieldObject {
 		
 		super(pos);
 		
+		// Create components
 		eyePos = new Vector2();
 		eyePos = vpos.clone();
+		fadings = new Fading[FADING_MAX];
+		for(int i = 0; i < fadings.length; ++ i) {
+			
+			fadings[i] = new Fading();
+		}
+	
 	}
 	
 
 	@Override
 	public void update(Gamepad vpad, TimeManager tman, Stage stage, float tm) {
 		
-		final float OUTLINE_TIMER_SPEED = 0.025f;
+		final float OUTLINE_TIMER_SPEED = 0.05f;
 		
 		// Update "outline factor"
 		outlineFactor += OUTLINE_TIMER_SPEED * tm;
+		
+		// Update fadings
+		for(Fading f : fadings) {
+			
+			f.update(tm);
+		}
 		
 		// Control
 		control(vpad, tman, stage);
 		
 		// Move eyes
 		moveEyes(tm);
+		
+		// Generate fadings
+		generateFadings(tm);
 	}
 	
 
@@ -161,19 +225,66 @@ public class Player extends FieldObject {
 		final float OUTLINE_OPAQUE_DELTA = 0.125f;
 		final float OUTLINE_OPAQUE_START = 0.5f + OUTLINE_OPAQUE_DELTA;
 		
+		final float OUTLINE_START = 12;
+		final float OUTLINE_DELTA = 4;
+		
+		// Draw fadings
+		for(Fading f : fadings) {
+			
+			f.draw(g, bmpPlayer, 0, 0, 128, 128, scaleValue.x, scaleValue.y);
+		}
+		
 		// Green outline
+		float s = (float)Math.sin(outlineFactor);
 		g.setColor(0.5f, 1, 0, 
-				OUTLINE_OPAQUE_START + (float)Math.sin(outlineFactor) * OUTLINE_OPAQUE_DELTA);
-		g.fillRect(vpos.x-8, vpos.y-8, scaleValue.x+16, scaleValue.y+16);
+				OUTLINE_OPAQUE_START + s * OUTLINE_OPAQUE_DELTA);
+		
+		float outline = OUTLINE_START - s * OUTLINE_DELTA;
+		g.fillRect(vpos.x-outline, vpos.y-outline, scaleValue.x+outline*2, scaleValue.y+outline*2);
 		g.setColor();
 		
 		// Base block
 		g.drawScaledBitmapRegion(bmpPlayer, 0, 0, 128, 128,
 				vpos.x, vpos.y, scaleValue.x, scaleValue.y, Flip.NONE);
 		
-		// Eyes
+		// Calculate "true" eye position
+		float eyeX = vpos.x + (vpos.x-eyePos.x);
+		float eyeY= vpos.y + (vpos.y-eyePos.y);
+		
+		// Draw eyes
 		g.drawScaledBitmapRegion(bmpPlayer, 128, 0, 128, 128,
-				eyePos.x, eyePos.y, scaleValue.x, scaleValue.y, Flip.NONE);
+				eyeX, eyeY, scaleValue.x, scaleValue.y, Flip.NONE);
 	}
 
+	
+	/**
+	 * Force movement
+	 * @param dir Direction
+	 */
+	public void forceMove(Direction dir) {
+		
+		switch(dir) {
+		
+		case Down:		
+			++ target.y;
+			break;
+			
+		case Left:
+			-- target.x;
+			break;
+			
+		case Right:
+			++ target.x;
+			break;
+			
+		case Up:
+			-- target.y;
+			break;
+			
+		default:
+			break;
+		
+		}
+		moving = true;
+	}
 }

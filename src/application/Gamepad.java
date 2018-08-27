@@ -5,6 +5,7 @@ import java.util.List;
 
 import core.InputManager;
 import core.State;
+import core.types.Direction;
 import core.types.Vector2;
 import core.utility.XMLParser;
 
@@ -20,6 +21,11 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class Gamepad {
 
+	/** The minimal movement of stick that is recognized
+	 * when determining the direction */
+	static private final float STICK_DELTA = 0.5f;
+	
+	
 	/** Gamepad button */
 	private final class Button {
 		
@@ -31,7 +37,7 @@ public class Gamepad {
 		public int button;
 		/** State */
 		public State state;
-
+		
 		
 		/**
 		 * Constructor
@@ -53,6 +59,35 @@ public class Gamepad {
 	
 	/** "Analogue" stick */
 	private Vector2 stick;
+	
+	/** Gamepad direction*/
+	private Direction dir = Direction.Up;
+	
+	
+	/**
+	 * Determine stick direction
+	 */
+	private void determineDirection() {
+		
+		dir = Direction.None;
+		if(stick.x > STICK_DELTA) {
+			
+			dir = Direction.Right;
+		}
+		else if(stick.x < -STICK_DELTA) {
+			
+			dir = Direction.Left;
+		}
+		// Vertical movement
+		else if(stick.y > STICK_DELTA) {
+			
+			dir = Direction.Down;
+		}
+		else if(stick.y < -STICK_DELTA) {
+			
+			dir = Direction.Up;
+		}
+	}
 	
 	
 	/**
@@ -163,6 +198,9 @@ public class Gamepad {
 			}
 		
 		}
+		
+		// Determine direction
+		determineDirection();
 	}
 	
 	
@@ -207,6 +245,16 @@ public class Gamepad {
 	public Vector2 getStick() {
 		
 		return stick.clone();
+	}
+	
+	
+	/**
+	 * Get stick direction
+	 * @return Direction
+	 */
+	public Direction getDirection() {
+		
+		return dir;
 	}
 	
 }

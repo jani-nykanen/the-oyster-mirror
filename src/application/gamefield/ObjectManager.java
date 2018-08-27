@@ -48,13 +48,16 @@ public class ObjectManager {
 	 * Parse a tilemap layer & create objects
 	 * @param data Data
 	 */
-	public void parseMap(int[] data, int w, int h) {
+	public void parseMap(Stage stage, int[] data, int w, int h) {
 
 		Point p;
+		int x, y;
 		
 		for(int i = 0; i < data.length; ++ i) {
 
-			p = new Point(i % w, i / w);
+			x = i % w;
+			y = i / w;
+			p = new Point(x, y);
 			
 			// Crate
 			switch(data[i]) {
@@ -62,6 +65,7 @@ public class ObjectManager {
 			case 2:
 				
 				objects.add(new Crate(p));
+				stage.updateTileData(x, y, 2);
 				break;
 				
 			// Key
@@ -108,7 +112,8 @@ public class ObjectManager {
 		for(NonPlayerFieldObject o : objects) {
 			
 			// Update position
-			o.updatePosition(tman);
+			o.updatePosition(tman, stage);
+			o.playerCollision(player, vpad, stage, tman);
 			
 			// Update base
 			o.update(vpad, tman, stage, tm);
@@ -116,7 +121,7 @@ public class ObjectManager {
 		}
 	
 		// Update player
-		player.updatePosition(tman);
+		player.updatePosition(tman, stage);
 		player.update(vpad, tman, stage, tm);
 		
 	}

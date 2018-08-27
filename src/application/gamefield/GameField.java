@@ -5,6 +5,7 @@ import application.Scene;
 import core.renderer.Bitmap;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
+import core.types.Direction;
 import core.utility.AssetPack;
 
 
@@ -27,7 +28,7 @@ public class GameField extends Scene {
 	private TimeManager timeMan;
 	/** Object manager */
 	private ObjectManager objMan;
-	
+
 	
 	@Override
 	public void init(AssetPack assets) throws Exception {

@@ -1,5 +1,6 @@
 package application.gamefield;
 
+import application.Gamepad;
 import core.types.Point;
 
 /**
@@ -23,7 +24,7 @@ public abstract class NonPlayerFieldObject extends FieldObject {
 	 * Object-to-player collision
 	 * @param pl Player
 	 */
-	public abstract void playerCollision(Player pl, TimeManager tman);
+	public abstract void playerCollision(Player pl, Gamepad vpad, Stage stage, TimeManager tman);
 
 	
 }

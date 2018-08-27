@@ -24,9 +24,6 @@ public abstract class Collectible extends NonPlayerFieldObject {
 	 */
 	protected int animationMode = 0;
 	
-	/** If exist */
-	protected boolean exist;
-	
 	/** Float timer */
 	private float floatTimer = 0.0f;
 	/** Shine timer */
@@ -114,7 +111,7 @@ public abstract class Collectible extends NonPlayerFieldObject {
 
 
 	@Override
-	public void playerCollision(Player pl, TimeManager tman) {
+	public void playerCollision(Player pl, Gamepad vpad, Stage stage, TimeManager tman) {
 		
 		if(!exist) return;
 		

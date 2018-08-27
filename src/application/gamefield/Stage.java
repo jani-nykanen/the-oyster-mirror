@@ -22,6 +22,10 @@ public class Stage {
 	static final boolean[] STATIC_SOLID_TILES = new boolean[] {
 		true,false,true,true,false,false,true	
 	};
+	/** Solid tiles */
+	static final boolean[] SOLID_TILES = new boolean[] {
+		true,true,true,true,false,false,true	
+	};
 	
 	
 	/** Stage map */
@@ -59,22 +63,6 @@ public class Stage {
 		if(t <= 0 || t-1 >= STATIC_SOLID_TILES.length) return false;
 		
 		return STATIC_SOLID_TILES[t-1];
-	}
-	
-	
-	/**
-	 * Get a tile value in the current tile data array
-	 * @param x X coordinate
-	 * @param y Y coordinate
-	 * @return Tile value
-	 */
-	private int getTile(int x, int y) {
-		
-		int index = y*width + x;
-		if(index < 0 || index >= tileData.length)
-			return 1;
-		
-		return tileData[index];
 	}
 	
 	
@@ -460,7 +448,7 @@ public class Stage {
 	 */
 	public void createObjects(ObjectManager oman) {
 		
-		oman.parseMap(map.copyLayer(0), width, height);
+		oman.parseMap(this, map.copyLayer(0), width, height);
 	}
 
 	
@@ -481,5 +469,67 @@ public class Stage {
 	public int getHeight() {
 		
 		return height;
+	}
+	
+	
+	/**
+	 * Update tile data
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param value New value
+	 */
+	public void updateTileData(int x, int y, int value) {
+		
+		if(y*width +x < 0 || y*width+x >= width*height) return;
+		
+		tileData[y*width+x] = value;
+	}
+	
+	
+	/**
+	 * Is the tile in (X,Y) solid
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @return True or false
+	 */
+	public boolean isSolid(int x, int y) {
+		
+		int t = getTile(x, y);
+		if(t <= 0 || t-1 >= SOLID_TILES.length) return false;
+		
+		return SOLID_TILES[t-1];
+	}
+	
+	
+	/**
+	 * Is the tile in (X,Y) solid (exclude lava)
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @return True or false
+	 */
+	public boolean isSolidExcludeLava(int x, int y) {
+		
+		int t = getTile(x,y);
+		if(t <= 0 || t-1 >= SOLID_TILES.length) return false;
+		
+		if(t == 3) return false;
+		
+		return SOLID_TILES[t-1];
+	}
+	
+	
+	/**
+	 * Get a tile value in the current tile data array
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @return Tile value
+	 */
+	public int getTile(int x, int y) {
+		
+		int index = y*width + x;
+		if(index < 0 || index >= tileData.length)
+			return 1;
+		
+		return tileData[index];
 	}
 }
