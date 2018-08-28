@@ -98,7 +98,7 @@ public abstract class NonPlayerFieldObject extends FieldObject {
 	 * Player interaction
 	 * @param stage Stage
 	 */
-	protected void eventPlayerInteraction(Stage stage, TimeManager tman) {};
+	protected void eventPlayerInteraction(Player pl, Stage stage, TimeManager tman) {};
 	
 	
 	/**
@@ -127,7 +127,7 @@ public abstract class NonPlayerFieldObject extends FieldObject {
 			else if(p.x > pos.x) playerDir = Direction.Left;
 
 			if(vpad.getDirection() == playerDir)
-				eventPlayerInteraction(stage, tman);
+				eventPlayerInteraction(pl, stage, tman);
 		}
 		else {
 			

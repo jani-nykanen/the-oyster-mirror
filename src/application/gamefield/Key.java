@@ -24,7 +24,7 @@ public class Key extends Collectible {
 	@Override
 	public void onPlayerCollision(Player pl,  Stage stage) {
 		
-		// ...
+		pl.addKey();
 	}
 
 }

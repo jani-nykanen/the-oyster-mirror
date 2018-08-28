@@ -38,6 +38,9 @@ public class Player extends FieldObject {
 	/** Fading generation timer */
 	private float fadeGenTimer = FADING_INTERVAL;
 	
+	/** Key count */
+	private int keys;
+	
 	
 	/**
 	 * Initialize global player content
@@ -58,7 +61,7 @@ public class Player extends FieldObject {
 	 */
 	private void control(Gamepad vpad, TimeManager tman, Stage stage) {
 
-		if(tman.isWaiting()) return;
+		if(tman.isWaiting() || tman.hasStopped()) return;
 		
 		// Check direction
 		Point t = pos.clone();
@@ -190,6 +193,9 @@ public class Player extends FieldObject {
 			
 			fadings[i] = new Fading();
 		}
+		
+		// Set values
+		keys = 0;
 	
 	}
 	
@@ -286,5 +292,48 @@ public class Player extends FieldObject {
 		
 		}
 		moving = true;
+	}
+	
+	
+	/**
+	 * Force stop
+	 */
+	public void forceStop() {
+		
+		moving = false;
+		target.x = pos.x;
+		target.y = pos.y;
+		
+		vpos.x = pos.x * scaleValue.x;
+		vpos.y = pos.y * scaleValue.y;
+	}
+	
+	
+	/**
+	 * Add a key
+	 */
+	public void addKey() {
+		
+		++ keys;
+	}
+
+	
+	/**
+	 * Get amount of keys
+	 * @return Key count
+	 */
+	public int getKeyCount() {
+		
+		return keys;
+	}
+	
+	
+	/**
+	 * Reduce a key
+	 */
+	public void reduceKey() {
+		
+		if(keys > 0)
+			-- keys;
 	}
 }

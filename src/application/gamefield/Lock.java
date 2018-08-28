@@ -41,7 +41,12 @@ public class Lock extends NonPlayerFieldObject {
 
 	
 	@Override
-	protected void eventPlayerInteraction(Stage stage, TimeManager tman) {
+	protected void eventPlayerInteraction(Player pl, Stage stage, TimeManager tman) {
+		
+		if(pl.getKeyCount() <= 0)  return;
+		
+		// Reduce key
+		pl.reduceKey();
 		
 		// Update tile data in the lock position
 		stage.updateTileData(pos.x, pos.y, 0);

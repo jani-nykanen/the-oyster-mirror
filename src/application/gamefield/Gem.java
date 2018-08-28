@@ -25,6 +25,6 @@ public class Gem extends Collectible {
 	@Override
 	public void onPlayerCollision(Player pl, Stage stage) {
 		
-		stage.togglePurpleBlocks();
+		stage.startPurpleTileFading(DEFAULT_DEATH_TIME);
 	}
 }

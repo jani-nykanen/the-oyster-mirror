@@ -61,7 +61,7 @@ public class Gamepad {
 	private Vector2 stick;
 	
 	/** Gamepad direction*/
-	private Direction dir = Direction.Up;
+	private Direction dir = Direction.None;
 	
 	
 	/**

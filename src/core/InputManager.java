@@ -20,7 +20,7 @@ public class InputManager {
 	private State[] keyStates = new State[KEY_COUNT];
 	
 	/** Joystick axis */
-	private Vector2 joyAxis;
+	private Vector2 joyAxis = new Vector2();
 	/** Joystick buttons */
 	private State[] joyStates = new State[MAX_JOY_BUTTON];
 	

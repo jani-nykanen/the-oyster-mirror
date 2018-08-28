@@ -125,15 +125,13 @@ public abstract class Collectible extends NonPlayerFieldObject {
 	public void playerCollision(Player pl, Gamepad vpad, Stage stage, TimeManager tman) {
 		
 		if(!exist) return;
-		
-		// If not waiting, check if player has the same position
-		if(!tman.isWaiting()) {
-			
-			if(pl.getPosition().equals(pos)) {
+	
+		// If the player collides, make the player stop
+		if(pl.getPosition().equals(pos)) {
 				
-				onPlayerCollision(pl, stage);
-				die(tman);
-			}
+			onPlayerCollision(pl, stage);
+			pl.forceStop();
+			die(tman);
 		}
 	}
 

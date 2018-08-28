@@ -32,7 +32,7 @@ public class Crate extends NonPlayerFieldObject {
 	
 	
 	@Override
-	protected void eventPlayerInteraction(Stage stage, TimeManager tman) {
+	protected void eventPlayerInteraction(Player pl, Stage stage, TimeManager tman) {
 	
 		// TODO: Repeating code from Player. Add
 		// universal method?

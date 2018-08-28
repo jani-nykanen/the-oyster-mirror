@@ -50,6 +50,13 @@ public class Stage {
 	/** Lava phase */
 	private float lavaPhase = 0.0f;
 	
+	/** Are purple tiles fading */
+	private boolean purpleFading;
+	/** Purple tile fading timer */
+	private float purpleFadingTimer;
+	/** Purple tile fading initial time */
+	private float purpleInitialTime;
+	
 	
 	/**
 	 * Is the tile in (X,Y) solid in static sense
@@ -284,6 +291,13 @@ public class Stage {
 		float dx = x * TILE_SIZE;
 		float dy = y * TILE_SIZE;
 		
+		// Calculate purple tile alpha
+		float purpleAlpha = 1.0f;
+		if(purpleFading) {
+			
+			purpleAlpha = purpleFadingTimer / purpleInitialTime;
+		}
+		
 		g.setColor();
 		switch(tile) {
 
@@ -319,14 +333,40 @@ public class Stage {
 		// Purple wall, deactive
 		case 6:
 			
-			
+			// Draw base floor tile
 			g.drawScaledBitmapRegion(bmpStatic, 128, 128, 128, 128, 
 					dx, dy, TILE_SIZE, TILE_SIZE, Flip.NONE);
+			
+			// If purple fading, fade in the replacing tile
+			if(purpleFading) {
+				
+				g.setColor(1, 1, 1, purpleAlpha);
+				
+				// Draw background
+				g.drawScaledBitmapRegion(bmpStatic, 288, 32, 64, 64, 
+						dx, dy, TILE_SIZE, TILE_SIZE, Flip.NONE);
+
+				// Draw borders
+				g.setSourceTranslation(256, 0);
+				drawConnectedTile(g, x, y, 6, TILE_SIZE, TILE_SIZE);
+				g.setSourceTranslation(0, 0);
+			}
+			
+			
 			break;
 			
 		// Purple wall, active
 		case 7:
 			
+			// If purple fading, draw the replacing tile
+			if(purpleFading) {
+				
+				g.drawScaledBitmapRegion(bmpStatic, 128, 128, 128, 128, 
+						dx, dy, TILE_SIZE, TILE_SIZE, Flip.NONE);
+				
+				g.setColor(1, 1, 1, 1.0f - purpleAlpha);
+			}
+
 			// Draw background
 			g.drawScaledBitmapRegion(bmpStatic, 288, 32, 64, 64, 
 					dx, dy, TILE_SIZE, TILE_SIZE, Flip.NONE);
@@ -344,6 +384,8 @@ public class Stage {
 			drawFloor(g, x, y);
 			break;
 		}
+		
+		g.setColor();
 	}
 	
 	
@@ -403,6 +445,16 @@ public class Stage {
 		lavaPhase += LAVA_SPEED * tm;
 		if(lavaPhase >= 1.0f)
 			lavaPhase -= 1.0f;
+	
+		// Update purple tile fading
+		if(purpleFading) {
+			
+			purpleFadingTimer -= 1.0f * tm;
+			if(purpleFadingTimer <= 0.0f) {
+				
+				purpleFading = false;
+			}
+		}
 	}
 	
 	
@@ -572,5 +624,19 @@ public class Stage {
 			else if(tileID == 7)
 				updateTileData(i, 6);
 		}
+	}
+	
+	
+	/**
+	 * Start purple fading
+	 * @param time Time
+	 */
+	public void startPurpleTileFading(float time) {
+		
+		purpleFading = true;
+		purpleFadingTimer = time;
+		purpleInitialTime = time;
+		
+		togglePurpleBlocks();
 	}
 }
