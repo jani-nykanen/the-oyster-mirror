@@ -23,8 +23,8 @@ public class Gem extends Collectible {
 
 	
 	@Override
-	public void onPlayerCollision(Player pl) {
+	public void onPlayerCollision(Player pl, Stage stage) {
 		
-		// ...
+		stage.togglePurpleBlocks();
 	}
 }

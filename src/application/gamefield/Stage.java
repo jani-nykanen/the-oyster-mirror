@@ -316,7 +316,7 @@ public class Stage {
 			
 			break;
 			
-		// Purple wall, not active
+		// Purple wall, deactive
 		case 6:
 			
 			
@@ -480,11 +480,21 @@ public class Stage {
 	 */
 	public void updateTileData(int x, int y, int value) {
 		
-		if(y*width +x < 0 || y*width+x >= width*height) return;
-		
-		tileData[y*width+x] = value;
+		updateTileData(y*width + x, value);
 	}
 	
+	
+	/**
+	 * Update tile data
+	 * @param i Tile index
+	 * @param value New value
+	 */
+	public void updateTileData(int i, int value) {
+		
+		if(i < 0 || i >= tileData.length) return;
+		
+		tileData[i] = value;
+	}
 	
 	/**
 	 * Is the tile in (X,Y) solid
@@ -531,5 +541,36 @@ public class Stage {
 			return 1;
 		
 		return tileData[index];
+	}
+	
+	
+	/**
+	 * Get tile value in the current tile data array
+	 * @param i Index
+	 * @return Tile value
+	 */
+	public int getTile(int i) {
+		
+		if(i < 0 || i >= tileData.length)
+			return i;
+		
+		return tileData[i];
+	}
+	
+	
+	/**
+	 * Toggle purple blocks
+	 */
+	public void togglePurpleBlocks() {
+		
+		int tileID = 0;
+		for(int i = 0; i < width*height; ++ i) {
+			
+			tileID = getTile(i);
+			if(tileID == 6)
+				updateTileData(i, 7);
+			else if(tileID == 7)
+				updateTileData(i, 6);
+		}
 	}
 }

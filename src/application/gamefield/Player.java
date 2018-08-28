@@ -19,7 +19,7 @@ public class Player extends FieldObject {
 	/** Maximum amount of fadings */
 	static private final int FADING_MAX = 16;
 	/** Fading generation interval */
-	static private final float FADING_INTERVAL = 6.0f;
+	static private final float FADING_INTERVAL = 4.0f;
 	/** The stick movement that is required to be recognized
 	 * as accepted input */
 	static final public float STICK_DELTA = 0.5f;
@@ -127,7 +127,7 @@ public class Player extends FieldObject {
 	 */
 	private void generateFadings(float tm) {
 		
-		final float FADING_TIME = 30.0f;
+		final float FADING_TIME = 20.0f;
 		
 		if(!moving) return;
 		

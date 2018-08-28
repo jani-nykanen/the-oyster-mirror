@@ -23,7 +23,7 @@ public class Star extends Collectible {
 	
 
 	@Override
-	public void onPlayerCollision(Player pl) {
+	public void onPlayerCollision(Player pl,  Stage stage) {
 		
 		// ...
 	}

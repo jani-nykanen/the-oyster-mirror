@@ -53,15 +53,19 @@ public abstract class Collectible extends NonPlayerFieldObject {
 		final float FLOAT_MOD = (float)Math.PI / 6.0f;
 		floatTimer = ( pos.x + pos.y ) * FLOAT_MOD;
 	}
-	
 
+	
 	@Override
 	public void update(Gamepad vpad, TimeManager tman, Stage stage, float tm) {
 
 		final float FLOAT_SPEED = 0.05f;
 		final float SHINE_SPEED = 0.025f;
 		
-		if(!exist) return;
+		if(!exist) {
+			
+			updateDeath(tm);
+			return;
+		};
 		
 		// Update timers
 		floatTimer += FLOAT_SPEED * tm;
@@ -75,8 +79,15 @@ public abstract class Collectible extends NonPlayerFieldObject {
 		final float FLOAT_AMPLITUDE = 8.0f;
 		final float SCALE_FACTOR = 0.125f;
 		final float COLOR_MOD = 0.125f;
+		final float DEATH_SCALE = 2.0f;
 		
-		if(!exist) return;
+		if(!exist) {
+			
+			// Draw death
+			drawDeath(g, bmpCollectibles, id*128, 0, 128, 128, DEATH_SCALE);
+			
+			return;
+		};
 		
 		
 		// Calculate "floating position" & scaling
@@ -120,8 +131,8 @@ public abstract class Collectible extends NonPlayerFieldObject {
 			
 			if(pl.getPosition().equals(pos)) {
 				
-				onPlayerCollision(pl);
-				exist = false;
+				onPlayerCollision(pl, stage);
+				die(tman);
 			}
 		}
 	}
@@ -131,5 +142,5 @@ public abstract class Collectible extends NonPlayerFieldObject {
 	 * Called when player is overlaying this object
 	 * @param pl Player
 	 */
-	public abstract void onPlayerCollision(Player pl);
+	public abstract void onPlayerCollision(Player pl, Stage stage);
 }

@@ -32,6 +32,7 @@ public class ObjectManager {
 		Crate.init(assets);
 		Collectible.init(assets);
 		Player.init(assets);
+		Lock.init(assets);
 	}
 	
 	
@@ -62,10 +63,17 @@ public class ObjectManager {
 			// Crate
 			switch(data[i]) {
 			
+			// Crate
 			case 2:
 				
 				objects.add(new Crate(p));
 				stage.updateTileData(x, y, 2);
+				break;
+				
+			// Lock
+			case 4:
+				
+				objects.add(new Lock(p));
 				break;
 				
 			// Key
@@ -120,6 +128,13 @@ public class ObjectManager {
 			
 		}
 	
+		// Stop player before doing another updates,
+		// if an object is dying
+		if(tman.hasStopped() && tman.isWaiting()) {
+			
+			player.stopMoving(stage, tman);
+		}
+		
 		// Update player
 		player.updatePosition(tman, stage);
 		player.update(vpad, tman, stage, tm);

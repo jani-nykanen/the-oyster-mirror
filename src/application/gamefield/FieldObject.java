@@ -90,7 +90,7 @@ public abstract class FieldObject {
 				vpos.y = (float)pos.y;
 				
 				// Call "moving stopped" method
-				onMovingStopped(stage);
+				onMovingStopped(stage, tman);
 			}
 
 		}
@@ -98,6 +98,9 @@ public abstract class FieldObject {
 			
 			vpos.x = (float)pos.x;
 			vpos.y = (float)pos.y;
+			
+			pos.x = target.x;
+			pos.y = target.y;
 		}
 		
 		// Scale correctly
@@ -106,11 +109,33 @@ public abstract class FieldObject {
 	}
 	
 	
+	
+	/**
+	 * Force moving to be stopped
+	 * @param stage Stage
+	 * @param tman Time manager
+	 */
+	public void stopMoving(Stage stage, TimeManager tman) {
+
+		moving = false;
+		
+		// Move to the target position
+		pos.x = target.x;
+		pos.y = target.y;
+		
+		vpos.x = (float)pos.x;
+		vpos.y = (float)pos.y;
+		
+		// Call "moving stopped" method
+		onMovingStopped(stage, tman);
+	}
+	
+	
 	/**
 	 * Called when the moving is stopped
 	 * @param stage Stage
 	 */
-	public void onMovingStopped(Stage stage) {};
+	public void onMovingStopped(Stage stage, TimeManager tman) {};
 	
 	
 	/**

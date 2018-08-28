@@ -20,6 +20,9 @@ public class TimeManager {
 	/** Is turn waiting */
 	private boolean waiting;
 	
+	/** Has stopped lately. True only if forced */
+	private boolean stopped;
+	
 	
 	/**
 	 * Constructor
@@ -30,6 +33,7 @@ public class TimeManager {
 		turnLength = DEFAULT_TURN_LENGTH;
 		turnTimer = 0.0f;
 		waiting = false;
+		stopped = false;
 	}
 	
 	
@@ -49,6 +53,7 @@ public class TimeManager {
 				waiting = false;
 			}
 		}
+		stopped = false;
 	}
 	
 	
@@ -109,6 +114,25 @@ public class TimeManager {
 	public int getTurn() {
 		
 		return turn;
+	}
+	
+	
+	/**
+	 * Has stopped
+	 * @return True, if has
+	 */
+	public boolean hasStopped() {
+		
+		return stopped;
+	}
+	
+	
+	/**
+	 * Force stop signal
+	 */
+	public void forceStopSignal() {
+		
+		stopped = true;
 	}
 	
 }
