@@ -41,6 +41,10 @@ public class Stage {
 	
 	/** Stage index */
 	private int stageIndex;
+	/** Stage name */
+	private String stageName = "";
+	/** Turn limit */
+	private int turnLimit = 0;
 	
 	/** Static tile bitmap */
 	private Bitmap bmpStatic;
@@ -417,6 +421,10 @@ public class Stage {
 		// Get required information
 		width = map.getWidth();
 		height = map.getHeight();
+		stageName = map.getProperty("name");
+		String turnString = map.getProperty("turns");
+		turnLimit = turnString == null ? 0 : Integer.parseInt(turnString);
+
 		
 		// Copy bottom layer to tile data
 		// (note: copy only static data)
@@ -638,5 +646,35 @@ public class Stage {
 		purpleInitialTime = time;
 		
 		togglePurpleBlocks();
+	}
+	
+	
+	/**
+	 * Get stage index
+	 * @return Stage index
+	 */
+	public int getStageIndex() {
+		
+		return stageIndex;
+	}
+	
+	
+	/**
+	 * Get stage name
+	 * @return Stage name 
+	 */
+	public String getStageName() {
+		
+		return stageName;
+	}
+	
+	
+	/**
+	 * Get turn limit
+	 * @return Turn limit
+	 */
+	public int getTurnLimit() {
+		
+		return turnLimit;
 	}
 }

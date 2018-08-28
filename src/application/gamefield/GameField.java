@@ -5,7 +5,6 @@ import application.Scene;
 import core.renderer.Bitmap;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
-import core.types.Direction;
 import core.utility.AssetPack;
 
 
@@ -28,7 +27,9 @@ public class GameField extends Scene {
 	private TimeManager timeMan;
 	/** Object manager */
 	private ObjectManager objMan;
-
+	/** Status manager */
+	private StatusManager statMan;
+	
 	
 	@Override
 	public void init(AssetPack assets) throws Exception {
@@ -39,6 +40,7 @@ public class GameField extends Scene {
 		// Create stage
 		stage = new Stage(assets);
 		stage.loadMap(1);
+		
 		// Initialize object manager
 		ObjectManager.init(assets);
 		// Create object manager & objects
@@ -47,6 +49,11 @@ public class GameField extends Scene {
 		
 		// Create time manager
 		timeMan = new TimeManager();
+		
+		// Create status manager
+		StatusManager.init(assets);
+		statMan = new StatusManager();
+		statMan.setInitial(stage);
 	}
 	
 
@@ -58,13 +65,16 @@ public class GameField extends Scene {
 		// Update time manager
 		timeMan.update(tm);
 		// Update game objects
-		objMan.update(vpad, timeMan, stage, tm);
+		objMan.update(vpad, timeMan, stage, statMan, tm);
 		
 	}
 	
 
 	@Override
 	public void draw(Graphics g) {
+		
+		// TODO: Put this elsewhere
+		final float DEFAULT_VIEW_HEIGHT = 720.0f;
 		
 		// Clear screen
 		g.clearScreen(1,1,1);
@@ -80,12 +90,12 @@ public class GameField extends Scene {
 		objMan.draw(g);
 		
 		// Hello world!
-		tr.fitViewHeight(720.0f);
+		tr.fitViewHeight(DEFAULT_VIEW_HEIGHT);
 		tr.identity();
 		tr.use();
-		g.setColor(1,1,0);
-		g.drawText(bmpFont, "Hello world!", 8, 8, -16, 0, false, 0.75f);
-		g.setColor();
+		
+		// Draw status manager
+		statMan.draw(g);
 	}
 	
 

@@ -112,9 +112,10 @@ public class ObjectManager {
 	 * @param vpad Game pad
 	 * @param tman Time manager
 	 * @param stage Stage
+	 * @param statMan Status manager
 	 * @param tm Time mul.
 	 */
-	public void update(Gamepad vpad, TimeManager tman, Stage stage, float tm) {
+	public void update(Gamepad vpad, TimeManager tman, Stage stage, StatusManager statMan, float tm) {
 		
 		// Update non-player field objects
 		for(NonPlayerFieldObject o : objects) {
@@ -138,6 +139,9 @@ public class ObjectManager {
 		// Update player
 		player.updatePosition(tman, stage);
 		player.update(vpad, tman, stage, tm);
+		
+		// Update status manager
+		statMan.update(player, tman);
 		
 	}
 	
