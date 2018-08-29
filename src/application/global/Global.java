@@ -4,6 +4,7 @@ import application.Gamepad;
 import application.Scene;
 import core.renderer.Graphics;
 import core.utility.AssetPack;
+import core.utility.RGBFloat;
 
 /**
  * The global scene
@@ -15,39 +16,48 @@ public class Global extends Scene {
 	/** Scene name */
 	public String name = "game";
 	
+	/** Transition object */
+	private Transition trans;
+	
 	
 	@Override
 	public void init(AssetPack assets) throws Exception {
-		// TODO Auto-generated method stub
 		
+		// Create global components
+		trans = new Transition();
+		
+		// TEMP: Fade!
+		trans.activate(Transition.Mode.Out, Transition.Type.Fade, 1.0f, new RGBFloat(), null);
 	}
 
 	
 	@Override
 	public void update(Gamepad vpad, float tm) {
-		// TODO Auto-generated method stub
 		
+		// Update transitions
+		trans.update(tm);
 	}
 	
 
 	@Override
 	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
 		
+		// Draw transition
+		trans.draw(g);
 	}
 	
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
 		
+		// ...
 	}
 
 	
 	@Override
 	public void changeTo() {
-		// TODO Auto-generated method stub
 		
+		// ...
 	}
 
 }
