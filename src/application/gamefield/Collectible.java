@@ -29,6 +29,7 @@ public abstract class Collectible extends NonPlayerFieldObject {
 	/** Shine timer */
 	private float shineTimer = 0.0f;
 	
+	
 	/**
 	 * Initialize global content
 	 * @param assets Assets
@@ -53,6 +54,14 @@ public abstract class Collectible extends NonPlayerFieldObject {
 		final float FLOAT_MOD = (float)Math.PI / 6.0f;
 		floatTimer = ( pos.x + pos.y ) * FLOAT_MOD;
 	}
+	
+	
+	/**
+	 * Called on update function
+	 * @param tman Time manager
+	 * @param stage Stage
+	 */
+	public void onUpdate(TimeManager tman, Stage stage) {};
 
 	
 	@Override
@@ -70,6 +79,9 @@ public abstract class Collectible extends NonPlayerFieldObject {
 		// Update timers
 		floatTimer += FLOAT_SPEED * tm;
 		shineTimer += SHINE_SPEED * tm;
+		
+		// Call "on update" function
+		onUpdate(tman, stage);
 	}
 	
 

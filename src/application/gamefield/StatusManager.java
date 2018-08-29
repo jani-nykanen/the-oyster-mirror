@@ -1,6 +1,7 @@
 package application.gamefield;
 
 import core.renderer.Bitmap;
+import core.renderer.Flip;
 import core.renderer.Graphics;
 import core.utility.AssetPack;
 
@@ -12,6 +13,9 @@ import core.utility.AssetPack;
  */
 public class StatusManager {
 
+	/** Appearance time */
+	static private final float APPEARANCE_TIME = 30.0f;
+	
 	/** Font bitmap */
 	static private Bitmap bmpFont;
 	/** Collectibles bitmap */
@@ -28,6 +32,10 @@ public class StatusManager {
 	/** Stage index */
 	private int stageIndex;
 	
+	/** Key appearance timer*/
+	private float keyAppearanceTimer = 0.0f;
+	/** Old key count */
+	private int oldKeyCount = 0;
 	
 	/**
 	 * Initialize global content
@@ -64,7 +72,8 @@ public class StatusManager {
 	 */
 	private void drawText(Graphics g, float tx, float ty, boolean shadow) {
 		
-		final float XOFF = -26.0f;
+		final float XOFF1 = -28.0f;
+		final float XOFF2 = -22.0f;
 		final float YOFF = 0;
 		final float FONT_SCALE = 0.75f;
 		final float TEXT_Y = 10.0f;
@@ -80,37 +89,94 @@ public class StatusManager {
 
 		// Draw stage index
 		g.drawText(bmpFont, "Stage " + Integer.toString(stageIndex) + ": " + stageName,
-				tx + STAGE_X, ty + TEXT_Y, XOFF, YOFF, false, FONT_SCALE);
+				tx + STAGE_X, ty + TEXT_Y, XOFF1, YOFF, false, FONT_SCALE);
 		
 
 		// Create turn strings
 		String turnStr1 = "Turn: ";
 		String turnStr2 =  Integer.toString(turnCount);
-		String turnStr3 = " (" + Integer.toString(turnLimit) + ")"; 	
+		String turnStr3 = "  (~" + Integer.toString(turnLimit) + ")"; 	
 		
 		// Calculate positions
-		float pos1 = getDrawnTextPos(g, turnStr1+turnStr2+turnStr3, bmpFont, XOFF, FONT_SCALE);
-		float pos2 = getDrawnTextPos(g, turnStr2+turnStr3, bmpFont, XOFF, FONT_SCALE);
-		float pos3 = getDrawnTextPos(g, turnStr3, bmpFont, XOFF, FONT_SCALE);
+		float pos1 = getDrawnTextPos(g, turnStr1+turnStr2+turnStr3, bmpFont, XOFF1, FONT_SCALE);
+		float pos2 = getDrawnTextPos(g, turnStr2+turnStr3, bmpFont, XOFF1, FONT_SCALE);
+		float pos3 = getDrawnTextPos(g, turnStr3, bmpFont, XOFF2, FONT_SCALE);
 
 		// Draw texts
 		g.drawText(bmpFont, turnStr1,
-				tx + pos1, ty + TEXT_Y, XOFF, YOFF, false, FONT_SCALE);
+				tx + pos1, ty + TEXT_Y, XOFF1, YOFF, false, FONT_SCALE);
 		
 		// Switch to special color if too many turns taken
 		if(!shadow) {
 			
 			if(turnCount > turnLimit)
-				g.setColor(1, 0.25f, 0);
+				g.setColor(1, 0.5f, 0);
 		}
 		
 		g.drawText(bmpFont, turnStr2,
-				tx + pos2, ty + TEXT_Y, XOFF, YOFF, false, FONT_SCALE);
+				tx + pos2, ty + TEXT_Y, XOFF1, YOFF, false, FONT_SCALE);
 		
-		if(!shadow)
-			g.setColor(1, 1, 0);
+		// Switch to special color if too many turns taken
+		if(!shadow) {
+					
+			if(turnCount > turnLimit)
+				g.setColor(0.75f, 0.75f, 0.75f);
+			else
+				g.setColor(1, 1, 0);
+		}
 		g.drawText(bmpFont, turnStr3,
-				tx + pos3 , ty + TEXT_Y, XOFF, YOFF, false, FONT_SCALE);
+				tx + pos3 , ty + TEXT_Y, XOFF2, YOFF, false, FONT_SCALE);
+	}
+	
+	
+	/**
+	 * Draw collected items
+	 * @param g Graphics objects
+	 */
+	public void drawItems(Graphics g) {
+		
+		final float START_Y = 64.0f;
+		final float POS_X = 0.0f;
+		final float SCALE = 0.75f;
+		final float YOFF_FACTOR = 0.75f;
+		
+		float dw = SCALE * 128.0f;
+		float dh = SCALE * 128.0f;
+		
+		float yoff = dh * YOFF_FACTOR;
+		
+		for(int i = 0; i < (int)Math.min(keyCount, oldKeyCount); ++ i) {
+			
+			g.drawScaledBitmapRegion(bmpCollectibles, 0, 0, 128, 128, 
+					POS_X, START_Y + yoff*i, dw, dh, Flip.NONE);
+		}
+		
+		// Draw (dis)appearing key
+		if(oldKeyCount != keyCount) {
+			
+			// Calculate alpha & position
+			float t = keyAppearanceTimer / APPEARANCE_TIME;
+			
+			float alpha, posx;	
+			if(oldKeyCount < keyCount) {
+				
+				alpha = 1.0f - t;
+				posx = POS_X - dw + dw*(1.0f-t);
+			}
+			else {
+				
+				alpha = t;
+				posx = POS_X - dw + dw*t;
+			}
+			
+			int index = oldKeyCount < keyCount ? oldKeyCount : oldKeyCount-1;
+			
+			
+			g.setColor(1, 1, 1, alpha);
+			g.drawScaledBitmapRegion(bmpCollectibles, 0, 0, 128, 128, 
+					posx, START_Y + yoff*index, dw, dh, Flip.NONE);
+			g.setColor();
+		}
 	}
 	
 	
@@ -143,10 +209,28 @@ public class StatusManager {
 	 * @param pl Player
 	 * @param tman Time manager
 	 */
-	public void update(Player pl, TimeManager tman) {
+	public void update(Player pl, TimeManager tman, float tm) {
 		
 		turnCount = tman.getTurn();
+		
+		// Check if more keys collected
+		int oldKeys = keyCount;
 		keyCount = pl.getKeyCount();
+		if(keyCount != oldKeys) {
+			
+			oldKeyCount = oldKeys;
+			keyAppearanceTimer = APPEARANCE_TIME;
+		}
+		
+		// Update key appearance timer
+		if(keyAppearanceTimer > 0.0f) {
+			
+			keyAppearanceTimer -= 1.0f * tm;
+			if(keyAppearanceTimer <= 0.0f) {
+				
+				oldKeyCount = keyCount;
+			}
+		}
 	}
 	
 	
@@ -165,5 +249,8 @@ public class StatusManager {
 		drawText(g, 0, 0, false);
 		
 		g.setColor();
+		
+		// Draw items
+		drawItems(g);
 	}
 }

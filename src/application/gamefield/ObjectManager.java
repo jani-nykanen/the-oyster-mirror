@@ -141,7 +141,7 @@ public class ObjectManager {
 		player.update(vpad, tman, stage, tm);
 		
 		// Update status manager
-		statMan.update(player, tman);
+		statMan.update(player, tman, tm);
 		
 	}
 	
