@@ -1,9 +1,11 @@
 package application.gamefield;
 
+import application.global.Transition;
 import core.renderer.Bitmap;
 import core.renderer.Flip;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
+import core.types.Vector2;
 import core.utility.AssetPack;
 import core.utility.Tilemap;
 
@@ -16,7 +18,7 @@ import core.utility.Tilemap;
 public class Stage {
 
 	/** An assumed tile size */
-	static public final int TILE_SIZE = 128;
+	static public final int INITIAL_TILE_SIZE = 128;
 	
 	/** Static solid tiles */
 	static final boolean[] STATIC_SOLID_TILES = new boolean[] {
@@ -60,6 +62,12 @@ public class Stage {
 	private float purpleFadingTimer;
 	/** Purple tile fading initial time */
 	private float purpleInitialTime;
+	
+	/** Tile size*/
+	private int tileSize = INITIAL_TILE_SIZE;
+	
+	/** Has the stage ended */
+	private boolean stageEnded;
 	
 	
 	/**
@@ -250,7 +258,7 @@ public class Stage {
 	private void drawFloor(Graphics g, int x, int y) {
 		
 		g.drawScaledBitmapRegion(bmpStatic, 0, 128, 128, 128, 
-				x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE, Flip.NONE);
+				x*tileSize, y*tileSize, tileSize, tileSize, Flip.NONE);
 	}
 	
 	
@@ -273,11 +281,11 @@ public class Stage {
 
 		g.setColor(color, color, color);
 		g.drawScaledBitmapRegion(bmpLava, tw, th, 128, 128, 
-				x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE, Flip.NONE);
+				x*tileSize, y*tileSize, tileSize, tileSize, Flip.NONE);
 		
 		// Draw borders
 		g.setColor(0.40f,0.0f,0.0f);
-		drawBorders(g, x, y, TILE_SIZE, TILE_SIZE, BORDER_WIDTH);
+		drawBorders(g, x, y, tileSize, tileSize, BORDER_WIDTH);
 	}
 	
 	
@@ -292,8 +300,8 @@ public class Stage {
 		
 		final float LOCK_BORDER_WIDTH = 8.0f;
 		
-		float dx = x * TILE_SIZE;
-		float dy = y * TILE_SIZE;
+		float dx = x * tileSize;
+		float dy = y * tileSize;
 		
 		// Calculate purple tile alpha
 		float purpleAlpha = 1.0f;
@@ -309,10 +317,10 @@ public class Stage {
 		case 1:
 			
 			// Draw background white
-			g.fillRect(dx, dy, TILE_SIZE, TILE_SIZE);
+			g.fillRect(dx, dy, tileSize, tileSize);
 			
 			// Draw borders
-			drawConnectedTile(g, x, y, 1, TILE_SIZE, TILE_SIZE);
+			drawConnectedTile(g, x, y, 1, tileSize, tileSize);
 			
 			break;
 			
@@ -326,11 +334,11 @@ public class Stage {
 			
 			// Tile background
 			g.drawScaledBitmapRegion(bmpStatic, 256, 128, 128, 128, 
-					dx, dy, TILE_SIZE, TILE_SIZE, Flip.NONE);
+					dx, dy, tileSize, tileSize, Flip.NONE);
 			
 			// Borders
 			g.setColor(0.25f,0.10f,0.0f);
-			drawBorders(g, x, y, TILE_SIZE, TILE_SIZE, LOCK_BORDER_WIDTH);
+			drawBorders(g, x, y, tileSize, tileSize, LOCK_BORDER_WIDTH);
 			
 			break;
 			
@@ -339,7 +347,7 @@ public class Stage {
 			
 			// Draw base floor tile
 			g.drawScaledBitmapRegion(bmpStatic, 128, 128, 128, 128, 
-					dx, dy, TILE_SIZE, TILE_SIZE, Flip.NONE);
+					dx, dy, tileSize, tileSize, Flip.NONE);
 			
 			// If purple fading, fade in the replacing tile
 			if(purpleFading) {
@@ -348,11 +356,11 @@ public class Stage {
 				
 				// Draw background
 				g.drawScaledBitmapRegion(bmpStatic, 288, 32, 64, 64, 
-						dx, dy, TILE_SIZE, TILE_SIZE, Flip.NONE);
+						dx, dy, tileSize, tileSize, Flip.NONE);
 
 				// Draw borders
 				g.setSourceTranslation(256, 0);
-				drawConnectedTile(g, x, y, 6, TILE_SIZE, TILE_SIZE);
+				drawConnectedTile(g, x, y, 6, tileSize, tileSize);
 				g.setSourceTranslation(0, 0);
 			}
 			
@@ -366,18 +374,18 @@ public class Stage {
 			if(purpleFading) {
 				
 				g.drawScaledBitmapRegion(bmpStatic, 128, 128, 128, 128, 
-						dx, dy, TILE_SIZE, TILE_SIZE, Flip.NONE);
+						dx, dy, tileSize, tileSize, Flip.NONE);
 				
 				g.setColor(1, 1, 1, 1.0f - purpleAlpha);
 			}
 
 			// Draw background
 			g.drawScaledBitmapRegion(bmpStatic, 288, 32, 64, 64, 
-					dx, dy, TILE_SIZE, TILE_SIZE, Flip.NONE);
+					dx, dy, tileSize, tileSize, Flip.NONE);
 
 			// Draw borders
 			g.setSourceTranslation(256, 0);
-			drawConnectedTile(g, x, y, 7, TILE_SIZE, TILE_SIZE);
+			drawConnectedTile(g, x, y, 7, tileSize, tileSize);
 			g.setSourceTranslation(0, 0);
 
 			break;
@@ -406,17 +414,9 @@ public class Stage {
 	
 	
 	/**
-	 * Load a map from a file
-	 * @param index Stage index
-	 * @throws Exception If does not exist
+	 * Reset a map
 	 */
-	public void loadMap(int index) throws Exception {
-	
-		stageIndex = index;
-		
-		// Open file
-		String path = "assets/tilemaps/" + index + ".tmx";
-		map = new Tilemap(path);
+	public void resetMap() {
 		
 		// Get required information
 		width = map.getWidth();
@@ -425,7 +425,6 @@ public class Stage {
 		String turnString = map.getProperty("turns");
 		turnLimit = turnString == null ? 0 : Integer.parseInt(turnString);
 
-		
 		// Copy bottom layer to tile data
 		// (note: copy only static data)
 		tileData = new int[width*height];
@@ -438,12 +437,33 @@ public class Stage {
 			else
 				tileData[i] = 0;
 		}
+		
+		// Set flags
+		stageEnded = false;
+	}
+	
+	
+	/**
+	 * Load a map from a file
+	 * @param index Stage index
+	 * @throws Exception If does not exist
+	 */
+	public void loadMap(int index) throws Exception {
+	
+		stageIndex = index;
+		
+		// Open file
+		String path = "assets/tilemaps/" + index + ".tmx";
+		map = new Tilemap(path);
+		
+		resetMap();
 	}
 	
 	
 	/**
 	 * Update the stage
 	 * @param tm Time multiplier
+	 * @param trans Transitions
 	 */
 	public void update(float tm) {
 		
@@ -470,16 +490,35 @@ public class Stage {
 	 * Set stage transformations
 	 * @param g Graphics object
 	 */
-	public void setTransform(Graphics g) {
+	public void setTransform(Graphics g, Transition trans) {
+		
+		final float SCALE_IN_FACTOR = 0.25f;
+		final float SCALE_OUT_FACTOR = 0.75f;
 		
 		// Set camera
 		Transformations tr = g.transform();
 		tr.identity();
 		// Fit tilemap height to the screen
-		tr.fitViewHeight(height * TILE_SIZE);
+		tr.fitViewHeight(height * tileSize);
 				
+		// Scale, if transitioning
+		if(trans.isActive()) {
+			
+			float t = trans.getTimer();
+			float scale = trans.getMode() == Transition.Mode.In 
+					? (1.0f-SCALE_IN_FACTOR) + t*SCALE_IN_FACTOR :  
+					   1.0f + t * SCALE_OUT_FACTOR;
+			Vector2 center = tr.getViewport().clone();
+			center.x /= 2;
+			center.y /= 2;
+			
+			tr.translate(center.x, center.y);
+			tr.scale(scale, scale);
+			tr.translate(-center.x, -center.y);
+		}
+		
 		// Calculate x translation
-		float xtrans = tr.getViewport().x / 2 - width*TILE_SIZE/2;
+		float xtrans = tr.getViewport().x / 2 - width*tileSize/2;
 		tr.translate(xtrans, 0);
 		tr.use();
 	}
@@ -676,5 +715,26 @@ public class Stage {
 	public int getTurnLimit() {
 		
 		return turnLimit;
+	}
+	
+	
+	/**
+	 * Toggle "stage ended" flag on
+	 */
+	public void endStage() {
+		
+		stageEnded = true;
+	}
+	
+	
+	/**
+	 * Get the "stage ended" flag value and disable the flag
+	 * @return True or false
+	 */
+	public boolean hasStageEnded() {
+		
+		boolean ret = stageEnded;
+		stageEnded = false;
+		return ret;
 	}
 }

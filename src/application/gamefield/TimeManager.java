@@ -19,7 +19,7 @@ public class TimeManager {
 	private float turnTimer;
 	/** Is turn waiting */
 	private boolean waiting;
-	
+
 	/** Has stopped lately. True only if forced */
 	private boolean stopped;
 	
@@ -134,4 +134,5 @@ public class TimeManager {
 		
 		stopped = true;
 	}
+
 }

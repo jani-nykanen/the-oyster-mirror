@@ -25,9 +25,6 @@ public class Global extends Scene {
 		
 		// Create global components
 		trans = new Transition();
-		
-		// TEMP: Fade!
-		trans.activate(Transition.Mode.Out, Transition.Type.Fade, 1.0f, new RGBFloat(), null);
 	}
 
 	
@@ -60,4 +57,13 @@ public class Global extends Scene {
 		// ...
 	}
 
+	
+	/**
+	 * Get global transition manager
+	 * @return Transition manager
+	 */
+	public Transition getTransition() {
+		
+		return trans;
+	}
 }

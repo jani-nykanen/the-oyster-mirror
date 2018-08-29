@@ -85,10 +85,7 @@ public class Transition {
 		
 		timer -= speed * tm;
 		if(timer <= 0.0f) {
-			
-			active = false;
-			timer = 0.0f;
-			
+
 			// Call callback function, if not null & mode is in
 			if(mode == Mode.In) {
 				
@@ -96,7 +93,12 @@ public class Transition {
 					cb.execute();
 				
 				mode = Mode.Out;
-				timer = FADE_TIME;
+				timer += FADE_TIME;
+			}
+			else {
+				
+				active = false;
+				timer = 0.0f;
 			}
 		}
 	}
@@ -162,5 +164,15 @@ public class Transition {
 	public float getTimer() {
 		
 		return timer / FADE_TIME;
+	}
+	
+	
+	/**
+	 * Get fading mode
+	 * @return
+	 */
+	public Mode getMode() {
+		
+		return mode;
 	}
 }

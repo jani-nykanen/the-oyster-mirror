@@ -28,7 +28,7 @@ public class ObjectManager {
 	static public void init(AssetPack assets) {
 		
 		// Pass assets to all components
-		NonPlayerFieldObject.setScaleValue(Stage.TILE_SIZE, Stage.TILE_SIZE);
+		NonPlayerFieldObject.setScaleValue(Stage.INITIAL_TILE_SIZE, Stage.INITIAL_TILE_SIZE);
 		Crate.init(assets);
 		Collectible.init(assets);
 		Player.init(assets);

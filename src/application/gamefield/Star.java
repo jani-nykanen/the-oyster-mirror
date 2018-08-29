@@ -9,6 +9,7 @@ import core.types.Point;
  */
 public class Star extends Collectible {
 
+	
 	/**
 	 * Constructor
 	 * @param pos Position
@@ -34,7 +35,8 @@ public class Star extends Collectible {
 	@Override
 	public void onPlayerCollision(Player pl,  Stage stage) {
 		
-		// ...
+		// End stage
+		stage.endStage();
 	}
 
 }
