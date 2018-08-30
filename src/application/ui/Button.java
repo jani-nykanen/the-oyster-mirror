@@ -7,7 +7,7 @@ import core.utility.VoidCallback;
  * @author Jani Nykänen
  *
  */
-public class Button {
+public class Button implements Cloneable {
 
 	/** Text */
 	private String text;
@@ -116,5 +116,12 @@ public class Button {
 		
 		if(cb != null)
 			cb.execute();
+	}
+	
+	
+	@Override
+	public Button clone() {
+		
+		return new Button(text, cb);
 	}
 }

@@ -6,4 +6,5 @@
    	<bitmap name="movable" path="movable.png" />
    	<bitmap name="collectibles" path="collectibles.png" />
    	<bitmap name="player" path="player.png" />
+   	<bitmap name="cursor" path="cursor.png" />
 </assets>

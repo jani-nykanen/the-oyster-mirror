@@ -1,5 +1,6 @@
 package application;
 
+import core.WeakEventManager;
 import core.renderer.Graphics;
 import core.utility.AssetPack;
 
@@ -15,6 +16,8 @@ public abstract class Scene {
 	
 	/** Scene manager reference */
 	protected SceneManager sceneMan;
+	/** Weak event manager reference */
+	protected WeakEventManager eventMan;
 	
 	
 	/** Initialize 
@@ -62,5 +65,15 @@ public abstract class Scene {
 	public void setSceneManager(SceneManager s) {
 		
 		sceneMan = s;
+	}
+	
+	
+	/**
+	 * Set a reference to the weak event manager
+	 * @param e Event manager
+	 */
+	public void setWeakEventManager(WeakEventManager e) {
+		
+		eventMan = e;
 	}
 }

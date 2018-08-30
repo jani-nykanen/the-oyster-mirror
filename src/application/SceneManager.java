@@ -47,6 +47,7 @@ public class SceneManager extends Scene {
 	public void addScene(Scene s, boolean makeCurrent) {
 		
 		s.setSceneManager(this);
+		s.setWeakEventManager(eventMan);
 		scenes.add(s);
 		if(makeCurrent || current == null) {
 			

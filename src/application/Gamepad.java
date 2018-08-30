@@ -59,6 +59,8 @@ public class Gamepad {
 	
 	/** "Analogue" stick */
 	private Vector2 stick;
+	/** Stick delta */
+	private Vector2 delta;
 	
 	/** Gamepad direction*/
 	private Direction dir = Direction.None;
@@ -98,6 +100,7 @@ public class Gamepad {
 		// Initialize components
 		buttons = new ArrayList<Button> ();
 		stick = new Vector2();
+		delta = new Vector2();
 	}
 	
 	
@@ -150,6 +153,9 @@ public class Gamepad {
 
 		final float JOY_DELTA = 0.1f;
 		
+		// Store old stick state
+		Vector2 oldStick = stick.clone();
+		
 		// Go through every button and update
 		// state
 		Button b;
@@ -198,6 +204,10 @@ public class Gamepad {
 			}
 		
 		}
+		
+		// Calculate delta
+		delta.x = stick.x - oldStick.x;
+		delta.y = stick.y - oldStick.y;
 		
 		// Determine direction
 		determineDirection();
@@ -255,6 +265,16 @@ public class Gamepad {
 	public Direction getDirection() {
 		
 		return dir;
+	}
+	
+	
+	/**
+	 * Get stick delta
+	 * @return Stick delta
+	 */
+	public Vector2 getDelta() {
+		
+		return delta;
 	}
 	
 }

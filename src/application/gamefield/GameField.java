@@ -32,6 +32,8 @@ public class GameField extends Scene {
 	private StatusManager statMan;
 	/** Transitions */
 	private Transition trans;
+	/** Pause object */
+	private Pause pause;
 	
 	
 	@Override
@@ -60,19 +62,40 @@ public class GameField extends Scene {
 		if(global != null)
 			trans = ( (Global)global ).getTransition();
 				
+		// Create pause
+		Pause.init(assets);
+		pause = new Pause(this);
+		
 		// Fade in
-		trans.activate(Transition.Mode.Out, Transition.Type.Fade, 1.0f, new RGBFloat(), null);
+		trans.activate(Transition.Mode.Out, Transition.Type.Fade, 2.0f, new RGBFloat(), null);
 	}
 	
 
 	@Override
 	public void update(Gamepad vpad, float tm) {
 		
-		
 		final float END_STAGE_FADE_SPEED = 0.75f;
 		
-		// No updating if fading
-		if(trans.isActive()) return;
+		// No updating if fading, except possibly
+		// fading pause screen
+		if(trans.isActive()) {
+			
+			pause.fadeOnly(tm);
+			return;
+		}
+		
+		// If pause is active, update pause
+		if(pause.isActive()) {
+			
+			pause.update(vpad, tm);
+			return;
+		}
+		// If not, check if pause button pressed
+		else if(vpad.getButtonByName("confirm") == State.Pressed) {
+			
+			pause.activate();
+			return;
+		}
 		
 		// Update stage
 		stage.update(tm);
@@ -84,14 +107,7 @@ public class GameField extends Scene {
 		// Reset button
 		if(vpad.getButtonByName("reset") == State.Pressed) {
 			
-			// Fade in and reset
-			trans.activate(Transition.Mode.In, Transition.Type.Fade, 2.0f, new RGBFloat(), 
-					new VoidCallback() {
-						@Override
-						public void execute() {
-							reset();	
-						}
-			});
+			fadeAndReset();
 		}
 		
 		// Check if the stage has ended
@@ -134,6 +150,9 @@ public class GameField extends Scene {
 		
 		// Draw status manager
 		statMan.draw(g);
+		
+		// Draw pause
+		pause.draw(g);
 	}
 	
 
@@ -169,6 +188,39 @@ public class GameField extends Scene {
 		// Create status manager
 		statMan = new StatusManager();
 		statMan.setInitial(stage);
+	}
+	
+	
+	/**
+	 * Fade in and reset
+	 */
+	public void fadeAndReset() {
+		
+		// Fade in and reset
+		trans.activate(Transition.Mode.In, Transition.Type.Fade, 2.0f, new RGBFloat(), 
+			new VoidCallback() {
+				@Override
+				public void execute() {
+					reset();	
+				}
+		});
+	}
+	
+	
+	/**
+	 * Terminate application, "in style"
+	 */
+	public void quit() {
+
+		// Fade in and quit
+		trans.activate(Transition.Mode.In, Transition.Type.Fade, 2.0f, new RGBFloat(0, 0, 0), 
+			new VoidCallback() {
+				@Override
+				public void execute() {
+					
+					eventMan.quit();	
+				}
+		});
 	}
 
 }

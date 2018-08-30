@@ -70,6 +70,7 @@ public class ApplicationListener extends WindowListener {
 		// Reset timer
 		glfwSetTime(0.0);
 		timeSum = 0.0;
+		
 	}
 	
 	

@@ -4,9 +4,11 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import application.gamefield.GameField;
 import application.global.Global;
+import application.ui.VerticalButtonList;
 import core.ApplicationListener;
 import core.Configuration;
 import core.State;
+import core.WeakEventManager;
 
 
 /**
@@ -18,6 +20,8 @@ public class Game extends ApplicationListener {
 	
 	/** Scene manager */
 	private SceneManager scenes;
+	/** Weak event manager */
+	private WeakEventManager eventMan;
 	
 	/** Virtual game pad */
 	private Gamepad vpad;
@@ -78,8 +82,12 @@ public class Game extends ApplicationListener {
 	@Override
 	protected void onInit() {
 		
+		// Create the weak event manager
+		eventMan = new WeakEventManager(this);
+		
 		// Create scene manager and add scenes
 		scenes = new SceneManager();
+		scenes.setWeakEventManager(eventMan);
 		scenes.addGlobalScene(new Global());
 		scenes.addScene(new GameField(), true);
 		
@@ -98,6 +106,9 @@ public class Game extends ApplicationListener {
 	
 	@Override
 	protected void onLoaded() throws Exception {
+		
+		// Initialize UI assets
+		VerticalButtonList.init(assets);
 		
 		// Initialize scenes
 		scenes.init(assets);

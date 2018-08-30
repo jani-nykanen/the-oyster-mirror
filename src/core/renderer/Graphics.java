@@ -31,6 +31,10 @@ public final class Graphics {
 	/** Source translation */
 	private Point sourceTranslation;
 	
+	/** Global alpha */
+	private float globalAlpha = 1.0f;
+	
+	
 	/**
 	 * Initialize graphics
 	 * @throws Exception If something goes wrong
@@ -77,6 +81,9 @@ public final class Graphics {
 	    
 	    // Bind mesh
 	    meshRect.bind();
+	    
+	    // Set default values
+	    globalAlpha = 1.0f;
 	}
 	
 	
@@ -307,7 +314,7 @@ public final class Graphics {
 	 */
 	public void setColor(float r, float g, float b, float a) {
 		
-		shaderDefault.setColorUniform(r, g, b, a);
+		shaderDefault.setColorUniform(r, g, b, a * globalAlpha);
 	}
 
 	
@@ -319,7 +326,7 @@ public final class Graphics {
 	 */
 	public void setColor(float r, float g, float b) {
 		
-		setColor(r, g, b, 1.0f);
+		setColor(r, g, b, 1.0f * globalAlpha);
 	}
 	
 	
@@ -328,7 +335,7 @@ public final class Graphics {
 	 */
 	public void setColor() {
 		
-		setColor(1,1,1,1);
+		setColor(1, 1, 1, 1.0f * globalAlpha);
 	}
 	
 	
@@ -366,5 +373,24 @@ public final class Graphics {
 		
 		sourceTranslation.x = x;
 		sourceTranslation.y = y;
+	}
+	
+	
+	/**
+	 * Set global alpha
+	 * @param alpha Alpha
+	 */
+	public void setGlobalAlpha(float alpha) {
+		
+		globalAlpha = alpha;
+	}
+	
+	
+	/**
+	 * Reset global alpha to 1.0
+	 */
+	public void setGlobalAlpha() {
+		
+		setGlobalAlpha(1.0f);
 	}
 }
