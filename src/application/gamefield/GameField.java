@@ -70,7 +70,7 @@ public class GameField extends Scene {
 		
 		// Create "Stage clear" object
 		StageClearScreen.init(assets);
-		stageClear = new StageClearScreen();
+		stageClear = new StageClearScreen(this);
 		
 		// Fade in
 		trans.activate(Transition.Mode.Out, Transition.Type.Fade, 2.0f, new RGBFloat(), null);
@@ -178,7 +178,7 @@ public class GameField extends Scene {
 		pause.draw(g);
 		
 		// Draw "Stage Clear" screen
-		stageClear.draw(g);
+		stageClear.draw(g, trans);
 	}
 	
 
@@ -215,8 +215,8 @@ public class GameField extends Scene {
 		statMan = new StatusManager();
 		statMan.setInitial(stage);
 		
-		// Create stage clear object
-		stageClear = new StageClearScreen();
+		// Reset stage clear object
+		stageClear.reset();
 	}
 	
 	

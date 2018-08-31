@@ -507,8 +507,8 @@ public class Stage {
 		// Scale, if transitioning
 		if(transActive) {
 			
-			float t = transTime;
-			float scale = mode == Transition.Mode.In 
+			float t = 1.0f-transTime;
+			float scale = mode == Transition.Mode.Out 
 					? (1.0f-SCALE_IN_FACTOR) + t*SCALE_IN_FACTOR :  
 					   1.0f + t * SCALE_OUT_FACTOR;
 			Vector2 center = tr.getViewport().clone();
