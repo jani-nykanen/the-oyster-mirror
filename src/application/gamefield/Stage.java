@@ -489,8 +489,11 @@ public class Stage {
 	/**
 	 * Set stage transformations
 	 * @param g Graphics object
+	 * @param transActive Is transition active
+	 * @param mode Transition mode
+	 * @param transTime Transition time in scale [0, 1]
 	 */
-	public void setTransform(Graphics g, Transition trans) {
+	public void setTransform(Graphics g, boolean transActive, Transition.Mode mode, float transTime) {
 		
 		final float SCALE_IN_FACTOR = 0.25f;
 		final float SCALE_OUT_FACTOR = 0.75f;
@@ -502,10 +505,10 @@ public class Stage {
 		tr.fitViewHeight(height * tileSize);
 				
 		// Scale, if transitioning
-		if(trans.isActive()) {
+		if(transActive) {
 			
-			float t = trans.getTimer();
-			float scale = trans.getMode() == Transition.Mode.In 
+			float t = transTime;
+			float scale = mode == Transition.Mode.In 
 					? (1.0f-SCALE_IN_FACTOR) + t*SCALE_IN_FACTOR :  
 					   1.0f + t * SCALE_OUT_FACTOR;
 			Vector2 center = tr.getViewport().clone();

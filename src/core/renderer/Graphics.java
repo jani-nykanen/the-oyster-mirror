@@ -246,45 +246,7 @@ public final class Graphics {
 	public void drawText(Bitmap bmp, String text, 
 			float dx, float dy, float xoff, float yoff, boolean center, float scale) {
 		
-	    if(bmp == null) return;
-	    
-	    center = center == false ? false : center;
-
-	    int cw = (bmp.getWidth()) / 16;
-	    int ch = cw;
-	    int len = text.length();
-	    float x = dx;
-	    float y = dy;
-	    char c;
-	    
-	    // No source translation here!
-	    setSourceTranslation(0, 0);
-	    
-	    int sx, sy;
-	    
-	    if(center) {
-
-	        dx -= ( (len+1)/2.0f * (cw+xoff) * scale );
-	        x = dx;
-	    }
-
-	    for(int i = 0; i < len;  ++ i) {
-
-	        c = text.charAt(i);
-	        if(c == '\n') {
-
-	            x = dx;
-	            y += (yoff + ch) * scale;
-	            continue;
-	        }
-
-	        sx = c % 16;
-	        sy = (c / 16) | 0;
-
-	        drawScaledBitmapRegion(bmp,sx*cw,sy*ch,cw,ch,x,y, cw* scale, ch* scale, Flip.NONE);
-
-	        x += (cw + xoff)* scale;
-	    }
+		drawWavingText(bmp, text, dx, dy, xoff, yoff, center, 0.0f, 0.0f, 0, scale);
 	}
 	
 	
@@ -302,6 +264,78 @@ public final class Graphics {
 			float dx, float dy, float xoff, float yoff, boolean center) {
 		
 		drawText(bmp, text, dx, dy, xoff, yoff, center, 1.0f);
+	}
+	
+	
+	/**
+	 * Draw waving text
+	 * @param bmp Bitmap
+	 * @param text Text to be drawn
+	 * @param dx Destination x
+	 * @param dy Destination y
+	 * @param xoff X offset
+	 * @param yoff Y offset
+	 * @param center Center the text or not
+	 * @param t Time value, in [0,1]
+	 * @param amplitude Amplitude
+	 * @param periodLength Period length
+	 * @param scale Scale
+	 */
+	public void drawWavingText(Bitmap bmp, String text, 
+			float dx, float dy, float xoff, float yoff, boolean center, float t, 
+			float amplitude, int periodLength, float scale) {
+		
+	    if(bmp == null) return;
+	    
+	    center = center == false ? false : center;
+
+	    int cw = (bmp.getWidth()) / 16;
+	    int ch = cw;
+	    int len = text.length();
+	    float x = dx;
+	    float y = dy;
+	    char c;
+	    
+	    // Calculate period
+	    float yplus = 0.0f;
+        float period = periodLength == 0 ? 0.0f : (float)Math.PI / periodLength;
+	    
+	    // No source translation here!
+	    setSourceTranslation(0, 0);
+	    
+	    int sx, sy;
+	    
+	    // Center the text
+	    if(center) {
+
+	        dx -= ( (len+1)/2.0f * (cw+xoff) * scale );
+	        x = dx;
+	    }
+
+        // Draw every character
+	    for(int i = 0; i < len;  ++ i) {
+
+	        c = text.charAt(i);
+	        if(c == '\n') {
+
+	            x = dx;
+	            y += (yoff + ch) * scale;
+	            continue;
+	        }
+	        
+	        if(periodLength != 0)
+	        	yplus = (float)Math.sin(t + period * i) * amplitude;
+
+	        sx = c % 16;
+	        sy = (c / 16) | 0;
+
+	        drawScaledBitmapRegion(bmp,sx*cw,sy*ch,cw,ch,
+	            x,y + yplus, 
+	            cw* scale, ch* scale, 
+	            Flip.NONE);
+
+	        x += (cw + xoff)* scale;
+	    }
 	}
 	
 	

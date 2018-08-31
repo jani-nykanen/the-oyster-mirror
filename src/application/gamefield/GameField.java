@@ -34,6 +34,8 @@ public class GameField extends Scene {
 	private Transition trans;
 	/** Pause object */
 	private Pause pause;
+	/** Stage clear screen object */
+	private StageClearScreen stageClear;
 	
 	
 	@Override
@@ -66,6 +68,10 @@ public class GameField extends Scene {
 		Pause.init(assets);
 		pause = new Pause(this);
 		
+		// Create "Stage clear" object
+		StageClearScreen.init(assets);
+		stageClear = new StageClearScreen();
+		
 		// Fade in
 		trans.activate(Transition.Mode.Out, Transition.Type.Fade, 2.0f, new RGBFloat(), null);
 	}
@@ -81,6 +87,14 @@ public class GameField extends Scene {
 		if(trans.isActive()) {
 			
 			pause.fadeOnly(tm);
+			return;
+		}
+		
+		// If stage clear screen active, update it and
+		// ignore the rest
+		if(stageClear.isActive()) {
+			
+			stageClear.update(vpad, tm);
 			return;
 		}
 		
@@ -113,14 +127,9 @@ public class GameField extends Scene {
 		// Check if the stage has ended
 		if(stage.hasStageEnded()) {
 			
-			// Fade in
-			trans.activate(Transition.Mode.In, 
-					Transition.Type.Fade, END_STAGE_FADE_SPEED, 
-					new RGBFloat(), null);
+			stageClear.activate(timeMan.getTurn() <= stage.getTurnLimit());
 		}
-		
-		
-		
+
 	}
 	
 
@@ -129,7 +138,7 @@ public class GameField extends Scene {
 		
 		// TODO: Put this elsewhere
 		final float DEFAULT_VIEW_HEIGHT = 720.0f;
-		
+
 		// Clear screen
 		g.clearScreen(1,1,1);
 		
@@ -137,13 +146,27 @@ public class GameField extends Scene {
 		Transformations tr = g.transform();
 
 		// Draw stage
-		stage.setTransform(g, trans);
-		stage.draw(g);
+		if(!stageClear.isActive()) {
+			
+			stage.setTransform(g, trans.isActive(), trans.getMode(), trans.getTimer());
+		}
+		else if(stageClear.isFadingIn()) {
+			
+			stage.setTransform(g, true, Transition.Mode.In, 
+					stageClear.getFadeValue());
+		}
 		
-		// Draw game objects
-		objMan.draw(g);
+		// If not fading, but stage clear is active, then we don't have to draw
+		// the stage or the objects
+		if(! (stageClear.isActive() && !stageClear.isFadingIn()) ) {
+			
+			stage.draw(g);
+			
+			// Draw game objects
+			objMan.draw(g);
+		}
 		
-		// Hello world!
+		// Set screen transformations
 		tr.fitViewHeight(DEFAULT_VIEW_HEIGHT);
 		tr.identity();
 		tr.use();
@@ -153,6 +176,9 @@ public class GameField extends Scene {
 		
 		// Draw pause
 		pause.draw(g);
+		
+		// Draw "Stage Clear" screen
+		stageClear.draw(g);
 	}
 	
 
@@ -188,6 +214,9 @@ public class GameField extends Scene {
 		// Create status manager
 		statMan = new StatusManager();
 		statMan.setInitial(stage);
+		
+		// Create stage clear object
+		stageClear = new StageClearScreen();
 	}
 	
 	
