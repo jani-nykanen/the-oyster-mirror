@@ -1,5 +1,7 @@
 package core;
 
+import core.audio.AudioManager;
+
 /**
  * A very weak event manager. Can
  * shut down the application and hardly
@@ -38,5 +40,35 @@ public class WeakEventManager {
 	public void toggleFullscreen() {
 		
 		app.toggleFullScreen();
+	}
+	
+	
+	/**
+	 * Get frame limit
+	 * @return Frame limit
+	 */
+	public int getFrameRate() {
+		
+		return app.getFrameRate();
+	}
+	
+	
+	/**
+	 * Set a new frame limit
+	 * @param fps New frame limit
+	 */
+	public void setFrameRate(int fps) {
+		
+		app.setFrameRate(fps);
+	}
+	
+	
+	/**
+	 * Get audio manager
+	 * @return Audio manager
+	 */
+	public AudioManager getAudioManager() {
+		
+		return app.getAudioManager();
 	}
 }

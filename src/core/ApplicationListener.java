@@ -2,6 +2,7 @@ package core;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import core.audio.AudioManager;
 import core.renderer.Graphics;
 import core.utility.AssetPack;
 
@@ -25,6 +26,8 @@ public class ApplicationListener extends WindowListener {
 	protected Graphics graph;
 	/** Global assets */
 	protected AssetPack assets;
+	/** Audio manager */
+	protected AudioManager audioMan;
 	
 	/** Frame rate */
 	private int frameRate;
@@ -53,6 +56,9 @@ public class ApplicationListener extends WindowListener {
 		int[] winSize = getWindowSize();
 		graph.setViewport(winSize[0], winSize[1]);
 
+		// Create audio manager
+		audioMan = new AudioManager();
+		
 		// Read certain data from configuration
 		frameRate = conf.getParameterValueInt("frame_rate", DEFALT_FRAME_RATE);
 		
@@ -243,5 +249,35 @@ public class ApplicationListener extends WindowListener {
 			// Destroy application content
 			destroy(success);
 		}
+	}
+	
+
+	/**
+	 * Get frame rate
+	 * @return Frame rate
+	 */
+	public int getFrameRate() {
+		
+		return frameRate;
+	}
+	
+	
+	/**
+	 * Set a new frame rate
+	 * @param fps New fps limit
+	 */
+	public void setFrameRate(int fps) {
+		
+		frameRate = fps;
+	}
+	
+	
+	/**
+	 * Get audio manager
+	 * @return Audio manager
+	 */
+	public AudioManager getAudioManager() {
+		
+		return audioMan;
 	}
 }

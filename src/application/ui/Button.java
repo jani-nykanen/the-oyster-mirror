@@ -1,5 +1,6 @@
 package application.ui;
 
+import core.types.Direction;
 import core.utility.VoidCallback;
 
 /**
@@ -17,6 +18,11 @@ public class Button implements Cloneable {
 	
 	/** Called when "pressed" */
 	private VoidCallback cb = null;
+	
+	/** Directional callback, "Left" */
+	private VoidCallback leftCb = null;
+	/** Directional callback, "Right" */
+	private VoidCallback rightCb = null;
 	
 	
 	/**
@@ -41,6 +47,20 @@ public class Button implements Cloneable {
 		this(text, null);
 	}
 	
+	/**
+	 * Constructor
+	 * @param text Text
+	 * @param left Left callback
+	 * @param right Right callback
+	 */
+	public Button(String text, VoidCallback left, VoidCallback right) {
+		
+		this.text = text;
+		leftCb = left;
+		rightCb = right;
+		disabled = false;
+	}
+	
 	
 	/**
 	 * Constructor
@@ -51,6 +71,23 @@ public class Button implements Cloneable {
 	}
 	
 	
+	/**
+	 * Constructor
+	 * @param text Text
+	 * @param cb Press callback
+	 * @param left Left callback
+	 * @param right Right callback
+	 */
+	public Button(String text, VoidCallback cb, VoidCallback left, VoidCallback right) {
+		
+		this.text = text;
+		this.cb = cb;
+		leftCb = left;
+		rightCb = right;
+		disabled = false;
+	}
+
+
 	/**
 	 * Disable button
 	 */
@@ -110,12 +147,38 @@ public class Button implements Cloneable {
 	
 	
 	/**
+	 * Set directional callbacks
+	 * @param left Left callback
+	 * @param right Right callback
+	 */
+	public void setDirectionalCallbacks(VoidCallback left, VoidCallback right) {
+		
+		leftCb = left;
+		rightCb = right;
+	}
+	
+	
+	/**
 	 * Call the callback function
 	 */
 	public void activate() {
 		
 		if(cb != null)
 			cb.execute();
+	}
+	
+	
+	/**
+	 * Activate directional callback
+	 * @param dir Direction
+	 */
+	public void activate(Direction dir) {
+		
+		if(dir == Direction.Left && leftCb != null)
+			leftCb.execute();
+		
+		else if(dir == Direction.Right && rightCb != null)
+			rightCb.execute();
 	}
 	
 	

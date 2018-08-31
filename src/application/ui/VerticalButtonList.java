@@ -9,6 +9,7 @@ import core.renderer.Bitmap;
 import core.renderer.Flip;
 import core.renderer.Graphics;
 import core.types.Direction;
+import core.types.Vector2;
 import core.utility.AssetPack;
 
 /**
@@ -71,7 +72,7 @@ public class VerticalButtonList {
 	 */
 	public void addButton(Button b) {
 		
-		buttons.add(b.clone());
+		buttons.add(b);
 		++ length;
 	}
 	
@@ -97,6 +98,8 @@ public class VerticalButtonList {
 	 * @param tm Time mul.
 	 */
 	public void update(Gamepad vpad, float tm) {
+		
+		final float DELTA_LIMIT = 0.25f;
 		
 		// Update cursor
 		if(cursorMoving) {
@@ -137,6 +140,18 @@ public class VerticalButtonList {
 			   vpad.getButtonByName("fire1") == State.Pressed) {
 				
 				buttons.get(cursorPos).activate();;
+			}
+			
+			// Check directional stick movement
+			Vector2 delta = vpad.getDelta();
+			Vector2 stick = vpad.getStick();
+			if(delta.x > DELTA_LIMIT && stick.x > 0.0f) {
+				
+				buttons.get(cursorPos).activate(Direction.Right);
+			}
+			else if(delta.x < -DELTA_LIMIT && stick.x < 0.0f) {
+				
+				buttons.get(cursorPos).activate(Direction.Left);
 			}
 		}
 	}

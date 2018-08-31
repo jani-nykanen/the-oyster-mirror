@@ -4,7 +4,6 @@ import application.Gamepad;
 import core.renderer.Bitmap;
 import core.renderer.Flip;
 import core.renderer.Graphics;
-import core.types.Direction;
 import core.types.Point;
 import core.utility.AssetPack;
 

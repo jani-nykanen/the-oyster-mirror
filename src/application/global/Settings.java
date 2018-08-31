@@ -4,6 +4,7 @@ import application.Gamepad;
 import application.ui.Button;
 import application.ui.MenuContainer;
 import core.WeakEventManager;
+import core.audio.AudioManager;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
 import core.types.Vector2;
@@ -24,11 +25,23 @@ public class Settings extends MenuContainer {
 	static final private String[] BUTTON_TEXT = new String[] {
 		
 		"Toggle Fullscreen",
-		"Music Volume: 100%",
-		"Sound volume: 100%",
-		"Framerate: 30 FPS",
+		"Music Volume: ",
+		"Sound volume: ",
+		"Framerate: ",
 		"Back"
 	};
+	
+	
+	/**
+	 * Update volume button text
+	 * @param b Button
+	 * @param index Index
+	 * @param vol Volume
+	 */
+	private void updateVolumeButtonText(Button b, int index, int vol) {
+		
+		b.setText(BUTTON_TEXT[index] + Integer.toString(vol*10) + "%");
+	}
 	
 	
 	/**
@@ -38,8 +51,14 @@ public class Settings extends MenuContainer {
 		
 		super();
 		
+		// Get audio manager
+		AudioManager audioMan = eventMan.getAudioManager();
+		
 		// Create callbacks for buttons
 		VoidCallback[] cbs = new VoidCallback[BUTTON_COUNT];
+		// Directional callbacks
+		VoidCallback[] leftCbs = new VoidCallback[BUTTON_COUNT];
+		VoidCallback[] rightCbs = new VoidCallback[BUTTON_COUNT];
 		// Fullscreen
 		cbs[0] = new VoidCallback() {
 			@Override
@@ -48,12 +67,64 @@ public class Settings extends MenuContainer {
 				eventMan.toggleFullscreen();
 			}
 		};
+		leftCbs[0] = null;
+		rightCbs[0] = null;
+		
 		// Music volume
 		cbs[1] = null;
+		leftCbs[1] = new VoidCallback() {
+			@Override
+			public void execute() {
+
+				audioMan.setMusicVolume(audioMan.getMusicVolume() -1);
+				updateVolumeButtonText(buttons.getButton(1), 1, audioMan.getMusicVolume());
+			}
+		};
+		rightCbs[1] = new VoidCallback() {
+			@Override
+			public void execute() {
+
+				audioMan.setMusicVolume(audioMan.getMusicVolume() +1);
+				updateVolumeButtonText(buttons.getButton(1), 1, audioMan.getMusicVolume());
+			}
+		};
+		
 		// Sound volume
 		cbs[2] =  null;
+		leftCbs[2] = new VoidCallback() {
+			@Override
+			public void execute() {
+
+				audioMan.setSoundVolume(audioMan.getSoundVolume() -1);
+				updateVolumeButtonText(buttons.getButton(2), 2, audioMan.getSoundVolume());
+			}
+		};
+		rightCbs[2] = new VoidCallback() {
+			@Override
+			public void execute() {
+
+				audioMan.setSoundVolume(audioMan.getSoundVolume() +1);
+				updateVolumeButtonText(buttons.getButton(2), 2, audioMan.getSoundVolume());
+			}
+		};
+		
 		// FPS
-		cbs[3]  = null;
+		cbs[3]  = new VoidCallback() {
+			@Override
+			public void execute() {
+				
+				// Update frame rate
+				int fps = eventMan.getFrameRate();
+				fps = fps == 30 ? 60 : 30;				
+				eventMan.setFrameRate(fps);
+				
+				// Update string
+				buttons.getButton(3).setText(BUTTON_TEXT[3] + Integer.toString(fps) + " FPS");
+			}
+		};
+		leftCbs[3] = cbs[3];
+		rightCbs[3] = cbs[3];
+		
 		// Back
 		cbs[4] = new VoidCallback() {
 			@Override
@@ -63,12 +134,20 @@ public class Settings extends MenuContainer {
 				leaving = true;
 			}
 		};
+		leftCbs[4] = null;
+		rightCbs[4] = null;
 		
 		// Create buttons
 		for(int i = 0; i < BUTTON_COUNT; ++ i) {
 			
-			buttons.addButton(new Button(BUTTON_TEXT[i], cbs[i]));
+			buttons.addButton(new Button(BUTTON_TEXT[i], cbs[i], leftCbs[i], rightCbs[i]));
 		}
+		
+		// Update button texts
+		int fps = eventMan.getFrameRate();
+		buttons.getButton(3).setText(BUTTON_TEXT[3] + Integer.toString(fps) + " FPS");
+		updateVolumeButtonText(buttons.getButton(1), 1, audioMan.getMusicVolume());
+		updateVolumeButtonText(buttons.getButton(2), 2, audioMan.getSoundVolume());
 	}
 	
 	
@@ -78,6 +157,7 @@ public class Settings extends MenuContainer {
 		buttons.setCursorPos(BUTTON_COUNT-1);
 		
 		// TODO: Read settings.xml
+		// Get settings
 	}
 	
 	

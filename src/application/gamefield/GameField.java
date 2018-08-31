@@ -80,8 +80,6 @@ public class GameField extends Scene {
 	@Override
 	public void update(Gamepad vpad, float tm) {
 		
-		final float END_STAGE_FADE_SPEED = 0.75f;
-		
 		// No updating if fading, except possibly
 		// fading pause screen
 		if(trans.isActive()) {
