@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import application.gamefield.GameField;
 import application.global.Global;
+import application.ui.MenuContainer;
 import application.ui.VerticalButtonList;
 import core.ApplicationListener;
 import core.Configuration;
@@ -109,6 +110,7 @@ public class Game extends ApplicationListener {
 		
 		// Initialize UI assets
 		VerticalButtonList.init(assets);
+		MenuContainer.init(assets);
 		
 		// Initialize scenes
 		scenes.init(assets);

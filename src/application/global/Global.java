@@ -4,7 +4,6 @@ import application.Gamepad;
 import application.Scene;
 import core.renderer.Graphics;
 import core.utility.AssetPack;
-import core.utility.RGBFloat;
 
 /**
  * The global scene

@@ -1,7 +1,9 @@
 package application.gamefield;
 
 import application.Gamepad;
+import application.global.Settings;
 import application.ui.Button;
+import application.ui.MenuContainer;
 import application.ui.VerticalButtonList;
 import core.ApplicationListener;
 import core.State;
@@ -17,7 +19,7 @@ import core.utility.VoidCallback;
  * @author Jani Nykänen
  *
  */
-public class Pause {
+public class Pause extends MenuContainer {
 	
 	/** Amount of pause buttons */
 	static private int BUTTON_COUNT = 4;
@@ -30,23 +32,10 @@ public class Pause {
 		"Quit"
 	};
 	
-	/** Time required for in/out transition */
-	static private final float TRANSITION_TIME = 30.0f;
+	/** A settings screen */
+	private Settings settings;
+	
 
-	/** Font bitmap */
-	static public Bitmap bmpFont;
-	
-	/** Buttons */
-	private VerticalButtonList buttons;
-	
-	/** Timer */
-	private float timer;
-	/** Is active */
-	private boolean active;
-	/** Is leaving */
-	private boolean leaving;
-	
-	
 	/**
 	 * Initialize global content
 	 * @param assets Assets pack
@@ -56,33 +45,14 @@ public class Pause {
 		// Get assets
 		bmpFont = assets.getBitmap("font");
 	}
-	
-	
-	/**
-	 * Draw a centered box
-	 * @param g Graphics object
-	 * @param w Width
-	 * @param h Height
-	 * @param shadow Shadow offset
-	 */
-	private void drawBox(Graphics g, float w, float h, float shadow) {
-		
-		final float SHADOW_ALPHA = 0.5f;
-		
-		// Draw shadow
-		g.setColor(0, 0, 0, SHADOW_ALPHA);
-		g.fillRect(-w/2 + shadow, -h/2 + shadow, w, h);
-		
-		// Draw base box
-		g.setColor();
-		g.fillRect(-w/2, -h/2 , w, h);
-	}
-	
+
 	
 	/**
 	 * Constructor
 	 */
 	public Pause(GameField game) {
+		
+		super();
 		
 		// Create callbacks for buttons
 		VoidCallback[] cbs = new VoidCallback[BUTTON_COUNT];
@@ -107,7 +77,13 @@ public class Pause {
 			}
 		};
 		// Settings
-		cbs[2] = null;
+		cbs[2] =  new VoidCallback() {
+			@Override
+			public void execute() {
+						
+				settings.activate();
+			}
+		};
 		// Quit
 		cbs[3]  = new VoidCallback() {
 			@Override
@@ -120,11 +96,13 @@ public class Pause {
 		};
 		
 		// Create buttons
-		buttons = new VerticalButtonList();
 		for(int i = 0; i < BUTTON_COUNT; ++ i) {
 			
 			buttons.addButton(new Button(BUTTON_TEXT[i], cbs[i]));
 		}
+		
+		// Create settings
+		settings = new Settings(game.getWeakEventManager());
 		
 		// Set default values
 		timer = 0.0f;
@@ -133,30 +111,19 @@ public class Pause {
 	}
 	
 	
-	/**
-	 * Update pause screen
-	 * @param vpad Virtual gamepad
-	 * @param tm Time mul.
-	 */
-	public void update(Gamepad vpad, float tm) {
+	@Override
+	public void updateEvent(Gamepad vpad, float tm) {
 		
-		if(!active) return;
+		// If settings active, update it
+		// and ignore pause menu
+		if(settings.isActive()) {
+			
+			settings.update(vpad, tm);
+			return;
+		}
 		
-		// Update timer
-		if(timer > 0.0f) {
-			
-			timer -= 1.0f * tm;
-			if(timer <= 0.0f && leaving) {
-				
-				active = false;
-				return;
-			}
-		}
-		else {
-			
-			// Update button list
-			buttons.update(vpad, tm);
-		}
+		// Update button list
+		buttons.update(vpad, tm);
 	}
 	
 	
@@ -179,10 +146,7 @@ public class Pause {
 	}
 	
 	
-	/**
-	 * Draw pause screen
-	 * @param g Graphics object
-	 */
+	@Override
 	public void draw(Graphics g) {
 		
 		if(!active) return;
@@ -199,6 +163,7 @@ public class Pause {
 		final float BUTTONS_SCALE = 0.8f;
 		final float BUTTONS_SHADOW = 4.0f;
 		
+
 		// Calculate scale value
 		float scale = timer > 0.0f ? 1.0f - timer / TRANSITION_TIME : 1.0f;
 		if(leaving)
@@ -209,6 +174,15 @@ public class Pause {
 		Vector2 view = tr.getViewport();
 		g.setColor(0, 0, 0, BG_ALPHA * scale);
 		g.fillRect(0, 0, view.x, view.y);
+		
+		// If settings screen is ready, draw it and
+		// ignore everything else (they are behind
+		// the settings anyway)
+		if(settings.ready()) {
+					
+			settings.draw(g);
+			return;
+		}
 		
 		// Set global alpha
 		g.setGlobalAlpha(scale);
@@ -231,28 +205,12 @@ public class Pause {
 		
 		g.setGlobalAlpha();
 		tr.pop();
-	}
-	
-	
-	/**
-	 * Activate pause
-	 */
-	public void activate() {
 		
-		active = true;
-		timer = TRANSITION_TIME;
-		leaving = false;
-		buttons.resetCursor();
-	}
-	
-	
-	/**
-	 * Is the pause screen active
-	 * @return True, if active
-	 */
-	public boolean isActive() {
-		
-		return active;
+		// Draw settings screen now, if still transitioning
+		if(!settings.ready()) {
+			
+			settings.draw(g);
+		}
 	}
 	
 }

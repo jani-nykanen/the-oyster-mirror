@@ -76,4 +76,14 @@ public abstract class Scene {
 		
 		eventMan = e;
 	}
+	
+	
+	/**
+	 * Get the reference to the weak event manager.
+	 * @return
+	 */
+	public WeakEventManager getWeakEventManager() {
+		
+		return eventMan;
+	}
 }

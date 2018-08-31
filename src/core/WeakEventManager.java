@@ -30,4 +30,13 @@ public class WeakEventManager {
 		
 		app.terminate();
 	}
+	
+	
+	/**
+	 * Toggle full screen mode
+	 */
+	public void toggleFullscreen() {
+		
+		app.toggleFullScreen();
+	}
 }

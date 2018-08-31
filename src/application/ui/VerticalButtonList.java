@@ -8,7 +8,6 @@ import core.State;
 import core.renderer.Bitmap;
 import core.renderer.Flip;
 import core.renderer.Graphics;
-import core.renderer.Transformations;
 import core.types.Direction;
 import core.utility.AssetPack;
 
@@ -210,8 +209,21 @@ public class VerticalButtonList {
 	 */
 	public void resetCursor() {
 		
-		cursorPos = 0;
-		oldPos = 0;
+		setCursorPos(0);
+	}
+	
+	
+	/**
+	 * Set cursor position
+	 * @param pos Position
+	 */
+	public void setCursorPos(int pos) {
+		
+		if(pos < 0 || pos >= buttons.size())
+			pos = 0;
+		
+		cursorPos = pos;
+		oldPos = pos;
 		cursorTimer = 0.0f;
 	}
 }
