@@ -97,11 +97,11 @@ public class AssetPack {
 	 * @param name Tilemap name
 	 * @return Tilemap, null if does not exist
 	 */
-	public Tilemap getTilemap(String namex) {
+	public Tilemap getTilemap(String name) {
 		
 		for(Asset<Tilemap> b : tilemaps) {
 			
-			if(b.getName().equals(namex)) {
+			if(b.getName().equals(name)) {
 				
 				return b.getAsset();
 			}

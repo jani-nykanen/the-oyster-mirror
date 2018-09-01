@@ -164,6 +164,8 @@ public class Button implements Cloneable {
 	 */
 	public void activate(int index) {
 		
+		if(disabled) return;
+		
 		if(cb != null)
 			cb.execute(index);
 	}
@@ -174,6 +176,8 @@ public class Button implements Cloneable {
 	 * @param dir Direction
 	 */
 	public void activate(Direction dir, int index) {
+		
+		if(disabled) return;
 		
 		if(dir == Direction.Left && leftCb != null)
 			leftCb.execute(index);

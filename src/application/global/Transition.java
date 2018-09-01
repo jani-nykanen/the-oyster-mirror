@@ -42,8 +42,6 @@ public class Transition {
 	private RGBFloat color = new RGBFloat(1.0f, 1.0f, 1.0f);
 	/** Callback */
 	private VoidCallback cb = null;
-	/** Callback index value */
-	private int cbIndex = 0;
 	
 	
 	/**
@@ -92,7 +90,7 @@ public class Transition {
 			if(mode == Mode.In) {
 				
 				if(cb != null)
-					cb.execute(cbIndex);
+					cb.execute(0);
 				
 				mode = Mode.Out;
 				timer += FADE_TIME;
@@ -135,9 +133,8 @@ public class Transition {
 	 * @param speed Speed
 	 * @param col Color
 	 * @param cb Callback function
-	 * @param index Index value
 	 */
-	public void activate(Mode mode, Type type, float speed, RGBFloat col, VoidCallback cb, int index) {
+	public void activate(Mode mode, Type type, float speed, RGBFloat col, VoidCallback cb) {
 		
 		this.mode = mode;
 		this.type = type;
@@ -145,23 +142,8 @@ public class Transition {
 		this.color = col;
 		this.cb = cb;
 		this.timer = FADE_TIME;
-		this.cbIndex = index;
 		
 		active = true;
-	}
-	
-	
-	/**
-	 * Activate
-	 * @param mode Mode
-	 * @param type Type
-	 * @param speed Speed
-	 * @param col Color
-	 * @param cb Callback function
-	 */
-	public void activate(Mode mode, Type type, float speed, RGBFloat col, VoidCallback cb) {
-		
-		activate(mode, type, speed, col, cb, 0);
 	}
 	
 	

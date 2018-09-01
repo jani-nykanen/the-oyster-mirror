@@ -178,7 +178,10 @@ public class VerticalButtonList {
 		
 		// Draw text
 		float tfactor = 0.0f;
+		Button b;
 		for(int i = 0; i < length; ++ i) {
+			
+			b = buttons.get(i);
 			
 			if(cursorPos == i)
 				tfactor = t ;
@@ -191,15 +194,19 @@ public class VerticalButtonList {
 			
 			// Draw shadow
 			g.setColor(0, 0, 0, SHADOW_ALPHA);
-			g.drawText(bmp, buttons.get(i).getText(), 
+			g.drawText(bmp, b.getText(), 
 					shadow + dx + tfactor*yoff, 
 					shadow + dy + i * yoff, xoff, 
 					0.0f, center, scale);
 			
-			// Set color
-			g.setColor(2.0f - tfactor, 2.0f - tfactor, 1.0f - tfactor);
+			// Set color, gray if disabled, otherwise
+			// yellow
+			if(b.isDisabled())
+				g.setColor(0.75f, 0.75f, 0.75f);
+			else
+				g.setColor(2.0f - tfactor, 2.0f - tfactor, 1.0f - tfactor);
 			// Draw text
-			g.drawText(bmp, buttons.get(i).getText(), dx + tfactor*yoff, 
+			g.drawText(bmp,b.getText(), dx + tfactor*yoff, 
 					dy + i * yoff, xoff, 0.0f, center, scale);
 		}
 		

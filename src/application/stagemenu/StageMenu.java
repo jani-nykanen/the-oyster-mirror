@@ -30,15 +30,59 @@ public class StageMenu extends Scene {
 	private VerticalButtonList stageButtons;
 	/** Transitions */
 	private Transition trans;
-	/** A global index pointer (read: i). Required for callbacks */
-	private int indexPointer = 0;
+	
+	/** Stage index */
+	private int stageIndex = 0;
+	
+	
+	/**
+	 * Change to the game scene
+	 */
+	private void changeToGame() {
+		
+		final float STAGE_CHANGE_FADE_SPEED = 2.0f;
+		
+		// Fade in and change scene
+		trans.activate(Transition.Mode.In, Transition.Type.Fade, 
+				STAGE_CHANGE_FADE_SPEED, new RGBFloat(1, 1, 1), 
+		new VoidCallback() {
+			@Override
+			public void execute(int index) {
+				
+				sceneMan.changeScene("game", 
+						(Object)new Integer(stageIndex));	
+			}
+		});
+	}
+	
+	
+	/**
+	 * Get the amount of active buttons (i.e amount of stages
+	 * that exist). NOTE: If 1 & 2 exist, and 3 not, it does not 
+	 * matter if 4 exists, this returns 2.
+	 * @param assets Asset pack
+	 * @return Active button count
+	 */
+	private int getActiveButtonCount(AssetPack assets) {
+		
+		int count = 0;
+		for(int i = 1; i < BUTTON_COUNT; ++ i) {
+			
+			if(assets.getTilemap(Integer.toString(i)) == null) {
+				
+				break;
+			}
+			++ count;
+		}
+		
+		return count;
+	}
+	
 	
 	
 	@Override
 	public void init(AssetPack assets) throws Exception {
 
-		final float STAGE_CHANGE_FADE_SPEED = 2.0f;
-		
 		// Set name
 		name = "stagemenu";
 		
@@ -47,6 +91,9 @@ public class StageMenu extends Scene {
 		
 		// Create button list
 		stageButtons = new VerticalButtonList();
+		
+		// Get active button count
+		int bcount = getActiveButtonCount(assets);
 		
 		// Create buttons 
 		VoidCallback[] cbs = new VoidCallback[BUTTON_COUNT];
@@ -58,34 +105,39 @@ public class StageMenu extends Scene {
 			}
 		};
 		String name = "";
-		for(indexPointer = 0; indexPointer < BUTTON_COUNT; ++ indexPointer) {
+		for(int i = 0; i < BUTTON_COUNT; ++ i) {
+			
+			Button b = new Button();
 			
 			// Set stage button callbacks
-			if(indexPointer > 0) {
+			if(i > 0) {
 				
-				cbs[indexPointer] = new VoidCallback() {
+				cbs[i] = new VoidCallback() {
 					@Override
 					public void execute(int index) {
 						
-						// Fade in and change scene
-						trans.activate(Transition.Mode.In, Transition.Type.Fade, 
-								STAGE_CHANGE_FADE_SPEED, new RGBFloat(1, 1, 1), 
-						new VoidCallback() {
-							@Override
-							public void execute(int index) {
-								
-								System.out.println(index);
-								sceneMan.changeScene("game", 
-										(Object)new Integer(index));	
-							}
-						}, index);
+						stageIndex = index;
+						changeToGame();
 					}
 				};
 			}
+			b.setCallback(cbs[i]);
 			
-			name = indexPointer == 0 ? "Back" 
-					: "Stage " + Integer.toString(indexPointer);
-			stageButtons.addButton(new Button(name, cbs[indexPointer]));
+			// Set name
+			name = i == 0 ? "Back" 
+					: "Stage " + Integer.toString(i);
+			b.setText(name);
+			
+			// Disable, if not yet ready
+			if(i > bcount) {
+				
+				b.disable();
+			}
+				
+			
+			// Set name
+			
+			stageButtons.addButton(b);
 		}
 		
 		// Get transitions object

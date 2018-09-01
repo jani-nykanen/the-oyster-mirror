@@ -3,6 +3,7 @@ package application.gamefield;
 import core.renderer.Bitmap;
 import core.renderer.Flip;
 import core.renderer.Graphics;
+import core.types.Vector2;
 import core.utility.AssetPack;
 
 /**
@@ -88,7 +89,14 @@ public class StatusManager {
 		}
 
 		// Draw stage index
-		g.drawText(bmpFont, "Stage " + Integer.toString(stageIndex) + ": " + stageName,
+		float viewx = g.transform().getViewport().x;
+		String sname = "";
+		if( (stageName.length()-1) * ( (64.0f-XOFF1) * FONT_SCALE) > viewx)
+			sname = stageName;
+		else
+			sname = "Stage " + Integer.toString(stageIndex) + ": " + stageName;
+			
+		g.drawText(bmpFont, sname,
 				tx + STAGE_X, ty + TEXT_Y, XOFF1, YOFF, false, FONT_SCALE);
 		
 
