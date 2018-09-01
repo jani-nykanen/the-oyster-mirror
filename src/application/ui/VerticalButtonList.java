@@ -8,6 +8,7 @@ import core.State;
 import core.renderer.Bitmap;
 import core.renderer.Flip;
 import core.renderer.Graphics;
+import core.renderer.Transformations;
 import core.types.Direction;
 import core.types.Vector2;
 import core.utility.AssetPack;
@@ -40,6 +41,13 @@ public class VerticalButtonList {
 	/** Is the cursor moving */
 	private boolean cursorMoving;
 	
+	/** Y translation target */
+	private float ytarget;
+	/** Y translation */
+	private float ytrans;
+	/** Y translation maximum */
+	private float ytransMax;
+	
 	
 	/**
 	 * Initialize global content
@@ -63,6 +71,7 @@ public class VerticalButtonList {
 		cursorMoving = false;
 		cursorTimer = 0.0f;
 		cursorPos = 0;
+		ytransMax = 0.0f;
 	}
 	
 	
@@ -100,6 +109,7 @@ public class VerticalButtonList {
 	public void update(Gamepad vpad, float tm) {
 		
 		final float DELTA_LIMIT = 0.25f;
+		final float Y_TRANS_SPEED = 60.0f / CURSOR_TIME * 2.0f;
 		
 		// Update cursor
 		if(cursorMoving) {
@@ -154,6 +164,37 @@ public class VerticalButtonList {
 				buttons.get(cursorPos).activate(Direction.Left, cursorPos);
 			}
 		}
+		
+		
+		// Update y transition
+		if(ytarget > ytrans) {
+				
+			ytrans += 1.0f * Y_TRANS_SPEED * tm;
+			if(ytrans > ytarget) {
+					
+				ytrans = ytarget;
+			}
+		}
+		else if(ytarget < ytrans) {
+				
+			ytrans -= 1.0f * Y_TRANS_SPEED * tm;
+			if(ytrans < ytarget) {
+					
+				ytrans = ytarget;
+			}
+		}
+		
+		// Limit y translation
+		if(ytrans > 0.0f) {
+			
+			ytrans = 0.0f;
+			ytarget = 0.0f;
+		}
+		else if(ytrans < -ytransMax) {
+			
+			ytrans = -ytransMax;
+			ytarget = -ytransMax;
+		}
 	}
 	
 	
@@ -166,19 +207,33 @@ public class VerticalButtonList {
 	 * @param xoff X offset
 	 * @param yoff Y offset
 	 * @param scale Scale
-	 * @param center Whether to center the text
+	 * @param limit Whether offscreen elements should be hidden
+	 * and special translation used.
 	 * @param shadow Shadow offset
 	 */
-	public void draw(Graphics g, Bitmap bmp, float dx, float dy, float xoff, float yoff, float scale, boolean center, float shadow) {
+	public void draw(Graphics g, Bitmap bmp, float dx, float dy, float xoff, float yoff, float scale, boolean limit, float shadow) {
 		
 		final float SHADOW_ALPHA = 0.5f;
+		
+		// Translate & calculate translation max
+		dy += ytrans;
+		ytransMax = yoff * (buttons.size()- 1);
 		
 		// Calculate "factor value"
 		float t = 1.0f - cursorTimer / CURSOR_TIME;
 		
+		// Calculate cursor position
+		float size = yoff ;
+		float cpos = dy + (oldPos * (1.0f-t) + cursorPos * t) * yoff;
+		
+		// Get viewport size
+		Transformations tr = g.transform();
+		Vector2 view = tr.getViewport();
+		
 		// Draw text
 		float tfactor = 0.0f;
 		Button b;
+		float y;
 		for(int i = 0; i < length; ++ i) {
 			
 			b = buttons.get(i);
@@ -192,12 +247,43 @@ public class VerticalButtonList {
 			else
 				tfactor = 0.0f;
 			
+			y = dy + i * yoff;
+			
+			
+			if(limit) {
+				
+				// If outside the screen, break. If only
+				// almost outside, just move forward
+				if(y +yoff > view.y) {
+	
+					// If cursor low enough, move menu
+					if(cursorPos >= i -1) {
+						
+						ytarget -= yoff;
+					}
+					
+					if(y > view.y)
+						break;
+				}
+				else if(y < 0.0f) {
+	
+					// If cursor low enough, move menu
+					if(cursorPos <= i +1) {
+						
+						ytarget += yoff;
+					}
+					
+					if(y+yoff < 0.0f)
+						continue;
+				}
+			}
+			
 			// Draw shadow
 			g.setColor(0, 0, 0, SHADOW_ALPHA);
 			g.drawText(bmp, b.getText(), 
 					shadow + dx + tfactor*yoff, 
-					shadow + dy + i * yoff, xoff, 
-					0.0f, center, scale);
+					shadow + y, xoff, 
+					0.0f, false, scale);
 			
 			// Set color, gray if disabled, otherwise
 			// yellow
@@ -207,13 +293,9 @@ public class VerticalButtonList {
 				g.setColor(2.0f - tfactor, 2.0f - tfactor, 1.0f - tfactor);
 			// Draw text
 			g.drawText(bmp,b.getText(), dx + tfactor*yoff, 
-					dy + i * yoff, xoff, 0.0f, center, scale);
+					y, xoff, 0.0f, false, scale);
 		}
 		
-		
-		// Calculate cursor position
-		float size = yoff ;
-		float cpos = dy + (oldPos * (1.0f-t) + cursorPos * t) * yoff;
 		
 		// Draw cursor shadow
 		g.setColor(0, 0, 0, SHADOW_ALPHA);

@@ -24,7 +24,7 @@ import core.utility.VoidCallback;
 public class StageMenu extends Scene {
 
 	/** Amount of buttons (= stage count + back button) */
-	static private final int BUTTON_COUNT = 10 +1;
+	static private final int BUTTON_COUNT = 20 +1;
 	
 	/** Font bitmap */
 	private Bitmap bmpFont;
@@ -40,6 +40,33 @@ public class StageMenu extends Scene {
 	private String[] stageNames;
 	/** Difficulties */
 	private int[] difficulties;
+	/** Is leaving */
+	private boolean leaving = false;
+	
+	
+	/**
+	 * Get difficulty string (i.e stars)
+	 * @param dif Difficulty level (from 1 to n)
+	 * @return Difficulty string
+	 */
+	private String getDifficultyString(int dif) {
+		
+		String str = "";
+		
+		// Add full stars
+		for(int i = 0; i < dif/2; ++ i) {
+			
+			str += "~";
+		}
+		
+		// Add a half star, if needed
+		if(dif % 2 == 1) {
+			
+			str += Character.toString((char)('~'+1));
+		}
+		
+		return str;
+	}
 	
 	
 	/**
@@ -100,7 +127,7 @@ public class StageMenu extends Scene {
 		final float SHADOW_OFF = 8.0f;
 		
 		// Draw buttons
-		stageButtons.draw(g, bmpFont, XPOS, YPOS, XOFF, YOFF, TEXT_SCALE, false, SHADOW_OFF);
+		stageButtons.draw(g, bmpFont, XPOS, YPOS, XOFF, YOFF, TEXT_SCALE, true, SHADOW_OFF);
 	}
 	
 	
@@ -146,18 +173,29 @@ public class StageMenu extends Scene {
 		final float NAME_X = 16.0f;
 		final float NAME_Y = 16.0f;
 		final float XOFF = -26.0f;
+		final float XOFF_STARS = -16.0f;
 		final float YOFF = 56.0f;
 		final float TEXT_SCALE = 0.60f;
+		final float STAR_SCALE = 0.70f;
 		
 		// Draw stage name
 		g.drawText(bmpFont, "NAME: " + stageNames[cpos-1], 
 				x + NAME_X, y + NAME_Y,
 				XOFF, 0.0f, false, TEXT_SCALE);
 				
-		// Draw difficulty
-		g.drawText(bmpFont, "DIFFICULTY: " + difficulties[cpos-1], 
+		// Draw difficulty text
+		String dif = "DIFFICULTY:";
+		g.drawText(bmpFont, dif, 
 				x + NAME_X, y + NAME_Y + YOFF,
 				XOFF, 0.0f, false, TEXT_SCALE);
+		
+		// Draw star
+		String stars = getDifficultyString(difficulties[cpos-1]);
+		x += (64.0f+XOFF) * TEXT_SCALE * (dif.length());
+		y -= (64.0f * STAR_SCALE) - (64.0f * TEXT_SCALE);
+		g.drawText(bmpFont, stars, 
+				x + NAME_X, y + NAME_Y + YOFF,
+				XOFF_STARS, 0.0f, false, STAR_SCALE);
 	}
 	
 	
@@ -234,7 +272,18 @@ public class StageMenu extends Scene {
 			@Override
 			public void execute(int index) {
 				
-				eventMan.quit();
+				// Fade in and quit
+				// TEMPORARY
+				leaving = true;
+				trans.activate(Transition.Mode.In, Transition.Type.Fade, 
+						2.0f, new RGBFloat(0, 0, 0), 
+				new VoidCallback() {
+					@Override
+					public void execute(int index) {
+					
+						eventMan.quit();
+					}
+				});
 			}
 		};
 		String name = "";
@@ -301,15 +350,21 @@ public class StageMenu extends Scene {
 		tr.fitViewHeight(Global.DEFAULT_VIEW_HEIGHT);
 		tr.identity();
 		
-		
-		// Scale, if transitioning
+		// Scale, if "transitioning"
 		if(trans.isActive()) {
 			
 			float scale = 1.0f;
-			if(trans.getMode() == Mode.Out)
-				scale = 1.0f + FADE_SCALE* trans.getTimer();
-			else
-				scale = 1.0f + FADE_SCALE* (1.0f-trans.getTimer());
+			if(leaving) {
+				
+				scale = 1.0f - FADE_SCALE* (1.0f-trans.getTimer());
+			}
+			else {
+				
+				if(trans.getMode() == Mode.Out)
+					scale = 1.0f + FADE_SCALE* trans.getTimer();
+				else
+					scale = 1.0f + FADE_SCALE* (1.0f-trans.getTimer());
+			}
 			
 			tr.translate(view.x/2, view.y/2);
 			tr.scale(scale, scale);
