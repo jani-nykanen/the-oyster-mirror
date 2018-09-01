@@ -188,7 +188,7 @@ public class StageClearScreen {
 		// Stage menu
 		cbs[0] = new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 				
 				restarting = false;
 				game.quit();
@@ -197,7 +197,7 @@ public class StageClearScreen {
 		// Restart
 		cbs[1] = new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 				
 				restarting = true;
 				game.fadeAndReset();

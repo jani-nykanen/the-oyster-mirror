@@ -444,17 +444,15 @@ public class Stage {
 	
 	
 	/**
-	 * Load a map from a file
+	 * Set the stage tilemap ready to be used
 	 * @param index Stage index
-	 * @throws Exception If does not exist
 	 */
-	public void loadMap(int index) throws Exception {
-	
+	public void setStage(int index, AssetPack assets) {
+		
 		stageIndex = index;
 		
-		// Open file
-		String path = "assets/tilemaps/" + index + ".tmx";
-		map = new Tilemap(path);
+		// Get the tilemap
+		map = assets.getTilemap(Integer.toString(index));
 		
 		resetMap();
 	}

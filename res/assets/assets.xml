@@ -7,4 +7,6 @@
    	<bitmap name="collectibles" path="collectibles.png" />
    	<bitmap name="player" path="player.png" />
    	<bitmap name="cursor" path="cursor.png" />
+   	
+   	<tilemap name="1" path="1.tmx" />
 </assets>

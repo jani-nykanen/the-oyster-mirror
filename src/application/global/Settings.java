@@ -62,7 +62,7 @@ public class Settings extends MenuContainer {
 		// Fullscreen
 		cbs[0] = new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 				
 				eventMan.toggleFullscreen();
 			}
@@ -74,7 +74,7 @@ public class Settings extends MenuContainer {
 		cbs[1] = null;
 		leftCbs[1] = new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 
 				audioMan.setMusicVolume(audioMan.getMusicVolume() -1);
 				updateVolumeButtonText(buttons.getButton(1), 1, audioMan.getMusicVolume());
@@ -82,7 +82,7 @@ public class Settings extends MenuContainer {
 		};
 		rightCbs[1] = new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 
 				audioMan.setMusicVolume(audioMan.getMusicVolume() +1);
 				updateVolumeButtonText(buttons.getButton(1), 1, audioMan.getMusicVolume());
@@ -93,7 +93,7 @@ public class Settings extends MenuContainer {
 		cbs[2] =  null;
 		leftCbs[2] = new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 
 				audioMan.setSoundVolume(audioMan.getSoundVolume() -1);
 				updateVolumeButtonText(buttons.getButton(2), 2, audioMan.getSoundVolume());
@@ -101,7 +101,7 @@ public class Settings extends MenuContainer {
 		};
 		rightCbs[2] = new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 
 				audioMan.setSoundVolume(audioMan.getSoundVolume() +1);
 				updateVolumeButtonText(buttons.getButton(2), 2, audioMan.getSoundVolume());
@@ -111,7 +111,7 @@ public class Settings extends MenuContainer {
 		// FPS
 		cbs[3]  = new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 				
 				// Update frame rate
 				int fps = eventMan.getFrameRate();
@@ -128,7 +128,7 @@ public class Settings extends MenuContainer {
 		// Back
 		cbs[4] = new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 				
 				timer = TRANSITION_TIME;
 				leaving = true;

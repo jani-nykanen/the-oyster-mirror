@@ -12,7 +12,9 @@ import core.utility.AssetPack;
 public abstract class Scene {
 
 	/** Scene name */
-	private String name = "";
+	protected String name = "";
+	/** A parameter passed to the scene when changed to it */
+	protected Object param = null;
 	
 	/** Scene manager reference */
 	protected SceneManager sceneMan;
@@ -85,5 +87,15 @@ public abstract class Scene {
 	public WeakEventManager getWeakEventManager() {
 		
 		return eventMan;
+	}
+	
+	
+	/**
+	 * Set scene parameter
+	 * @param param Parameter
+	 */
+	public void setParam(Object param) {
+		
+		this.param = param;
 	}
 }

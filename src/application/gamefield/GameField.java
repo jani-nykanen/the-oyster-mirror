@@ -4,6 +4,7 @@ import application.Gamepad;
 import application.Scene;
 import application.global.Global;
 import application.global.Transition;
+import application.global.Transition.Mode;
 import core.State;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
@@ -19,9 +20,6 @@ import core.utility.VoidCallback;
  */
 public class GameField extends Scene {
 
-	/** Scene name */
-	public String name = "game";
-
 	/** Stage manager */
 	private Stage stage;
 	/** Time manager */
@@ -36,14 +34,25 @@ public class GameField extends Scene {
 	private Pause pause;
 	/** Stage clear screen object */
 	private StageClearScreen stageClear;
+	/** A reference to assets (needed for change to event) */
+	private AssetPack assets;
+	
+	/** Is leaving */
+	private boolean leaving = false;
 	
 	
 	@Override
 	public void init(AssetPack assets) throws Exception {
 		
+		// Store reference to assets (TEMPORARY?)
+		this.assets = assets;
+		
+		// Set name
+		name = "game";
+		
 		// Create stage
 		stage = new Stage(assets);
-		stage.loadMap(1);
+		stage.setStage(1, assets);
 		
 		// Initialize object manager
 		ObjectManager.init(assets);
@@ -134,9 +143,6 @@ public class GameField extends Scene {
 	@Override
 	public void draw(Graphics g) {
 		
-		// TODO: Put this elsewhere
-		final float DEFAULT_VIEW_HEIGHT = 720.0f;
-
 		// Clear screen
 		g.clearScreen(1,1,1);
 		
@@ -146,7 +152,9 @@ public class GameField extends Scene {
 		// Draw stage
 		if(!stageClear.isActive()) {
 			
-			stage.setTransform(g, trans.isActive(), trans.getMode(), trans.getTimer());
+			Mode m = leaving ? Mode.Out : trans.getMode();
+			float time = leaving ? 1.0f - trans.getTimer() : trans.getTimer();
+			stage.setTransform(g, trans.isActive(), m, time);
 		}
 		else if(stageClear.isFadingIn()) {
 			
@@ -165,7 +173,7 @@ public class GameField extends Scene {
 		}
 		
 		// Set screen transformations
-		tr.fitViewHeight(DEFAULT_VIEW_HEIGHT);
+		tr.fitViewHeight(Global.DEFAULT_VIEW_HEIGHT);
 		tr.identity();
 		tr.use();
 		
@@ -189,8 +197,16 @@ public class GameField extends Scene {
 
 	@Override
 	public void changeTo() {
-		// TODO Auto-generated method stub
 		
+		Integer i = (Integer)param;
+		int stageIndex = i != null ? i.intValue() : 1;
+		
+		leaving = false;
+		
+		// Load map
+		stage.setStage(stageIndex, assets);
+		// Reset
+		reset();
 	}
 	
 	
@@ -227,7 +243,7 @@ public class GameField extends Scene {
 		trans.activate(Transition.Mode.In, Transition.Type.Fade, 2.0f, new RGBFloat(), 
 			new VoidCallback() {
 				@Override
-				public void execute() {
+				public void execute(int index) {
 					reset();	
 				}
 		});
@@ -235,17 +251,19 @@ public class GameField extends Scene {
 	
 	
 	/**
-	 * Terminate application, "in style"
+	 * Go back to the stage menu
 	 */
 	public void quit() {
 
+		leaving = true;
+		
 		// Fade in and quit
-		trans.activate(Transition.Mode.In, Transition.Type.Fade, 2.0f, new RGBFloat(0, 0, 0), 
+		trans.activate(Transition.Mode.In, Transition.Type.Fade, 2.0f, new RGBFloat(1, 1, 1), 
 			new VoidCallback() {
 				@Override
-				public void execute() {
+				public void execute(int index) {
 					
-					eventMan.quit();	
+					sceneMan.changeScene("stagemenu");	
 				}
 		});
 	}

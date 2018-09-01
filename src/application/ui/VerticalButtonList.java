@@ -139,7 +139,7 @@ public class VerticalButtonList {
 			if(vpad.getButtonByName("confirm") == State.Pressed ||
 			   vpad.getButtonByName("fire1") == State.Pressed) {
 				
-				buttons.get(cursorPos).activate();;
+				buttons.get(cursorPos).activate(cursorPos);
 			}
 			
 			// Check directional stick movement
@@ -147,11 +147,11 @@ public class VerticalButtonList {
 			Vector2 stick = vpad.getStick();
 			if(delta.x > DELTA_LIMIT && stick.x > 0.0f) {
 				
-				buttons.get(cursorPos).activate(Direction.Right);
+				buttons.get(cursorPos).activate(Direction.Right, cursorPos);
 			}
 			else if(delta.x < -DELTA_LIMIT && stick.x < 0.0f) {
 				
-				buttons.get(cursorPos).activate(Direction.Left);
+				buttons.get(cursorPos).activate(Direction.Left, cursorPos);
 			}
 		}
 	}

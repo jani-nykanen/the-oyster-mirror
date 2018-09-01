@@ -12,6 +12,9 @@ import core.utility.AssetPack;
  */
 public class Global extends Scene {
 
+	/** Default view height */
+	public static final float DEFAULT_VIEW_HEIGHT = 720.0f;
+	
 	/** Scene name */
 	public String name = "game";
 	

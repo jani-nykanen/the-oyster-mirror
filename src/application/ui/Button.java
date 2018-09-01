@@ -160,11 +160,12 @@ public class Button implements Cloneable {
 	
 	/**
 	 * Call the callback function
+	 * @param index An index value passed to the button
 	 */
-	public void activate() {
+	public void activate(int index) {
 		
 		if(cb != null)
-			cb.execute();
+			cb.execute(index);
 	}
 	
 	
@@ -172,13 +173,13 @@ public class Button implements Cloneable {
 	 * Activate directional callback
 	 * @param dir Direction
 	 */
-	public void activate(Direction dir) {
+	public void activate(Direction dir, int index) {
 		
 		if(dir == Direction.Left && leftCb != null)
-			leftCb.execute();
+			leftCb.execute(index);
 		
 		else if(dir == Direction.Right && rightCb != null)
-			rightCb.execute();
+			rightCb.execute(index);
 	}
 	
 	

@@ -90,4 +90,22 @@ public class AssetPack {
 		}
 		return null;
 	}
+
+
+	/**
+	 * Get a tilemap by name
+	 * @param name Tilemap name
+	 * @return Tilemap, null if does not exist
+	 */
+	public Tilemap getTilemap(String namex) {
+		
+		for(Asset<Tilemap> b : tilemaps) {
+			
+			if(b.getName().equals(namex)) {
+				
+				return b.getAsset();
+			}
+		}
+		return null;
+	}
 }

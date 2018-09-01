@@ -84,19 +84,35 @@ public class SceneManager extends Scene {
 	/**
 	 * Change to a scene
 	 * @param name Name of the new scene
+	 * @param param Parameter
 	 */
-	public void changeScene(String name) {
+	public void changeScene(String name, Object param) {
+		
 		
 		// Find a scene with the same name
 		for(Scene s : scenes) {
 			
 			if(s.getName() == name) {
 				
+				// Set parameter
+				s.setParam(param);
+				
+				// Change to
 				current = s;
 				s.changeTo();
 				return;
 			}
 		}
+ 	}
+	
+	
+	/**
+	 * Change to a scene
+	 * @param name Name of the new scene
+	 */
+	public void changeScene(String name) {
+		
+		changeScene(name, null);
  	}
 
 	

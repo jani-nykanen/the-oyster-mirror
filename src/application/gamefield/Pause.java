@@ -4,10 +4,6 @@ import application.Gamepad;
 import application.global.Settings;
 import application.ui.Button;
 import application.ui.MenuContainer;
-import application.ui.VerticalButtonList;
-import core.ApplicationListener;
-import core.State;
-import core.renderer.Bitmap;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
 import core.types.Vector2;
@@ -59,7 +55,7 @@ public class Pause extends MenuContainer {
 		// Resume
 		cbs[0] = new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 				
 				timer = TRANSITION_TIME;
 				leaving = true;
@@ -69,7 +65,7 @@ public class Pause extends MenuContainer {
 		// Restart
 		cbs[1] = new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 						
 				timer = TRANSITION_TIME;
 				leaving = true;
@@ -79,7 +75,7 @@ public class Pause extends MenuContainer {
 		// Settings
 		cbs[2] =  new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 						
 				settings.activate();
 			}
@@ -87,7 +83,7 @@ public class Pause extends MenuContainer {
 		// Quit
 		cbs[3]  = new VoidCallback() {
 			@Override
-			public void execute() {
+			public void execute(int index) {
 						
 				timer = TRANSITION_TIME;
 				leaving = true;

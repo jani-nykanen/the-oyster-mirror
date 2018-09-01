@@ -10,5 +10,5 @@ package core.utility;
 public interface VoidCallback {
 
 	/** Execute */
-	public void execute();
+	public void execute(int index);
 }
