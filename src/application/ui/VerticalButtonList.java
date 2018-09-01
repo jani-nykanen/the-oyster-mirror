@@ -248,4 +248,14 @@ public class VerticalButtonList {
 		oldPos = pos;
 		cursorTimer = 0.0f;
 	}
+	
+	
+	/**
+	 * Get cursor position
+	 * @return Cursor position
+	 */
+	public int getCursorPos() {
+		
+		return cursorPos;
+	}
 }

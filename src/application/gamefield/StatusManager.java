@@ -3,7 +3,6 @@ package application.gamefield;
 import core.renderer.Bitmap;
 import core.renderer.Flip;
 import core.renderer.Graphics;
-import core.types.Vector2;
 import core.utility.AssetPack;
 
 /**
@@ -80,6 +79,7 @@ public class StatusManager {
 		final float TEXT_Y = 10.0f;
 		final float STAGE_X = 8.0f;
 		final float SHADOW_ALPHA = 0.5f;
+		final float LIMIT_DIV = 1.625f;
 		
 		if(shadow)
 			g.setColor(0,0,0, SHADOW_ALPHA);
@@ -90,12 +90,10 @@ public class StatusManager {
 
 		// Draw stage index
 		float viewx = g.transform().getViewport().x;
-		String sname = "";
-		if( (stageName.length()-1) * ( (64.0f-XOFF1) * FONT_SCALE) > viewx)
+		String sname = "Stage " + Integer.toString(stageIndex) + ": " + stageName;
+		if( (sname.length()+1) * ( 64.0f + XOFF1) * FONT_SCALE > viewx / LIMIT_DIV)
 			sname = stageName;
-		else
-			sname = "Stage " + Integer.toString(stageIndex) + ": " + stageName;
-			
+
 		g.drawText(bmpFont, sname,
 				tx + STAGE_X, ty + TEXT_Y, XOFF1, YOFF, false, FONT_SCALE);
 		

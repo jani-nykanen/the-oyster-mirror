@@ -4,13 +4,16 @@ import application.Gamepad;
 import application.Scene;
 import application.global.Global;
 import application.global.Transition;
+import application.global.Transition.Mode;
 import application.ui.Button;
 import application.ui.VerticalButtonList;
 import core.renderer.Bitmap;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
+import core.types.Vector2;
 import core.utility.AssetPack;
 import core.utility.RGBFloat;
+import core.utility.Tilemap;
 import core.utility.VoidCallback;
 
 /**
@@ -33,6 +36,10 @@ public class StageMenu extends Scene {
 	
 	/** Stage index */
 	private int stageIndex = 0;
+	/** Stage names */
+	private String[] stageNames;
+	/** Difficulties */
+	private int[] difficulties;
 	
 	
 	/**
@@ -79,6 +86,121 @@ public class StageMenu extends Scene {
 	}
 	
 	
+	/**
+	 * Draw the stage buttons (plus "Back")
+	 * @param g Graphics object
+	 */
+	private void drawStageButtons(Graphics g) {
+		
+		final float XPOS = 32;
+		final float YPOS = 32;
+		final float XOFF = -26.0f;
+		final float YOFF = 56.0f;
+		final float TEXT_SCALE = 0.80f;
+		final float SHADOW_OFF = 8.0f;
+		
+		// Draw buttons
+		stageButtons.draw(g, bmpFont, XPOS, YPOS, XOFF, YOFF, TEXT_SCALE, false, SHADOW_OFF);
+	}
+	
+	
+	/**
+	 * Draw title
+	 * @param g Graphics object
+	 */
+	private void drawTitle(Graphics g) {
+		
+		final String TEXT = "Choose a stage";
+		final float X_PLUS = -32.0f;
+		final float YPOS = 16.0f;
+		final float XOFF = -26.0f;
+		final float TEXT_SCALE = 0.90f;
+		final float SHADOW_OFF = 8.0f;
+		final float SHADOW_ALPHA = 0.5f;
+		
+		Transformations tr = g.transform();
+		Vector2 view = tr.getViewport();
+		
+		float xpos = X_PLUS + view.x - (TEXT.length() +1) * ((64.0f+XOFF) * TEXT_SCALE);
+		
+		// Draw shadow
+		g.setColor(0, 0, 0, SHADOW_ALPHA);
+		g.drawText(bmpFont, TEXT, xpos + SHADOW_OFF, YPOS + SHADOW_OFF,
+				XOFF, 0.0f, false, TEXT_SCALE);
+		
+		// Draw base text
+		g.setColor(1, 1, 0);
+		g.drawText(bmpFont, TEXT, xpos, YPOS, XOFF, 0.0f, false, TEXT_SCALE);
+	}
+	
+	
+	/**
+	 * Draw info box text
+	 * @param g Graphics object
+	 * @param cpos Cursor position
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 */
+	private void drawInfoBoxText(Graphics g, int cpos, float x, float y) {
+		
+		final float NAME_X = 16.0f;
+		final float NAME_Y = 16.0f;
+		final float XOFF = -26.0f;
+		final float YOFF = 56.0f;
+		final float TEXT_SCALE = 0.60f;
+		
+		// Draw stage name
+		g.drawText(bmpFont, "NAME: " + stageNames[cpos-1], 
+				x + NAME_X, y + NAME_Y,
+				XOFF, 0.0f, false, TEXT_SCALE);
+				
+		// Draw difficulty
+		g.drawText(bmpFont, "DIFFICULTY: " + difficulties[cpos-1], 
+				x + NAME_X, y + NAME_Y + YOFF,
+				XOFF, 0.0f, false, TEXT_SCALE);
+	}
+	
+	
+	/**
+	 * Draw an info box
+	 * @param g Graphics object
+	 */
+	private void drawInfoBox(Graphics g) {
+		
+		final float WIDTH_P = 0.65f; // 60%
+		final float XPOS = 32.0f;
+		final float HEIGHT = 128.0f;
+		final float YPOS = 32.0f;
+		final float SHADOW_OFF = 4.0f;
+		final float SHADOW_ALPHA = 0.25f;
+		
+		Transformations tr = g.transform();
+		Vector2 view = tr.getViewport();
+	
+		float w = WIDTH_P * view.x;
+		float x = view.x - XPOS - w;
+		float y = view.y - YPOS - HEIGHT;
+		
+		// Draw box
+		g.setColor(0, 0, 0, 0.25f);
+		g.fillRect(x, y, w, HEIGHT);
+		
+		// Get cursor position
+		int cpos = stageButtons.getCursorPos();
+		// If names not available, stop here
+		if(cpos == 0 || cpos > stageNames.length)
+			return;
+		
+		// Draw info box text, shadow
+		g.setColor(0, 0, 0, SHADOW_ALPHA);
+		drawInfoBoxText(g, cpos, x + SHADOW_OFF, y + SHADOW_OFF);
+		
+		
+		// Draw info box text, base
+		g.setColor(1, 1, 0);
+		drawInfoBoxText(g, cpos, x, y);
+	}
+	
 	
 	@Override
 	public void init(AssetPack assets) throws Exception {
@@ -94,6 +216,17 @@ public class StageMenu extends Scene {
 		
 		// Get active button count
 		int bcount = getActiveButtonCount(assets);
+		
+		// Get stage names & difficulties
+		stageNames = new String[bcount];
+		difficulties = new int[bcount];
+		Tilemap map;
+		for(int i = 1; i <= bcount; ++ i) {
+			
+			map = assets.getTilemap(Integer.toString(i));
+			stageNames[i -1] = map.getProperty("name");
+			difficulties[i -1] = Integer.parseInt(map.getProperty("difficulty"));
+		}
 		
 		// Create buttons 
 		VoidCallback[] cbs = new VoidCallback[BUTTON_COUNT];
@@ -134,9 +267,7 @@ public class StageMenu extends Scene {
 				b.disable();
 			}
 				
-			
-			// Set name
-			
+			// Add button
 			stageButtons.addButton(b);
 		}
 		
@@ -159,17 +290,42 @@ public class StageMenu extends Scene {
 	@Override
 	public void draw(Graphics g) {
 		
+		final float FADE_SCALE = 0.25f;
+		
 		// Clear to white
 		g.clearScreen(1.0f, 1.0f, 1.0f);
 		
 		// Set screen transformations
 		Transformations tr = g.transform();
+		Vector2 view = tr.getViewport();
 		tr.fitViewHeight(Global.DEFAULT_VIEW_HEIGHT);
 		tr.identity();
+		
+		
+		// Scale, if transitioning
+		if(trans.isActive()) {
+			
+			float scale = 1.0f;
+			if(trans.getMode() == Mode.Out)
+				scale = 1.0f + FADE_SCALE* trans.getTimer();
+			else
+				scale = 1.0f + FADE_SCALE* (1.0f-trans.getTimer());
+			
+			tr.translate(view.x/2, view.y/2);
+			tr.scale(scale, scale);
+			tr.translate(-view.x/2, -view.y/2);
+			
+		}
 		tr.use();
 
 		// Draw buttons
-		stageButtons.draw(g, bmpFont, 32, 32, -26, 56.0f, 0.80f, false, 8.0f);
+		drawStageButtons(g);
+		
+		// Draw title
+		drawTitle(g);
+		
+		// Draw info box
+		drawInfoBox(g);
 	}
 
 	
