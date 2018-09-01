@@ -24,7 +24,7 @@ import core.utility.VoidCallback;
 public class StageMenu extends Scene {
 
 	/** Amount of buttons (= stage count + back button) */
-	static private final int BUTTON_COUNT = 20 +1;
+	static private final int BUTTON_COUNT = 30 +1;
 	
 	/** Font bitmap */
 	private Bitmap bmpFont;
@@ -121,7 +121,7 @@ public class StageMenu extends Scene {
 		
 		final float XPOS = 32;
 		final float YPOS = 32;
-		final float XOFF = -26.0f;
+		final float XOFF = -28.0f;
 		final float YOFF = 56.0f;
 		final float TEXT_SCALE = 0.80f;
 		final float SHADOW_OFF = 8.0f;
@@ -170,9 +170,9 @@ public class StageMenu extends Scene {
 	 */
 	private void drawInfoBoxText(Graphics g, int cpos, float x, float y) {
 		
-		final float NAME_X = 16.0f;
+		final float NAME_X = 8.0f;
 		final float NAME_Y = 16.0f;
-		final float XOFF = -26.0f;
+		final float XOFF = -28.0f;
 		final float XOFF_STARS = -16.0f;
 		final float YOFF = 56.0f;
 		final float TEXT_SCALE = 0.60f;
@@ -184,7 +184,7 @@ public class StageMenu extends Scene {
 				XOFF, 0.0f, false, TEXT_SCALE);
 				
 		// Draw difficulty text
-		String dif = "DIFFICULTY:";
+		String dif = "DIFFICULTY: ";
 		g.drawText(bmpFont, dif, 
 				x + NAME_X, y + NAME_Y + YOFF,
 				XOFF, 0.0f, false, TEXT_SCALE);
@@ -205,7 +205,7 @@ public class StageMenu extends Scene {
 	 */
 	private void drawInfoBox(Graphics g) {
 		
-		final float WIDTH_P = 0.65f; // 60%
+		final float WIDTH_P = 0.60f; // 60%
 		final float XPOS = 32.0f;
 		final float HEIGHT = 128.0f;
 		final float YPOS = 32.0f;

@@ -21,7 +21,7 @@ import core.utility.AssetPack;
 public class VerticalButtonList {
 
 	/** Time required cursor to move from button to button */
-	static private final float CURSOR_TIME = 15.0f;
+	static private final float CURSOR_TIME = 12.0f;
 	
 	/** Cursor bitmap */
 	static private Bitmap bmpCursor;
@@ -47,6 +47,8 @@ public class VerticalButtonList {
 	private float ytrans;
 	/** Y translation maximum */
 	private float ytransMax;
+	/** If the amount of buttons drawn is limited */
+	private boolean limit;
 	
 	
 	/**
@@ -167,33 +169,36 @@ public class VerticalButtonList {
 		
 		
 		// Update y transition
-		if(ytarget > ytrans) {
-				
-			ytrans += 1.0f * Y_TRANS_SPEED * tm;
-			if(ytrans > ytarget) {
-					
-				ytrans = ytarget;
-			}
-		}
-		else if(ytarget < ytrans) {
-				
-			ytrans -= 1.0f * Y_TRANS_SPEED * tm;
-			if(ytrans < ytarget) {
-					
-				ytrans = ytarget;
-			}
-		}
-		
-		// Limit y translation
-		if(ytrans > 0.0f) {
+		if(limit) {
 			
-			ytrans = 0.0f;
-			ytarget = 0.0f;
-		}
-		else if(ytrans < -ytransMax) {
+			if(ytarget > ytrans) {
+					
+				ytrans += 1.0f * Y_TRANS_SPEED * tm;
+				if(ytrans > ytarget) {
+						
+					ytrans = ytarget;
+				}
+			}
+			else if(ytarget < ytrans) {
+					
+				ytrans -= 1.0f * Y_TRANS_SPEED * tm;
+				if(ytrans < ytarget) {
+						
+					ytrans = ytarget;
+				}
+			}
 			
-			ytrans = -ytransMax;
-			ytarget = -ytransMax;
+			// Limit y translation
+			if(ytrans > 0.0f) {
+				
+				ytrans = 0.0f;
+				ytarget = 0.0f;
+			}
+			else if(ytrans < -ytransMax) {
+				
+				ytrans = -ytransMax;
+				ytarget = -ytransMax;
+			}
 		}
 	}
 	
@@ -215,9 +220,17 @@ public class VerticalButtonList {
 		
 		final float SHADOW_ALPHA = 0.5f;
 		
+		// Get viewport size
+		Transformations tr = g.transform();
+		Vector2 view = tr.getViewport();
+		
 		// Translate & calculate translation max
-		dy += ytrans;
-		ytransMax = yoff * (buttons.size()- 1);
+		if(limit) {
+			
+			dy += ytrans;
+			ytransMax = yoff * (buttons.size()+1) - view.y;
+		}
+		this.limit = limit;
 		
 		// Calculate "factor value"
 		float t = 1.0f - cursorTimer / CURSOR_TIME;
@@ -225,10 +238,6 @@ public class VerticalButtonList {
 		// Calculate cursor position
 		float size = yoff ;
 		float cpos = dy + (oldPos * (1.0f-t) + cursorPos * t) * yoff;
-		
-		// Get viewport size
-		Transformations tr = g.transform();
-		Vector2 view = tr.getViewport();
 		
 		// Draw text
 		float tfactor = 0.0f;
