@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="8" height="7" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
+ <properties>
+  <property name="difficulty" value="5"/>
+  <property name="name" value="Not Quite Lava"/>
+  <property name="turns" value="20"/>
+ </properties>
+ <tileset firstgid="1" source="../../../dev/editor_tileset.tsx"/>
+ <layer name="Tile layer 1" width="8" height="7">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,
+1,17,0,10,0,10,8,1,
+1,10,2,10,2,0,0,1,
+1,10,10,10,0,0,10,1,
+1,0,0,10,0,3,6,1,
+1,8,0,10,0,3,18,1,
+1,1,1,1,1,1,1,1
+</data>
+ </layer>
+</map>

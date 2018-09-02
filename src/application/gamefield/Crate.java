@@ -16,8 +16,8 @@ public class Crate extends NonPlayerFieldObject {
 
 	/** A bitmap of movable object */
 	private static Bitmap bmpMovable;
-
 	
+
 	/**
 	 * Initialize global crate content
 	 * (read: get assets)
@@ -103,6 +103,15 @@ public class Crate extends NonPlayerFieldObject {
 			
 			updateDeath(tm);
 		}
+		
+		// If on special lava tile and not moving, die
+		int tile = stage.getTile(pos.x, pos.y);
+		if(tile == 10) {
+			
+			stage.updateTileData(pos.x, pos.y, 0);
+			stage.updateSolidTileData(pos.x, pos.y, 0);
+			die(tman);
+		}
 	}
 	
 
@@ -126,6 +135,19 @@ public class Crate extends NonPlayerFieldObject {
 	@Override
 	public void playerCollision(Player pl, Gamepad vpad, Stage stage, TimeManager tman) {
 		
+		// If moving & player not moving, stop
+		// moving (this happens in very rare
+		// occasions, but it's possible, nonetheless)
+		if(exist && moving && !pl.isMoving()) {
+			
+			moving = false;
+			target.x = pos.x;
+			target.y = pos.y;
+			
+			vpos.x = pos.x * scaleValue.x;
+			vpos.y = pos.y * scaleValue.y;
+		}
+		
 		if(!exist || tman.isWaiting() || pl.isMoving()) return;
 		
 		checkPlayerInteraction(pl, vpad, stage, tman);
@@ -136,7 +158,8 @@ public class Crate extends NonPlayerFieldObject {
 	public void onMovingStopped(Stage stage, TimeManager tman) {
 		
 		// If lava, die
-		if(stage.getTile(pos.x, pos.y) == 3) {
+		int tile = stage.getTile(pos.x, pos.y);
+		if(tile == 3 || tile == 10) {
 			
 			stage.updateTileData(pos.x, pos.y, 0);
 			stage.updateSolidTileData(pos.x, pos.y, 0);

@@ -7,6 +7,7 @@ import core.renderer.Graphics;
 import core.renderer.Transformations;
 import core.types.Vector2;
 import core.utility.AssetPack;
+import core.utility.RGBFloat;
 import core.utility.Tilemap;
 
 /**
@@ -22,11 +23,11 @@ public class Stage {
 	
 	/** Static solid tiles */
 	static final boolean[] STATIC_SOLID_TILES = new boolean[] {
-		true,false,true,true,false,false,true	
+		true,false,true,true,false,false,true, false, false, true,
 	};
 	/** Solid tiles */
 	static final boolean[] SOLID_TILES = new boolean[] {
-		true,true,true,true,false,false,true	
+		true,true,true, true,false,false, true, false, false, true,
 	};
 	
 	
@@ -115,7 +116,6 @@ public class Stage {
 			
 			g.drawBitmapRegion(bmpStatic, sw / 2, sh / 4, sw / 2, sh / 2, dx+sw/2, dy+sh/2, Flip.NONE);
 		}
-		
 		
 		
 		// Bottom-left
@@ -265,28 +265,43 @@ public class Stage {
 	
 	
 	/**
+	 * Get lava source position
+	 * @param phase Movement phase
+	 * @return Position
+	 */
+	private Vector2 getLavaSourcePos(float phase) {
+		
+		int tw = (int) (phase * (bmpLava.getWidth() / 4.0f));
+		int th = (int) ( (1.0f-phase) * (bmpLava.getHeight() / 2.0f));
+		
+		return new Vector2(tw, th);
+	}
+	
+	
+	/**
 	 * Draw lava tile
 	 * @param g Graphics object
+	 * @param tx X translation
 	 * @param x X coordinate in tiles
 	 * @param y Y coordinate in tiles
 	 * @param phase Movement phase
 	 */
-	private void drawLava(Graphics g, int x, int y, float phase) {
+	private void drawLava(Graphics g, int tx, int x, int y, float phase, RGBFloat borders) {
 		
 		final float COLOR_MOD = 0.125f;
 		final float BORDER_WIDTH = 8.0f;
 		
 		// Draw lava tile
-		int tw = (int) (phase * (bmpLava.getWidth() / 2.0f));
+		int tw = (int) (phase * (bmpLava.getWidth() / 4.0f));
 		int th = (int) ( (1.0f-phase) * (bmpLava.getHeight() / 2.0f));
 		float color = 1.0f + COLOR_MOD * (float)Math.sin(phase * Math.PI * 2.0f);
 
 		g.setColor(color, color, color);
-		g.drawScaledBitmapRegion(bmpLava, tw, th, 128, 128, 
+		g.drawScaledBitmapRegion(bmpLava, tw + tx, th, 128, 128, 
 				x*tileSize, y*tileSize, tileSize, tileSize, Flip.NONE);
 		
 		// Draw borders
-		g.setColor(0.40f,0.0f,0.0f);
+		g.setColor(borders.r, borders.g, borders.b);
 		drawBorders(g, x, y, tileSize, tileSize, BORDER_WIDTH);
 	}
 	
@@ -328,7 +343,22 @@ public class Stage {
 			
 		// Lava
 		case 3:
-			drawLava(g, x, y, lavaPhase);
+		case 10:
+			
+			// If purple fading, draw the replacing tile
+			if(purpleFading && tile == 10) {
+										
+				g.drawScaledBitmapRegion(bmpStatic, 384, 128, 128, 128, 
+					dx, dy, tileSize, tileSize, Flip.NONE);
+										
+				g.setGlobalAlpha(1.0f - purpleAlpha);
+			}
+			
+			drawLava(g, tile == 3 ? 0 : 256, x, y, lavaPhase,
+					tile == 3 ? new RGBFloat(0.40f,0.0f,0.0f)
+					: new RGBFloat(0.20f,0.0f,0.40f));
+			g.setGlobalAlpha();
+
 			break;
 			
 		// Lock
@@ -345,10 +375,13 @@ public class Stage {
 			break;
 			
 		// Purple wall, deactive
+		case 9:
 		case 6:
+		{
+			int sx = tile == 6 ? 128 : 384;
 			
 			// Draw base floor tile
-			g.drawScaledBitmapRegion(bmpStatic, 128, 128, 128, 128, 
+			g.drawScaledBitmapRegion(bmpStatic, sx, 128, 128, 128, 
 					dx, dy, tileSize, tileSize, Flip.NONE);
 			
 			// If purple fading, fade in the replacing tile
@@ -356,18 +389,28 @@ public class Stage {
 				
 				g.setColor(1, 1, 1, purpleAlpha);
 				
-				// Draw background
-				g.drawScaledBitmapRegion(bmpStatic, 288, 32, 64, 64, 
-						dx, dy, tileSize, tileSize, Flip.NONE);
-
-				// Draw borders
-				g.setSourceTranslation(256, 0);
-				drawConnectedTile(g, x, y, 6, tileSize, tileSize);
-				g.setSourceTranslation(0, 0);
+				if(tile == 6) {
+				
+					// Draw background
+					g.drawScaledBitmapRegion(bmpStatic, 288, 32, 64, 64, 
+							dx, dy, tileSize, tileSize, Flip.NONE);
+	
+					// Draw borders
+					g.setSourceTranslation(256, 0);
+					drawConnectedTile(g, x, y, 6, tileSize, tileSize);
+					g.setSourceTranslation(0, 0);
+				
+				}
+				else {
+					
+					Vector2 lavaPos = getLavaSourcePos(lavaPhase);
+					g.drawScaledBitmapRegion(bmpLava, 256 + (int)lavaPos.x, (int)lavaPos.y, 128, 128, 
+							dx, dy, tileSize, tileSize, Flip.NONE);
+				}
 			}
 			
-			
 			break;
+		}
 			
 		// Purple wall, active
 		case 7:
@@ -434,7 +477,8 @@ public class Stage {
 		for(int i = 0; i < width*height; ++ i) {
 			
 			tile = map.getTileValue(0, i % width, i / width);
-			if(tile == 1 || tile == 3 || tile == 4 || tile == 6 || tile == 7)
+			if(tile == 1 || tile == 3 || tile == 4 || tile == 6 || tile == 7 ||
+				tile == 9 || tile == 10)
 				tileData[i] = tile;
 			else
 				tileData[i] = 0;
@@ -643,7 +687,7 @@ public class Stage {
 		int t = getSolidTile(x,y);
 		if(t <= 0 || t-1 >= SOLID_TILES.length) return false;
 		
-		if(t == 3) return false;
+		if(t == 3 || t == 10) return false;
 		
 		return SOLID_TILES[t-1];
 	}
@@ -704,10 +748,17 @@ public class Stage {
 		for(int i = 0; i < width*height; ++ i) {
 			
 			tileID = getTile(i);
+			// Floor <-> wall
 			if(tileID == 6)
 				updateTileData(i, 7);
 			else if(tileID == 7)
 				updateTileData(i, 6);
+			
+			// Lava <-> floor
+			else if(tileID == 9)
+				updateTileData(i, 10);
+			else if(tileID == 10)
+				updateTileData(i, 9);
 		}
 	}
 	
