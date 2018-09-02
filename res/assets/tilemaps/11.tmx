@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="9" height="8" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
+ <properties>
+  <property name="difficulty" value="6"/>
+  <property name="name" value="Purple Maze"/>
+  <property name="turns" value="46"/>
+ </properties>
+ <tileset firstgid="1" source="../../../dev/editor_tileset.tsx"/>
+ <layer name="Tile layer 1" width="9" height="8">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,1,
+1,0,6,6,6,7,18,7,1,
+1,8,7,7,0,7,3,3,1,
+1,6,6,7,17,3,8,0,1,
+1,7,6,7,7,3,6,6,1,
+1,7,2,8,6,3,6,2,1,
+1,0,0,7,8,3,8,6,1,
+1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+</map>

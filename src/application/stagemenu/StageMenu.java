@@ -319,6 +319,9 @@ public class StageMenu extends Scene {
 			// Add button
 			stageButtons.addButton(b);
 		}
+		// Set to the latest button
+		stageButtons.setCursorPos(bcount);
+		
 		
 		// Get transitions object
 		trans = ((Global)sceneMan.getGlobalScene()).getTransition();

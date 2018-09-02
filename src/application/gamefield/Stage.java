@@ -35,6 +35,8 @@ public class Stage {
 	
 	/** Current tile data */
 	private int[] tileData;
+	/** Solid data */
+	private int[] solidData;
 	
 	/** Stage width in tiles */
 	private int width;
@@ -437,6 +439,8 @@ public class Stage {
 			else
 				tileData[i] = 0;
 		}
+		// Clone tile data to solid data
+		solidData = tileData.clone();
 		
 		// Set flags
 		stageEnded = false;
@@ -594,7 +598,24 @@ public class Stage {
 		if(i < 0 || i >= tileData.length) return;
 		
 		tileData[i] = value;
+		solidData[i] = value;
 	}
+	
+	
+	/**
+	 * Update solid tile data
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param value New value
+	 */
+	public void updateSolidTileData(int x, int y, int value) {
+		
+		int i = y * width + x ;
+		if(i < 0 || i >= solidData.length) return;
+		
+		solidData[i] = value;
+	}
+	
 	
 	/**
 	 * Is the tile in (X,Y) solid
@@ -604,7 +625,7 @@ public class Stage {
 	 */
 	public boolean isSolid(int x, int y) {
 		
-		int t = getTile(x, y);
+		int t = getSolidTile(x, y);
 		if(t <= 0 || t-1 >= SOLID_TILES.length) return false;
 		
 		return SOLID_TILES[t-1];
@@ -619,7 +640,7 @@ public class Stage {
 	 */
 	public boolean isSolidExcludeLava(int x, int y) {
 		
-		int t = getTile(x,y);
+		int t = getSolidTile(x,y);
 		if(t <= 0 || t-1 >= SOLID_TILES.length) return false;
 		
 		if(t == 3) return false;
@@ -655,6 +676,22 @@ public class Stage {
 			return i;
 		
 		return tileData[i];
+	}
+	
+	
+	/**
+	 * Get a tile "solidity" value in the current tile data array
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @return Tile value
+	 */
+	public int getSolidTile(int x, int y) {
+		
+		int index = y*width + x;
+		if(index < 0 || index >= solidData.length)
+			return 1;
+		
+		return solidData[index];
 	}
 	
 	

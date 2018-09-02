@@ -2,18 +2,18 @@
 <map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="7" height="7" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
  <properties>
   <property name="difficulty" value="2"/>
-  <property name="name" value="First Steps"/>
-  <property name="turns" value="9"/>
+  <property name="name" value="Magic Walls"/>
+  <property name="turns" value="21"/>
  </properties>
  <tileset firstgid="1" source="../../../dev/editor_tileset.tsx"/>
  <layer name="Tile layer 1" width="7" height="7">
   <data encoding="csv">
 1,1,1,1,1,1,1,
-1,0,0,1,0,18,1,
-1,0,2,0,0,0,1,
-1,0,0,2,1,1,1,
-1,1,2,0,0,17,1,
-1,0,0,2,0,0,1,
+1,8,2,0,7,5,1,
+1,0,0,0,7,0,1,
+1,0,2,0,7,7,1,
+1,1,1,2,0,2,1,
+1,18,4,0,17,0,1,
 1,1,1,1,1,1,1
 </data>
  </layer>

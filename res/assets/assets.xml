@@ -10,4 +10,14 @@
    	
    	<tilemap name="1" path="1.tmx" />
    	<tilemap name="2" path="2.tmx" />
+   	<tilemap name="3" path="3.tmx" />
+   	<tilemap name="4" path="4.tmx" />
+   	<tilemap name="5" path="5.tmx" />
+   	<tilemap name="6" path="6.tmx" />
+   	<tilemap name="7" path="7.tmx" />
+   	<tilemap name="8" path="8.tmx" />
+   	<tilemap name="9" path="9.tmx" />
+   	<tilemap name="10" path="10.tmx" />
+   	<tilemap name="11" path="11.tmx" />
+   	<tilemap name="12" path="12.tmx" />
 </assets>

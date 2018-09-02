@@ -80,7 +80,7 @@ public class Crate extends NonPlayerFieldObject {
 			moving = true;
 
 			// Update solid data
-			stage.updateTileData(pos.x, pos.y, 0);
+			stage.updateSolidTileData(pos.x, pos.y, 0);
 		}
 		
 	}
@@ -139,11 +139,13 @@ public class Crate extends NonPlayerFieldObject {
 		if(stage.getTile(pos.x, pos.y) == 3) {
 			
 			stage.updateTileData(pos.x, pos.y, 0);
+			stage.updateSolidTileData(pos.x, pos.y, 0);
 			die(tman);
 		}
 		else {
 			
-			stage.updateTileData(pos.x, pos.y, 2);
+			// Otherwise, update solid data
+			stage.updateSolidTileData(pos.x, pos.y, 2);
 		}
 	};
 }
