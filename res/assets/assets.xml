@@ -29,4 +29,6 @@
    	<tilemap name="19" path="19.tmx" />
    	<tilemap name="20" path="20.tmx" />
    	<tilemap name="21" path="21.tmx" />
+   	<tilemap name="22" path="22.tmx" />
+   	<tilemap name="23" path="23.tmx" />
 </assets>

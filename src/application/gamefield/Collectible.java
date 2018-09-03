@@ -93,10 +93,14 @@ public abstract class Collectible extends NonPlayerFieldObject {
 		final float COLOR_MOD = 0.125f;
 		final float DEATH_SCALE = 2.0f;
 		
+		int bsx = (id % 4) * 128;
+		int bsy = (id / 4);
+		bsy *= 128;
+		
 		if(!exist) {
 			
 			// Draw death
-			drawDeath(g, bmpCollectibles, id*128, 0, 128, 128, DEATH_SCALE);
+			drawDeath(g, bmpCollectibles, bsx, bsy, 128, 128, DEATH_SCALE);
 			
 			return;
 		};
@@ -125,7 +129,7 @@ public abstract class Collectible extends NonPlayerFieldObject {
 		g.setColor(c,c,c);
 		
 		// Draw
-		g.drawScaledBitmapRegion(bmpCollectibles, id*128, 0, 128, 128, 
+		g.drawScaledBitmapRegion(bmpCollectibles, bsx, bsy, 128, 128, 
 				vpos.x - scaleValue.x*(sx-1.0f)/2.0f, vpos.y - scaleValue.y*(sy-1.0f)/2.0f + floatPos, 
 				scaleValue.x*sx, scaleValue.y*sy, Flip.NONE);
 		

@@ -23,6 +23,8 @@ public class StatusManager {
 	
 	/** The amount of keys */
 	private int keyCount;
+	/** The amount of hammers */
+	private int hammerCount;
 	/** The amount of turns taken */
 	private int turnCount;
 	/** Turn limit */
@@ -32,10 +34,12 @@ public class StatusManager {
 	/** Stage index */
 	private int stageIndex;
 	
-	/** Key appearance timer*/
-	private float keyAppearanceTimer = 0.0f;
+	/** Item appearance timer*/
+	private float itemAppearanceTimer = 0.0f;
 	/** Old key count */
 	private int oldKeyCount = 0;
+	/** Old hammer count */
+	private int oldHammerCount = 0;
 	
 	/**
 	 * Initialize global content
@@ -97,7 +101,6 @@ public class StatusManager {
 		g.drawText(bmpFont, sname,
 				tx + STAGE_X, ty + TEXT_Y, XOFF1, YOFF, false, FONT_SCALE);
 		
-
 		// Create turn strings
 		String turnStr1 = "Turn: ";
 		String turnStr2 =  Integer.toString(turnCount);
@@ -136,10 +139,15 @@ public class StatusManager {
 	
 	
 	/**
-	 * Draw collected items
-	 * @param g Graphics objects
+	 * Draw item
+	 * @param g Graphics object
+	 * @param count Item count
+	 * @param old Old item count
+	 * @param y Y position
+	 * @param sx Source X
+	 * @param sy Source Y
 	 */
-	public void drawItems(Graphics g) {
+	private void drawItem(Graphics g, int count, int old, float y, int sx, int sy) {
 		
 		final float START_Y = 64.0f;
 		final float POS_X = 0.0f;
@@ -151,20 +159,21 @@ public class StatusManager {
 		
 		float yoff = dh * YOFF_FACTOR;
 		
-		for(int i = 0; i < (int)Math.min(keyCount, oldKeyCount); ++ i) {
+		// Draw items
+		for(int i = 0; i < (int)Math.min(count, old); ++ i) {
 			
-			g.drawScaledBitmapRegion(bmpCollectibles, 0, 0, 128, 128, 
+			g.drawScaledBitmapRegion(bmpCollectibles, sx, sy, 128, 128, 
 					POS_X, START_Y + yoff*i, dw, dh, Flip.NONE);
 		}
 		
-		// Draw (dis)appearing key
-		if(oldKeyCount != keyCount) {
+		// Draw (dis)appearing item
+		if(old != count) {
 			
 			// Calculate alpha & position
-			float t = keyAppearanceTimer / APPEARANCE_TIME;
+			float t = itemAppearanceTimer / APPEARANCE_TIME;
 			
 			float alpha, posx;	
-			if(oldKeyCount < keyCount) {
+			if(old < count) {
 				
 				alpha = 1.0f - t;
 				posx = POS_X - dw + dw*(1.0f-t);
@@ -175,14 +184,30 @@ public class StatusManager {
 				posx = POS_X - dw + dw*t;
 			}
 			
-			int index = oldKeyCount < keyCount ? oldKeyCount : oldKeyCount-1;
-			
-			
+			int index = old < count ? old : old-1;
+
 			g.setColor(1, 1, 1, alpha);
-			g.drawScaledBitmapRegion(bmpCollectibles, 0, 0, 128, 128, 
-					posx, START_Y + yoff*index, dw, dh, Flip.NONE);
+			g.drawScaledBitmapRegion(bmpCollectibles, sx, sy, 128, 128, 
+					posx, y + yoff*index, dw, dh, Flip.NONE);
 			g.setColor();
 		}
+	}
+	
+	
+	/**
+	 * Draw collected items
+	 * @param g Graphics objects
+	 */
+	private void drawItems(Graphics g) {
+		
+		final float KEY_Y = 64.0f;
+		final float HAMMER_Y = 320.0f;
+		
+		// Draw keys
+		drawItem(g, keyCount, oldKeyCount, KEY_Y, 0, 0);
+		
+		// Draw hammers
+		drawItem(g, hammerCount, oldHammerCount, HAMMER_Y, 0, 128);
 	}
 	
 	
@@ -225,14 +250,23 @@ public class StatusManager {
 		if(keyCount != oldKeys) {
 			
 			oldKeyCount = oldKeys;
-			keyAppearanceTimer = APPEARANCE_TIME;
+			itemAppearanceTimer = APPEARANCE_TIME;
 		}
 		
-		// Update key appearance timer
-		if(keyAppearanceTimer > 0.0f) {
+		// Or maybe more hammers were collected
+		int oldHammers = hammerCount;
+		hammerCount = pl.getHammerCount();
+		if(hammerCount != oldHammers) {
 			
-			keyAppearanceTimer -= 1.0f * tm;
-			if(keyAppearanceTimer <= 0.0f) {
+			oldHammerCount = oldHammers;
+			itemAppearanceTimer = APPEARANCE_TIME;
+		}
+		
+		// Update item appearance timer
+		if(itemAppearanceTimer > 0.0f) {
+			
+			itemAppearanceTimer -= 1.0f * tm;
+			if(itemAppearanceTimer <= 0.0f) {
 				
 				oldKeyCount = keyCount;
 			}

@@ -33,6 +33,7 @@ public class ObjectManager {
 		Collectible.init(assets);
 		Player.init(assets);
 		Lock.init(assets);
+		LavaContainer.init(assets);
 	}
 	
 	
@@ -88,6 +89,25 @@ public class ObjectManager {
 				objects.add(new Gem(p));
 				break;
 				
+			// Purple crate
+			case 11:
+									
+				objects.add(new PurpleCrate(p));
+				stage.updateTileData(x, y, 2);
+				break;	
+				
+			// Hammer
+			case 12:
+								
+				objects.add(new Hammer(p));
+				break;
+				
+			// Lava container
+			case 13:
+				
+				objects.add(new LavaContainer(p));
+				break;
+				
 			// Player
 			case 17:
 				player = new Player(p);
@@ -98,14 +118,7 @@ public class ObjectManager {
 				
 				objects.add(new Star(p));
 				break;
-				
-			// Purple crate
-			case 11:
-					
-				objects.add(new PurpleCrate(p));
-				stage.updateTileData(x, y, 2);
-				break;	
-				
+	
 			default:
 				break;
 			}

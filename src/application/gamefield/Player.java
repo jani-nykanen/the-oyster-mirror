@@ -40,6 +40,8 @@ public class Player extends FieldObject {
 	
 	/** Key count */
 	private int keys;
+	/** Hammers */
+	private int hammers;
 	
 	
 	/**
@@ -335,5 +337,34 @@ public class Player extends FieldObject {
 		
 		if(keys > 0)
 			-- keys;
+	}
+	
+	
+	/**
+	 * Add a hammer
+	 */
+	public void addHammer() {
+		
+		++ hammers;
+	}
+
+	
+	/**
+	 * Get amount of hammers
+	 * @return Hammer count
+	 */
+	public int getHammerCount() {
+		
+		return hammers;
+	}
+	
+	
+	/**
+	 * Reduce a hammer
+	 */
+	public void reduceHammer() {
+		
+		if(hammers > 0)
+			-- hammers;
 	}
 }

@@ -23,11 +23,13 @@ public class Stage {
 	
 	/** Static solid tiles */
 	static final boolean[] STATIC_SOLID_TILES = new boolean[] {
-		true,false,true,true,false,false,true, false, false, true,
+		true,false,true,true, false,false,true,false,  false, true, false, false,
+		true,
 	};
 	/** Solid tiles */
 	static final boolean[] SOLID_TILES = new boolean[] {
-		true,true,true, true,false,false, true, false, false, true,
+		true,true,true, true,false,false, true, false, false, true, false, false,
+		true,
 	};
 	
 	
@@ -301,8 +303,11 @@ public class Stage {
 				x*tileSize, y*tileSize, tileSize, tileSize, Flip.NONE);
 		
 		// Draw borders
-		g.setColor(borders.r, borders.g, borders.b);
-		drawBorders(g, x, y, tileSize, tileSize, BORDER_WIDTH);
+		if(borders != null) {
+			
+			g.setColor(borders.r, borders.g, borders.b);
+			drawBorders(g, x, y, tileSize, tileSize, BORDER_WIDTH);
+		}
 	}
 	
 	
@@ -435,6 +440,25 @@ public class Stage {
 
 			break;
 			
+		
+		// Lava container
+		case 13:
+			
+			// Draw lava
+			drawLava(g, 0, x, y, lavaPhase, null);
+			g.setGlobalAlpha();
+			
+			// Draw container
+			g.setColor();
+			g.drawScaledBitmapRegion(bmpStatic, 0, 256, 128, 128, 
+					dx, dy, tileSize, tileSize, Flip.NONE);
+			
+			// Borders
+			g.setColor(0.05f,0.27f,0.27f);
+			drawBorders(g, x, y, tileSize, tileSize, LOCK_BORDER_WIDTH);
+			
+		break;
+			
 		// Floor
 		default:
 			
@@ -478,7 +502,7 @@ public class Stage {
 			
 			tile = map.getTileValue(0, i % width, i / width);
 			if(tile == 1 || tile == 3 || tile == 4 || tile == 6 || tile == 7 ||
-				tile == 9 || tile == 10)
+				tile == 9 || tile == 10 || tile == 13)
 				tileData[i] = tile;
 			else
 				tileData[i] = 0;
