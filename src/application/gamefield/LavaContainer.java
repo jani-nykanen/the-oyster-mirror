@@ -19,6 +19,10 @@ public class LavaContainer extends NonPlayerFieldObject {
 	static private Bitmap bmpStatic = null;
 	
 	
+	/** Is purple lava container */
+	private boolean isPurple = false;
+	
+	
 	/**
 	 * Initialize global content
 	 * @param assets Assets pack
@@ -33,10 +37,12 @@ public class LavaContainer extends NonPlayerFieldObject {
 	/**
 	 * Constructor
 	 * @param pos Position
+	 * @param isPurple If contains purple lava
 	 */
-	public LavaContainer(Point pos) {
+	public LavaContainer(Point pos, boolean isPurple) {
 		
 		super(pos);
+		this.isPurple = isPurple;
 	}
 
 	
@@ -50,7 +56,7 @@ public class LavaContainer extends NonPlayerFieldObject {
 		
 		// Update tile data in the container position
 		// to lava
-		stage.updateTileData(pos.x, pos.y, 3);
+		stage.updateTileData(pos.x, pos.y, isPurple ? 10 : 3);
 		
 		// Die
 		die(tman);

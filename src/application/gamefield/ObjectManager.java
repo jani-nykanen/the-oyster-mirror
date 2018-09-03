@@ -104,8 +104,9 @@ public class ObjectManager {
 				
 			// Lava container
 			case 13:
+			case 14:
 				
-				objects.add(new LavaContainer(p));
+				objects.add(new LavaContainer(p, data[i] == 14));
 				break;
 				
 			// Player

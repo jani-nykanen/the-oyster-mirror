@@ -13,6 +13,13 @@ import core.utility.AssetPack;
  */
 public class StatusManager {
 
+	/** Appearing item type */
+	private enum AppearType {
+		
+		Key,
+		Hammer,
+	};
+	
 	/** Appearance time */
 	static private final float APPEARANCE_TIME = 30.0f;
 	
@@ -40,6 +47,8 @@ public class StatusManager {
 	private int oldKeyCount = 0;
 	/** Old hammer count */
 	private int oldHammerCount = 0;
+	/** Appearing type */
+	private AppearType appearType = AppearType.Key;
 	
 	/**
 	 * Initialize global content
@@ -147,9 +156,8 @@ public class StatusManager {
 	 * @param sx Source X
 	 * @param sy Source Y
 	 */
-	private void drawItem(Graphics g, int count, int old, float y, int sx, int sy) {
+	private void drawItem(Graphics g, int count, int old, float y, int sx, int sy, AppearType type) {
 		
-		final float START_Y = 64.0f;
 		final float POS_X = 0.0f;
 		final float SCALE = 0.75f;
 		final float YOFF_FACTOR = 0.75f;
@@ -163,11 +171,11 @@ public class StatusManager {
 		for(int i = 0; i < (int)Math.min(count, old); ++ i) {
 			
 			g.drawScaledBitmapRegion(bmpCollectibles, sx, sy, 128, 128, 
-					POS_X, START_Y + yoff*i, dw, dh, Flip.NONE);
+					POS_X, y + yoff*i, dw, dh, Flip.NONE);
 		}
 		
 		// Draw (dis)appearing item
-		if(old != count) {
+		if(old != count && appearType == type) {
 			
 			// Calculate alpha & position
 			float t = itemAppearanceTimer / APPEARANCE_TIME;
@@ -204,10 +212,10 @@ public class StatusManager {
 		final float HAMMER_Y = 320.0f;
 		
 		// Draw keys
-		drawItem(g, keyCount, oldKeyCount, KEY_Y, 0, 0);
+		drawItem(g, keyCount, oldKeyCount, KEY_Y, 0, 0, AppearType.Key);
 		
 		// Draw hammers
-		drawItem(g, hammerCount, oldHammerCount, HAMMER_Y, 0, 128);
+		drawItem(g, hammerCount, oldHammerCount, HAMMER_Y, 0, 128,  AppearType.Hammer);
 	}
 	
 	
@@ -251,6 +259,7 @@ public class StatusManager {
 			
 			oldKeyCount = oldKeys;
 			itemAppearanceTimer = APPEARANCE_TIME;
+			appearType = AppearType.Key;
 		}
 		
 		// Or maybe more hammers were collected
@@ -260,6 +269,7 @@ public class StatusManager {
 			
 			oldHammerCount = oldHammers;
 			itemAppearanceTimer = APPEARANCE_TIME;
+			appearType = AppearType.Hammer;
 		}
 		
 		// Update item appearance timer
@@ -269,6 +279,7 @@ public class StatusManager {
 			if(itemAppearanceTimer <= 0.0f) {
 				
 				oldKeyCount = keyCount;
+				oldHammerCount = hammerCount;
 			}
 		}
 	}

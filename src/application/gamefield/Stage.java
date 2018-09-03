@@ -24,12 +24,12 @@ public class Stage {
 	/** Static solid tiles */
 	static final boolean[] STATIC_SOLID_TILES = new boolean[] {
 		true,false,true,true, false,false,true,false,  false, true, false, false,
-		true,
+		true, true,
 	};
 	/** Solid tiles */
 	static final boolean[] SOLID_TILES = new boolean[] {
 		true,true,true, true,false,false, true, false, false, true, false, false,
-		true,
+		true, true,
 	};
 	
 	
@@ -443,9 +443,12 @@ public class Stage {
 		
 		// Lava container
 		case 13:
+		case 14:
 			
 			// Draw lava
-			drawLava(g, 0, x, y, lavaPhase, null);
+			drawLava(g, tile == 13 ? 0 : 256, x, y, lavaPhase,
+					tile == 13 ? new RGBFloat(0.40f,0.0f,0.0f)
+					: new RGBFloat(0.20f,0.0f,0.40f));
 			g.setGlobalAlpha();
 			
 			// Draw container
@@ -501,8 +504,10 @@ public class Stage {
 		for(int i = 0; i < width*height; ++ i) {
 			
 			tile = map.getTileValue(0, i % width, i / width);
+			// Check if we want to copy the tile to the tile data array
+			// TODO: Check if in array instead of so many ors
 			if(tile == 1 || tile == 3 || tile == 4 || tile == 6 || tile == 7 ||
-				tile == 9 || tile == 10 || tile == 13)
+				tile == 9 || tile == 10 || tile == 13 || tile == 14)
 				tileData[i] = tile;
 			else
 				tileData[i] = 0;
