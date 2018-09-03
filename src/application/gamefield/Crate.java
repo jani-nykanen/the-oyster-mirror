@@ -17,6 +17,9 @@ public class Crate extends NonPlayerFieldObject {
 	/** A bitmap of movable object */
 	private static Bitmap bmpMovable;
 	
+	/** Source X */
+	protected int sx = 0;
+	
 
 	/**
 	 * Initialize global crate content
@@ -87,6 +90,13 @@ public class Crate extends NonPlayerFieldObject {
 	
 	
 	/**
+	 * Death event
+	 * @param stage Stage object
+	 */
+	protected void deathEvent(Stage stage) { }
+	
+	
+	/**
 	 * Constructor
 	 * @param pos Target position
 	 */
@@ -121,12 +131,12 @@ public class Crate extends NonPlayerFieldObject {
 		if(!exist) {
 		
 			// If dying, draw death
-			drawDeath(g, bmpMovable, 0, 0, 128, 128, 0.0f);
+			drawDeath(g, bmpMovable, sx, 0, 128, 128, 0.0f);
 
 			return;
 		}
 		
-		g.drawScaledBitmapRegion(bmpMovable,0,0,128,128,
+		g.drawScaledBitmapRegion(bmpMovable,sx,0,128,128,
 				vpos.x, vpos.y, scaleValue.x, scaleValue.y, Flip.NONE);
 			
 	}
@@ -164,6 +174,9 @@ public class Crate extends NonPlayerFieldObject {
 			stage.updateTileData(pos.x, pos.y, 0);
 			stage.updateSolidTileData(pos.x, pos.y, 0);
 			die(tman);
+			
+			// Death event
+			deathEvent(stage);
 		}
 		else {
 			

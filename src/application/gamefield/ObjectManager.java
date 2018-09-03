@@ -98,7 +98,13 @@ public class ObjectManager {
 				
 				objects.add(new Star(p));
 				break;
-			
+				
+			// Purple crate
+			case 11:
+					
+				objects.add(new PurpleCrate(p));
+				stage.updateTileData(x, y, 2);
+				break;	
 				
 			default:
 				break;

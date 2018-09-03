@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="8" height="7" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
+ <properties>
+  <property name="difficulty" value="5"/>
+  <property name="name" value="Options"/>
+  <property name="turns" value="38"/>
+ </properties>
+ <tileset firstgid="1" source="../../../dev/editor_tileset.tsx"/>
+ <layer name="Tile layer 1" width="8" height="7">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,
+1,17,0,0,0,6,5,1,
+1,7,11,0,3,2,7,1,
+1,5,6,0,0,1,3,1,
+1,1,1,6,0,7,11,1,
+1,18,4,4,6,4,5,1,
+1,1,1,1,1,1,1,1
+</data>
+ </layer>
+</map>
