@@ -121,6 +121,9 @@ public class Crate extends NonPlayerFieldObject {
 			stage.updateTileData(pos.x, pos.y, 0);
 			stage.updateSolidTileData(pos.x, pos.y, 0);
 			die(tman);
+			
+			// Death event
+			// deathEvent(stage);
 		}
 	}
 	
