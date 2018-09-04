@@ -19,6 +19,10 @@ public class Crate extends NonPlayerFieldObject {
 	
 	/** Source X */
 	protected int sx = 0;
+	/** Source Y */
+	protected int sy = 0;
+	/** Die if in lava */
+	protected boolean dieInLava = true;
 	
 
 	/**
@@ -30,6 +34,19 @@ public class Crate extends NonPlayerFieldObject {
 		
 		// Get assets
 		bmpMovable = assets.getBitmap("movable");
+	}
+	
+	
+	/**
+	 * Check if the tile is good for moving
+	 * @param stage Stage
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @return True, if "good" (i.e not solid or lava)
+	 */
+	protected boolean freeTileCheck(Stage stage, int x, int y) {
+		
+		return !stage.isSolidExcludeLava(x, y);
 	}
 	
 	
@@ -72,7 +89,7 @@ public class Crate extends NonPlayerFieldObject {
 		}
 		
 		// Check if a free tile
-		if(stage.isSolidExcludeLava(t.x, t.y))
+		if(!freeTileCheck(stage, t.x, t.y))
 			doMove = false;
 		
 		// If no obstacles, move
@@ -97,6 +114,12 @@ public class Crate extends NonPlayerFieldObject {
 	
 	
 	/**
+	 * Update event
+	 */
+	protected void updateEvent(float tm) { }
+	
+	
+	/**
 	 * Constructor
 	 * @param pos Target position
 	 */
@@ -109,6 +132,7 @@ public class Crate extends NonPlayerFieldObject {
 	@Override
 	public void update(Gamepad vpad, TimeManager tman, Stage stage, float tm) {
 		
+		// If not existing, update death
 		if(!exist) {
 			
 			updateDeath(tm);
@@ -125,6 +149,9 @@ public class Crate extends NonPlayerFieldObject {
 			// Death event
 			// deathEvent(stage);
 		}
+		
+		// Call update event
+		updateEvent(tm);
 	}
 	
 
@@ -134,12 +161,12 @@ public class Crate extends NonPlayerFieldObject {
 		if(!exist) {
 		
 			// If dying, draw death
-			drawDeath(g, bmpMovable, sx, 0, 128, 128, 0.0f);
+			drawDeath(g, bmpMovable, sx, sy, 128, 128, 0.0f);
 
 			return;
 		}
 		
-		g.drawScaledBitmapRegion(bmpMovable,sx,0,128,128,
+		g.drawScaledBitmapRegion(bmpMovable,sx,sy,128,128,
 				vpos.x, vpos.y, scaleValue.x, scaleValue.y, Flip.NONE);
 			
 	}
@@ -172,7 +199,7 @@ public class Crate extends NonPlayerFieldObject {
 		
 		// If lava, die
 		int tile = stage.getTile(pos.x, pos.y);
-		if(tile == 3 || tile == 10) {
+		if(dieInLava && (tile == 3 || tile == 10) ) {
 			
 			stage.updateTileData(pos.x, pos.y, 0);
 			stage.updateSolidTileData(pos.x, pos.y, 0);
@@ -183,8 +210,15 @@ public class Crate extends NonPlayerFieldObject {
 		}
 		else {
 			
+			// And remove lava, if needed
+			if(!dieInLava && stage.isLava(pos.x, pos.y)) {
+							
+				stage.updateTileData(pos.x, pos.y, 0);
+			}
+			
 			// Otherwise, update solid data
 			stage.updateSolidTileData(pos.x, pos.y, 2);
+			
 		}
 	};
 }

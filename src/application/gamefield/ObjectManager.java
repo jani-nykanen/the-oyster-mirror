@@ -109,6 +109,13 @@ public class ObjectManager {
 				objects.add(new LavaContainer(p, data[i] == 14));
 				break;
 				
+			// Lava eater
+			case 15:
+				
+				objects.add(new LavaEater(p));
+				stage.updateTileData(x, y, 2);
+				break;
+				
 			// Player
 			case 17:
 				player = new Player(p);

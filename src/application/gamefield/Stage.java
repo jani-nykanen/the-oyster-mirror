@@ -723,6 +723,19 @@ public class Stage {
 	
 	
 	/**
+	 * Is the tile in (X,Y) lava
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @return True or false
+	 */
+	public boolean isLava(int x, int y) {
+		
+		int t = getSolidTile(x,y);
+		return t == 3 || t == 10;
+	}
+	
+	
+	/**
 	 * Get a tile value in the current tile data array
 	 * @param x X coordinate
 	 * @param y Y coordinate
