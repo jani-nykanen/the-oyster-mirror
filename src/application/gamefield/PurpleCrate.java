@@ -9,6 +9,10 @@ import core.types.Point;
  */
 public class PurpleCrate extends Crate {
 
+	/** Die if in lava */
+	protected boolean dieInLava = true;
+	
+	
 	/**
 	 * Constructor
 	 * @param pos Position

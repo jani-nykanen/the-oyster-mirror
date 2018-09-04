@@ -24,7 +24,7 @@ import core.utility.VoidCallback;
 public class StageMenu extends Scene {
 
 	/** Amount of buttons (= stage count + back button) */
-	static private final int BUTTON_COUNT = 30 +1;
+	static private final int BUTTON_COUNT = 35 +1;
 	
 	/** Font bitmap */
 	private Bitmap bmpFont;
