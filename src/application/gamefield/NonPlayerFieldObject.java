@@ -68,6 +68,18 @@ public abstract class NonPlayerFieldObject extends FieldObject {
 	
 	
 	/**
+	 * Die without stopping anything
+	 */
+	public void die() {
+		
+		deathTimer = DEFAULT_DEATH_TIME;
+		initialDeathTime = DEFAULT_DEATH_TIME;
+		dying = true;
+		exist = false;
+	}
+	
+	
+	/**
 	 * Die
 	 * @param time Time
 	 * @param tman Time manager

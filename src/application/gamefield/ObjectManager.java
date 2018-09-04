@@ -34,6 +34,7 @@ public class ObjectManager {
 		Player.init(assets);
 		Lock.init(assets);
 		LavaContainer.init(assets);
+		BlackHole.init(assets);
 	}
 	
 	
@@ -113,6 +114,13 @@ public class ObjectManager {
 			case 15:
 				
 				objects.add(new LavaEater(p));
+				stage.updateTileData(x, y, 2);
+				break;
+				
+			// Black hole
+			case 16:
+								
+				objects.add(new BlackHole(p));
 				stage.updateTileData(x, y, 2);
 				break;
 				

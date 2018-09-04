@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <assets bitmap_path="assets/bitmaps/" tilemap_path="assets/tilemaps/">
     <bitmap name="font" path="font.png" />
     <bitmap name="static" path="static.png" />
@@ -7,6 +7,7 @@
    	<bitmap name="collectibles" path="collectibles.png" />
    	<bitmap name="player" path="player.png" />
    	<bitmap name="cursor" path="cursor.png" />
+   	<bitmap name="black_hole" path="black_hole.png" />
    	
    	<tilemap name="1" path="1.tmx" />
    	<tilemap name="2" path="2.tmx" />
@@ -20,7 +21,7 @@
    	<tilemap name="10" path="10.tmx" />
    	<tilemap name="11" path="11.tmx" />
    	<tilemap name="12" path="12.tmx" />
-   	<tilemap name="13" path="13.tmx" />!
+   	<tilemap name="13" path="13.tmx" />
    	<tilemap name="14" path="14.tmx" />
    	<tilemap name="15" path="15.tmx" />
    	<tilemap name="16" path="16.tmx" />
@@ -38,5 +39,6 @@
    	<tilemap name="28" path="28.tmx" />
    	<tilemap name="29" path="29.tmx" />
    	<tilemap name="30" path="30.tmx" />
+   	<tilemap name="31" path="31.tmx" />
    	
 </assets>

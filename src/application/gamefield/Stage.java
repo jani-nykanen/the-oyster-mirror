@@ -869,4 +869,13 @@ public class Stage {
 		return ret;
 	}
 	
+	
+	/**
+	 * Are the purple tiles transforming
+	 * @return True, if they are
+	 */
+	public boolean isTransforming() {
+		
+		return purpleFading;
+	}
 }

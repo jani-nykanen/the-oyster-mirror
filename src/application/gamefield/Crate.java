@@ -116,7 +116,7 @@ public class Crate extends NonPlayerFieldObject {
 	/**
 	 * Update event
 	 */
-	protected void updateEvent(float tm) { }
+	protected void updateEvent(Stage stage, float tm) { }
 	
 	
 	/**
@@ -136,6 +136,7 @@ public class Crate extends NonPlayerFieldObject {
 		if(!exist) {
 			
 			updateDeath(tm);
+			return;
 		}
 		
 		// If on special lava tile and not moving, die
@@ -150,8 +151,16 @@ public class Crate extends NonPlayerFieldObject {
 			// deathEvent(stage);
 		}
 		
+		// Special check: if in the same tile as a wall,
+		// then die
+		if(stage.getTile(pos.x, pos.y) == 7 && stage.isTransforming()) {
+			
+			die();
+			return;
+		}
+		
 		// Call update event
-		updateEvent(tm);
+		updateEvent(stage, tm);
 	}
 	
 

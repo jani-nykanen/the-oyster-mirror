@@ -27,7 +27,7 @@ public class LavaEater extends Crate {
 	
 	
 	@Override
-	protected void updateEvent(float tm) {
+	protected void updateEvent(Stage stage, float tm) {
 		
 		//  Handle eye blinking
 		if(!moving && eyeCloseTimer > 0.0f) {
