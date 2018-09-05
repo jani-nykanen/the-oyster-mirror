@@ -23,6 +23,8 @@ public class Crate extends NonPlayerFieldObject {
 	protected int sy = 0;
 	/** Die if in lava */
 	protected boolean dieInLava = true;
+	/** If immune to the black hole */
+	protected boolean immune = false;
 	
 
 	/**
@@ -137,6 +139,11 @@ public class Crate extends NonPlayerFieldObject {
 			
 			updateDeath(tm);
 			return;
+		}
+		if(!immune) {
+			
+			// Check black hole
+			checkBlackHole(stage);
 		}
 		
 		// If on special lava tile and not moving, die

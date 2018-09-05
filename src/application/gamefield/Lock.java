@@ -71,6 +71,8 @@ public class Lock extends NonPlayerFieldObject {
 			
 			updateDeath(tm);
 		}
+		// Check black hole
+		checkBlackHole(stage);
 	}
 
 	

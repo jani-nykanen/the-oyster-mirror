@@ -75,6 +75,8 @@ public abstract class Collectible extends NonPlayerFieldObject {
 			updateDeath(tm);
 			return;
 		};
+		// Check black hole
+		checkBlackHole(stage);
 		
 		// Update timers
 		floatTimer += FLOAT_SPEED * tm;

@@ -78,6 +78,8 @@ public class LavaContainer extends NonPlayerFieldObject {
 			
 			updateDeath(tm);
 		}
+		// Check black hole
+		checkBlackHole(stage);
 	}
 
 	

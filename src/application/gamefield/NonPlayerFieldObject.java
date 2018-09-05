@@ -17,7 +17,6 @@ public abstract class NonPlayerFieldObject extends FieldObject {
 	/** Default death time */
 	protected static final float DEFAULT_DEATH_TIME = 30.0f;
 	
-	
 	/** Is dying */
 	protected boolean dying;
 	/** Death timer */
@@ -49,6 +48,20 @@ public abstract class NonPlayerFieldObject extends FieldObject {
 	 */
 	public abstract void playerCollision(Player pl, Gamepad vpad, Stage stage, TimeManager tman);
 
+	
+	/**
+	 * Check if in a black hole
+	 * @param stage Stage
+	 */
+	public void checkBlackHole(Stage stage) {
+		
+		// Check if in a black hole tile
+		if(stage.getSolidTile(pos.x, pos.y) == 16) {
+					
+			exist = false;
+		}
+	}
+	
 	
 	/**
 	 * Update death timer

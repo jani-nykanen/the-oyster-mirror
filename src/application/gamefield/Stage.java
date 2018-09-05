@@ -24,12 +24,12 @@ public class Stage {
 	/** Static solid tiles */
 	static final boolean[] STATIC_SOLID_TILES = new boolean[] {
 		true,false,true,true, false,false,true,false,  false, true, false, false,
-		true, true,
+		true, true, false, true,
 	};
 	/** Solid tiles */
 	static final boolean[] SOLID_TILES = new boolean[] {
-		true,true,true, true,false,false, true, false, false, true, false, false,
-		true, true,
+		true,true,true,true, false,false,true,false, false,true,false,false,
+		true, true, false, true,
 	};
 	
 	

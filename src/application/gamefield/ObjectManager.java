@@ -134,6 +134,12 @@ public class ObjectManager {
 				
 				objects.add(new Star(p));
 				break;
+				
+			// Emerald
+			case 19:
+				
+				objects.add(new Emerald(p));
+				break;
 	
 			default:
 				break;

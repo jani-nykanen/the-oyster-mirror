@@ -40,5 +40,9 @@
    	<tilemap name="29" path="29.tmx" />
    	<tilemap name="30" path="30.tmx" />
    	<tilemap name="31" path="31.tmx" />
+   	<tilemap name="32" path="32.tmx" />
+   	<tilemap name="33" path="33.tmx" />
+   	<tilemap name="34" path="34.tmx" />
+   	<tilemap name="35" path="35.tmx" />
    	
 </assets>

@@ -26,6 +26,11 @@ public class Star extends Collectible {
 	@Override
 	public void onUpdate(TimeManager tman, Stage stage) {
 		
+		if(!exist) return;
+		
+		// Check black hole
+		checkBlackHole(stage);
+		
 		// If turn limit broken, change to a gray star
 		if(tman.getTurn() > stage.getTurnLimit())
 			id = 3;
@@ -34,6 +39,8 @@ public class Star extends Collectible {
 
 	@Override
 	public void onPlayerCollision(Player pl,  Stage stage) {
+		
+		if(!exist) return;
 		
 		// End stage
 		stage.endStage();

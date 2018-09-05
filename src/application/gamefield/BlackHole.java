@@ -37,7 +37,7 @@ public class BlackHole extends Crate {
 	@Override
 	protected boolean freeTileCheck(Stage stage, int x, int y) {
 		
-		return x > 1 && y > 1 && x < stage.getWidth() -1 && y < stage.getHeight()-1;
+		return x > 0 && y > 0 && x < stage.getWidth() -1 && y < stage.getHeight()-1;
 	}
 	
 	
@@ -50,7 +50,7 @@ public class BlackHole extends Crate {
 		// Update angle
 		angle += ROTATE_SPEED * tm;
 		
-		// Update soze
+		// Update size
 		sizeTimer += SIZE_SPEED * tm;
 	}
 	
@@ -63,6 +63,7 @@ public class BlackHole extends Crate {
 		
 		super(pos);
 		dieInLava = false;
+		immune = true;
 	}
 
 	
@@ -94,6 +95,6 @@ public class BlackHole extends Crate {
 	public void onMovingStopped(Stage stage, TimeManager tman) {
 		
 		stage.updateTileData(pos.x, pos.y, 0);
-		stage.updateSolidTileData(pos.x, pos.y, 2);
+		stage.updateSolidTileData(pos.x, pos.y, 16);
 	};
 }
