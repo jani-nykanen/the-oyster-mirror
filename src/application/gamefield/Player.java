@@ -42,6 +42,8 @@ public class Player extends FieldObject {
 	private int keys;
 	/** Hammers */
 	private int hammers;
+	/** Emeralds remaining */
+	private int emeraldRemaining = 0;
 	
 	
 	/**
@@ -198,6 +200,7 @@ public class Player extends FieldObject {
 		
 		// Set values
 		keys = 0;
+		emeraldRemaining = 0;
 	
 	}
 	
@@ -366,5 +369,34 @@ public class Player extends FieldObject {
 		
 		if(hammers > 0)
 			-- hammers;
+	}
+	
+	
+	/**
+	 * Set remaining emeralds counter value
+	 * @param v Amount
+	 */
+	public void setRemainingEmeralds(int v) {
+		
+		emeraldRemaining += v;
+	}
+	
+	
+	/**
+	 * Get the amount of remaining emeralds
+	 * @return The amount
+	 */
+	public int getRemainingEmeralds() {
+		
+		return emeraldRemaining;
+	}
+	
+	
+	/**
+	 * Reduce the remaining emeralds counter
+	 */
+	public void reduceEmeralds() {
+		
+		-- emeraldRemaining;
 	}
 }

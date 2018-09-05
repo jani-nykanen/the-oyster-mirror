@@ -158,7 +158,7 @@ public class Crate extends NonPlayerFieldObject {
 			// deathEvent(stage);
 		}
 		
-		// Special check: if in the same tile as a wall,
+		// Special check: if in the same tile as a purple wall,
 		// then die
 		if(stage.getTile(pos.x, pos.y) == 7 && stage.isTransforming()) {
 			

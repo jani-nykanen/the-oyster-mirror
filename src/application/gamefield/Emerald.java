@@ -19,7 +19,11 @@ public class Emerald extends Collectible {
 	@Override
 	public void onPlayerCollision(Player pl, Stage stage) {
 
-		// ...
+		pl.reduceEmeralds();
+		if(pl.getRemainingEmeralds() <= 0) {
+			
+			stage.updateTileData(stage.getWidth()/2, stage.getHeight()/2, 0);
+		}
 	}
 
 }

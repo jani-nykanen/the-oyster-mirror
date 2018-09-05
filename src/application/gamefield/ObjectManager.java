@@ -56,6 +56,8 @@ public class ObjectManager {
 		Point p;
 		int x, y;
 		
+		int emeraldCount = 0;
+		
 		for(int i = 0; i < data.length; ++ i) {
 
 			x = i % w;
@@ -130,6 +132,7 @@ public class ObjectManager {
 				break;
 				
 			// Star
+			case 20:
 			case 18:
 				
 				objects.add(new Star(p));
@@ -139,12 +142,16 @@ public class ObjectManager {
 			case 19:
 				
 				objects.add(new Emerald(p));
+				++ emeraldCount;
 				break;
-	
+
 			default:
 				break;
 			}
 		}
+		
+		// Store emerald count
+		player.setRemainingEmeralds(emeraldCount);
 	}
 	
 	

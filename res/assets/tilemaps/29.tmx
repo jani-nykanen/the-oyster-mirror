@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="9" height="8" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
+<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="9" height="8" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
  <properties>
-  <property name="difficulty" value="7"/>
+  <property name="difficulty" value="8"/>
   <property name="name" value="Dead End?"/>
-  <property name="turns" value="51"/>
+  <property name="turns" value="75"/>
  </properties>
  <tileset firstgid="1" source="../../../dev/editor_tileset.tsx"/>
  <layer name="Tile layer 1" width="9" height="8">
   <data encoding="csv">
 1,1,1,1,1,1,1,1,1,
-1,0,0,12,9,9,9,0,1,
-1,17,15,10,10,10,9,9,1,
+1,0,0,12,9,9,9,8,1,
+1,17,15,10,10,10,9,0,1,
 1,2,9,11,10,10,10,9,1,
 1,9,9,9,9,0,1,1,1,
 1,0,10,14,11,1,0,18,1,
-1,10,10,10,10,10,10,10,1,
+1,0,10,10,10,10,9,9,1,
 1,1,1,1,1,1,1,1,1
 </data>
  </layer>

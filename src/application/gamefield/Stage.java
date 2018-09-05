@@ -24,12 +24,12 @@ public class Stage {
 	/** Static solid tiles */
 	static final boolean[] STATIC_SOLID_TILES = new boolean[] {
 		true,false,true,true, false,false,true,false,  false, true, false, false,
-		true, true, false, true,
+		true, true, false, true,  false, false, false, true,
 	};
 	/** Solid tiles */
 	static final boolean[] SOLID_TILES = new boolean[] {
 		true,true,true,true, false,false,true,false, false,true,false,false,
-		true, true, false, true,
+		true, true, false, true,   true, false, false, true,
 	};
 	
 	
@@ -461,6 +461,19 @@ public class Stage {
 			drawBorders(g, x, y, tileSize, tileSize, LOCK_BORDER_WIDTH);
 			
 		break;
+		
+		// Green star container
+		case 20:
+			
+			// Draw container
+			g.setColor();
+			g.drawScaledBitmapRegion(bmpStatic, 128, 256, 128, 128, 
+			dx, dy, tileSize, tileSize, Flip.NONE);
+						
+			// Borders
+			g.setColor(0.05f,0.25f,0.1f);
+			drawBorders(g, x, y, tileSize, tileSize, LOCK_BORDER_WIDTH);
+			break;
 			
 		// Floor
 		default:
@@ -507,7 +520,7 @@ public class Stage {
 			// Check if we want to copy the tile to the tile data array
 			// TODO: Check if in array instead of so many ors
 			if(tile == 1 || tile == 3 || tile == 4 || tile == 6 || tile == 7 ||
-				tile == 9 || tile == 10 || tile == 13 || tile == 14)
+				tile == 9 || tile == 10 || tile == 13 || tile == 14 || tile == 20)
 				tileData[i] = tile;
 			else
 				tileData[i] = 0;
