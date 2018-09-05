@@ -1,6 +1,6 @@
 Possibly a puzzle game, the third entry in Oyster Sauce "saga".
 
-![](https://cdn.discordapp.com/attachments/235123827279921155/483723878561087488/oyster3_gif_early.gif)
+![](https://files.64digits.com/Jani_Nykanen/final_Stage.png)
 
 Yes, it's a puzzle game.
 
