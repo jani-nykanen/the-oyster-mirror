@@ -35,6 +35,7 @@ public class ObjectManager {
 		Lock.init(assets);
 		LavaContainer.init(assets);
 		BlackHole.init(assets);
+		StarContainer.init(assets);
 	}
 	
 	
@@ -131,8 +132,10 @@ public class ObjectManager {
 				player = new Player(p);
 				break;
 				
-			// Star
+			// Star container
 			case 20:
+				objects.add(new StarContainer(p));
+			// Star
 			case 18:
 				
 				objects.add(new Star(p));
