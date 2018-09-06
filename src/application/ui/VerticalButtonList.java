@@ -49,9 +49,7 @@ public class VerticalButtonList {
 	private float ytransMax;
 	/** If the amount of buttons drawn is limited */
 	private boolean limit;
-	/** If the initial y translation is set */
-	private boolean initialYTransSet;
-	
+
 	
 	/**
 	 * Initialize global content
@@ -76,7 +74,6 @@ public class VerticalButtonList {
 		cursorTimer = 0.0f;
 		cursorPos = 0;
 		ytransMax = 0.0f;
-		initialYTransSet = false;
 	}
 	
 	
@@ -317,14 +314,7 @@ public class VerticalButtonList {
 		// Draw cursor
 		g.setColor();
 		g.drawScaledBitmapRegion(bmpCursor, -2, 0, 132, 128, dx, cpos, size, size, Flip.NONE);
-		
-		// Set the initial y translation
-		if(limit && !initialYTransSet) {
-			
-			ytrans = ytarget;
-			initialYTransSet = true;
-		}
-		
+
 	}
 	
 	
@@ -359,5 +349,16 @@ public class VerticalButtonList {
 	public int getCursorPos() {
 		
 		return cursorPos;
+	}
+	
+	
+	/**
+	 * Set Y translation
+	 * @param v Value
+	 */
+	public void setYTranslation(float v) {
+		
+		ytrans = v;
+		ytarget = v;
 	}
 }

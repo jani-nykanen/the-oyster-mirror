@@ -4,6 +4,7 @@ import application.Gamepad;
 import application.global.Settings;
 import application.ui.Button;
 import application.ui.MenuContainer;
+import core.State;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
 import core.types.Vector2;
@@ -120,6 +121,12 @@ public class Pause extends MenuContainer {
 		
 		// Update button list
 		buttons.update(vpad, tm);
+		
+		// If quit pressed, quit
+		if(vpad.getButtonByName("quit") == State.Pressed) {
+			
+			buttons.getButton(3).activate(0);
+		}
 	}
 	
 	

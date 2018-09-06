@@ -3,4 +3,5 @@
     <button name="fire1" key="32" joy="0" />
     <button name="reset" key="82" joy="3" />
     <button name="confirm" key="257" joy="7" />
+    <button name="quit" key="256" joy="6" />
 </keyconfig>

@@ -8,6 +8,7 @@ import application.global.Transition;
 import application.global.Transition.Mode;
 import application.ui.Button;
 import application.ui.VerticalButtonList;
+import core.State;
 import core.renderer.Bitmap;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
@@ -27,6 +28,9 @@ public class StageMenu extends Scene {
 	/** Amount of buttons (= stage count + back button) */
 	static public final int BUTTON_COUNT = 35 +1;
 	
+	static private final float BUTTONS_YPOS = 32;
+	static private final float BUTTONS_YOFF = 56.0f;
+	
 	/** Font bitmap */
 	private Bitmap bmpFont;
 	
@@ -45,6 +49,27 @@ public class StageMenu extends Scene {
 	private int[] difficulties;
 	/** Is leaving */
 	private boolean leaving = false;
+	/** Latest stage */
+	private int latestStage = 1;
+	
+	
+	/**
+	 * Quit
+	 */
+	private void quit() {
+		
+		// Fade in and quit
+		leaving = true;
+		trans.activate(Transition.Mode.In, Transition.Type.Fade, 
+				2.0f, new RGBFloat(0, 0, 0), 
+		new VoidCallback() {
+			@Override
+			public void execute(int index) {
+			
+				eventMan.quit();
+			}
+		});
+	}
 	
 	
 	/**
@@ -87,7 +112,7 @@ public class StageMenu extends Scene {
 			public void execute(int index) {
 				
 				sceneMan.changeScene("game", 
-						(Object)new Integer(stageIndex));	
+						(Object)new int[] {stageIndex});	
 			}
 		});
 	}
@@ -139,14 +164,12 @@ public class StageMenu extends Scene {
 	private void drawStageButtons(Graphics g) {
 		
 		final float XPOS = 32;
-		final float YPOS = 32;
 		final float XOFF = -28.0f;
-		final float YOFF = 56.0f;
 		final float TEXT_SCALE = 0.80f;
 		final float SHADOW_OFF = 8.0f;
 		
 		// Draw buttons
-		stageButtons.draw(g, bmpFont, XPOS, YPOS, XOFF, YOFF, TEXT_SCALE, true, SHADOW_OFF);
+		stageButtons.draw(g, bmpFont, XPOS, BUTTONS_YPOS, XOFF, BUTTONS_YOFF, TEXT_SCALE, true, SHADOW_OFF);
 	}
 	
 	
@@ -245,13 +268,12 @@ public class StageMenu extends Scene {
 		// Get cursor position
 		int cpos = stageButtons.getCursorPos();
 		// If names not available, stop here
-		if(cpos == 0 || cpos > stageNames.length)
+		if(cpos == 0 || cpos > latestStage)
 			return;
 		
 		// Draw info box text, shadow
 		g.setColor(0, 0, 0, SHADOW_ALPHA);
 		drawInfoBoxText(g, cpos, x + SHADOW_OFF, y + SHADOW_OFF);
-		
 		
 		// Draw info box text, base
 		g.setColor(1, 1, 0);
@@ -291,18 +313,7 @@ public class StageMenu extends Scene {
 			@Override
 			public void execute(int index) {
 				
-				// Fade in and quit
-				// TEMPORARY
-				leaving = true;
-				trans.activate(Transition.Mode.In, Transition.Type.Fade, 
-						2.0f, new RGBFloat(0, 0, 0), 
-				new VoidCallback() {
-					@Override
-					public void execute(int index) {
-					
-						eventMan.quit();
-					}
-				});
+				quit();
 			}
 		};
 		String name = "";
@@ -338,8 +349,6 @@ public class StageMenu extends Scene {
 			// Add button
 			stageButtons.addButton(b);
 		}
-		// Set to the latest button
-		stageButtons.setCursorPos(bcount);
 		
 		
 		// Get global objects
@@ -348,10 +357,23 @@ public class StageMenu extends Scene {
 		saveMan = g.getSaveManager();
 		
 		// Get current stage info
+		latestStage = saveMan.getCurrentStageIndex();
 		for(int i = 1; i < BUTTON_COUNT; ++ i) {
 			
 			updateButtonText(i, saveMan.getCompletionInfo(i));
+			if(i > latestStage) {
+				
+				stageButtons.getButton(i).disable();
+			}
 		}
+		stageButtons.setCursorPos(latestStage);
+		
+		// Calculate button menu y translation
+		float p = BUTTONS_YPOS + 
+				BUTTONS_YOFF * (latestStage + (latestStage == BUTTON_COUNT-1 ? 1 : 2)) 
+				-Global.DEFAULT_VIEW_HEIGHT;
+		if(p < 0) p = 0;
+		stageButtons.setYTranslation(-p);
 	}
 
 	
@@ -363,6 +385,12 @@ public class StageMenu extends Scene {
 		
 		// Update buttons
 		stageButtons.update(vpad, tm);
+		
+		// Check if quit button pressed
+		if(vpad.getButtonByName("quit") == State.Pressed) {
+			
+			quit();
+		}
 	}
 
 	
@@ -427,17 +455,28 @@ public class StageMenu extends Scene {
 		// Get stage completion information
 		int[] info = (int[])param;
 		if(info != null) {
-			
-			System.out.println(info[0]);
-			System.out.println(info[1]);
-			
+
 			// Save game
 			try {
 				
 				if(saveMan.updateCompletionData(info[0], info[1])) {
 					
-					saveMan.saveGame(Global.SAVE_DATA_PATH);
+					// Save game
 					updateButtonText(info[0], info[1]);
+					
+					// Check if new stage unlocked
+					if(latestStage < BUTTON_COUNT-1) {
+						
+						if(info[0] == latestStage) {
+							
+							++ latestStage;
+							stageButtons.getButton(latestStage).enable();
+							
+							saveMan.increaseStageIndex();
+						}
+					}
+
+					saveMan.saveGame(Global.SAVE_DATA_PATH);
 				}
 			}
 			catch(Exception e) {

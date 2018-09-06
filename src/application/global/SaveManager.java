@@ -25,7 +25,7 @@ public class SaveManager {
 	private int[] completion = new int[StageMenu.BUTTON_COUNT];
 	
 	/** The "current" stage i.e the latest unlocked stage */
-	private int currentStage;
+	private int currentStage =1;
 	
 	
 	/**
@@ -105,7 +105,8 @@ public class SaveManager {
 		}
 		catch(FileNotFoundException e) {
 			
-			System.out.println("Could not find a file in " + filename + ".");
+			System.out.println("Could not find " + filename 
+					+ ", maybe because it does not exist yet?");
 		}
 		catch(Exception e) {
 			
@@ -149,5 +150,24 @@ public class SaveManager {
 			return -1;
 		
 		return completion[index];
+	}
+	
+	
+	/**
+	 * Get the index of the latest unlocked stage
+	 * @return Index
+	 */
+	public int getCurrentStageIndex() {
+		
+		return currentStage;
+	}
+	
+	
+	/**
+	 * Increase the current stage index
+	 */
+	public void increaseStageIndex() {
+		
+		++ currentStage;
 	}
 }

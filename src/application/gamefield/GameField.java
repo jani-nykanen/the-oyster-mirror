@@ -3,7 +3,6 @@ package application.gamefield;
 import application.Gamepad;
 import application.Scene;
 import application.global.Global;
-import application.global.SaveManager;
 import application.global.Transition;
 import application.global.Transition.Mode;
 import core.State;
@@ -117,7 +116,8 @@ public class GameField extends Scene {
 			return;
 		}
 		// If not, check if pause button pressed
-		else if(vpad.getButtonByName("confirm") == State.Pressed) {
+		else if(vpad.getButtonByName("confirm") == State.Pressed
+				|| vpad.getButtonByName("quit") == State.Pressed) {
 			
 			pause.activate();
 			return;
@@ -204,8 +204,8 @@ public class GameField extends Scene {
 	@Override
 	public void changeTo() {
 		
-		Integer i = (Integer)param;
-		int stageIndex = i != null ? i.intValue() : 1;
+		int[] p = (int[])param;
+		int stageIndex = p != null ? p[0] : 1;
 		
 		leaving = false;
 		victory = false;
