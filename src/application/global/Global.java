@@ -14,12 +14,16 @@ public class Global extends Scene {
 
 	/** Default view height */
 	public static final float DEFAULT_VIEW_HEIGHT = 720.0f;
+	/** Default save game output path */
+	public static final String SAVE_DATA_PATH = "savegame.dat";
 	
 	/** Scene name */
 	public String name = "game";
 	
 	/** Transition object */
 	private Transition trans;
+	/** Save manager */
+	private SaveManager saveMan;
 	
 	
 	@Override
@@ -27,6 +31,14 @@ public class Global extends Scene {
 		
 		// Create global components
 		trans = new Transition();
+		saveMan = new SaveManager();
+		
+		// Load save data if exists
+		try {
+			
+			saveMan.loadGame(SAVE_DATA_PATH);
+		}
+		catch(Exception e) { }
 	}
 
 	
@@ -67,5 +79,15 @@ public class Global extends Scene {
 	public Transition getTransition() {
 		
 		return trans;
+	}
+	
+	
+	/**
+	 * Get global save manager
+	 * @return Save manager
+	 */
+	public SaveManager getSaveManager() {
+		
+		return saveMan;
 	}
 }

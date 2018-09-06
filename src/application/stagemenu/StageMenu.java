@@ -3,6 +3,7 @@ package application.stagemenu;
 import application.Gamepad;
 import application.Scene;
 import application.global.Global;
+import application.global.SaveManager;
 import application.global.Transition;
 import application.global.Transition.Mode;
 import application.ui.Button;
@@ -24,7 +25,7 @@ import core.utility.VoidCallback;
 public class StageMenu extends Scene {
 
 	/** Amount of buttons (= stage count + back button) */
-	static private final int BUTTON_COUNT = 35 +1;
+	static public final int BUTTON_COUNT = 35 +1;
 	
 	/** Font bitmap */
 	private Bitmap bmpFont;
@@ -33,6 +34,8 @@ public class StageMenu extends Scene {
 	private VerticalButtonList stageButtons;
 	/** Transitions */
 	private Transition trans;
+	/** Save game manager */
+	private SaveManager saveMan;
 	
 	/** Stage index */
 	private int stageIndex = 0;
@@ -110,6 +113,22 @@ public class StageMenu extends Scene {
 		}
 		
 		return count;
+	}
+	
+	
+	/**
+	 * Update button text
+	 * @param index Button index
+	 * @param value Value
+	 */
+	private void updateButtonText(int index, int value) {
+		
+		String s = "Stage " + Integer.toString(index) + " ";
+		if(value == 1) s += "}";
+		if(value == 2) s += "|";
+		
+		Button b = stageButtons.getButton(index);
+		b.setText(s);
 	}
 	
 	
@@ -323,8 +342,16 @@ public class StageMenu extends Scene {
 		stageButtons.setCursorPos(bcount);
 		
 		
-		// Get transitions object
-		trans = ((Global)sceneMan.getGlobalScene()).getTransition();
+		// Get global objects
+		Global g = (Global)sceneMan.getGlobalScene();
+		trans = g.getTransition();
+		saveMan = g.getSaveManager();
+		
+		// Get current stage info
+		for(int i = 1; i < BUTTON_COUNT; ++ i) {
+			
+			updateButtonText(i, saveMan.getCompletionInfo(i));
+		}
 	}
 
 	
@@ -397,7 +424,28 @@ public class StageMenu extends Scene {
 	@Override
 	public void changeTo() {
 		
-		// ...
+		// Get stage completion information
+		int[] info = (int[])param;
+		if(info != null) {
+			
+			System.out.println(info[0]);
+			System.out.println(info[1]);
+			
+			// Save game
+			try {
+				
+				if(saveMan.updateCompletionData(info[0], info[1])) {
+					
+					saveMan.saveGame(Global.SAVE_DATA_PATH);
+					updateButtonText(info[0], info[1]);
+				}
+			}
+			catch(Exception e) {
+				
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 }

@@ -3,6 +3,7 @@ package application.gamefield;
 import application.Gamepad;
 import application.Scene;
 import application.global.Global;
+import application.global.SaveManager;
 import application.global.Transition;
 import application.global.Transition.Mode;
 import core.State;
@@ -39,6 +40,8 @@ public class GameField extends Scene {
 	
 	/** Is leaving */
 	private boolean leaving = false;
+	/** Is victory */
+	private boolean victory = false;
 	
 	
 	@Override
@@ -68,10 +71,12 @@ public class GameField extends Scene {
 		statMan = new StatusManager();
 		statMan.setInitial(stage);
 		
-		// Get global transition manager
+		// Get global objects
 		Scene global = sceneMan.getGlobalScene();
-		if(global != null)
+		if(global != null) {
+			
 			trans = ( (Global)global ).getTransition();
+		}
 				
 		// Create pause
 		Pause.init(assets);
@@ -134,6 +139,7 @@ public class GameField extends Scene {
 		// Check if the stage has ended
 		if(stage.hasStageEnded()) {
 			
+			victory = true;
 			stageClear.activate(timeMan.getTurn() <= stage.getTurnLimit());
 		}
 
@@ -202,6 +208,7 @@ public class GameField extends Scene {
 		int stageIndex = i != null ? i.intValue() : 1;
 		
 		leaving = false;
+		victory = false;
 		
 		// Load map
 		stage.setStage(stageIndex, assets);
@@ -263,7 +270,12 @@ public class GameField extends Scene {
 				@Override
 				public void execute(int index) {
 					
-					sceneMan.changeScene("stagemenu");	
+					// Pass stage index & completion value
+					int[] params = (new int[] {
+						stage.getStageIndex(), 
+						victory ? (timeMan.getTurn() <= stage.getTurnLimit() ? 2 : 1) : 0,
+					});
+					sceneMan.changeScene("stagemenu", params);	
 				}
 		});
 	}

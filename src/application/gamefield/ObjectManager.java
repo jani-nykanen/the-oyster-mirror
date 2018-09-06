@@ -72,7 +72,7 @@ public class ObjectManager {
 			case 2:
 				
 				objects.add(new Crate(p));
-				stage.updateTileData(x, y, 2);
+				stage.updateSolidTileData(x, y, 2);
 				break;
 				
 			// Lock
@@ -97,7 +97,7 @@ public class ObjectManager {
 			case 11:
 									
 				objects.add(new PurpleCrate(p));
-				stage.updateTileData(x, y, 2);
+				stage.updateSolidTileData(x, y, 2);
 				break;	
 				
 			// Hammer
@@ -117,14 +117,14 @@ public class ObjectManager {
 			case 15:
 				
 				objects.add(new LavaEater(p));
-				stage.updateTileData(x, y, 2);
+				stage.updateSolidTileData(x, y, 2);
 				break;
 				
 			// Black hole
 			case 16:
 								
 				objects.add(new BlackHole(p));
-				stage.updateTileData(x, y, 2);
+				stage.updateSolidTileData(x, y, 2);
 				break;
 				
 			// Player
