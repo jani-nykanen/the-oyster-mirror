@@ -256,7 +256,7 @@ public class Mirror {
 		
 		// Draw "glass"
 		float alpha = ALPHA_START + ALPHA_FACTOR * scaleFactor;
-		g.setColor(0, 0, 0.5f, alpha);
+		g.setColor(0, 0.2f, 0.5f, alpha);
 		g.fillRect(x+80, y+80, width-160, height-160);
 		g.setColor();
 		

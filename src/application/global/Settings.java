@@ -1,5 +1,13 @@
 package application.global;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
 import application.Gamepad;
 import application.ui.Button;
 import application.ui.MenuContainer;
@@ -8,6 +16,7 @@ import core.audio.AudioManager;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
 import core.types.Vector2;
+import core.utility.CSVParser;
 import core.utility.VoidCallback;
 
 /**
@@ -17,9 +26,10 @@ import core.utility.VoidCallback;
  */
 public class Settings extends MenuContainer {
 
-	
+	/** Default settings path */
+	static public final String DEFAULT_PATH = "settings.dat";
 	/** Amount of buttons */
-	static final int BUTTON_COUNT = 5;
+	static final private int BUTTON_COUNT = 5;
 	
 	/** Button texts */
 	static final private String[] BUTTON_TEXT = new String[] {
@@ -30,6 +40,9 @@ public class Settings extends MenuContainer {
 		"Framerate: ",
 		"Back"
 	};
+	
+	/** Reference to the event manager */
+	private WeakEventManager eventMan;
 	
 	
 	/**
@@ -44,12 +57,59 @@ public class Settings extends MenuContainer {
 	}
 	
 	
+	
+	/**
+	 * Save settings
+	 * @param path Path
+	 * @throws Exception If fails to close writer
+	 */
+	private void saveSettings(String path) throws Exception {
+		
+		Writer writer = null;
+		try {
+			
+			// Open/create file for writing
+			writer = new BufferedWriter(new OutputStreamWriter(
+		              new FileOutputStream(path), "utf-8"));
+			
+			// Write full screen state
+			writer.write(
+					Integer.toString(eventMan.getFullscreenState() ? 1 : 0) + "\n");
+			// Write music volume
+			writer.write(Integer.toString(
+					eventMan.getAudioManager().getMusicVolume()
+					) + "\n");
+			// Write sound volume
+			writer.write(Integer.toString(
+					eventMan.getAudioManager().getSoundVolume())
+					+ "\n");
+			// Write FPS
+			writer.write(Integer.toString(
+					eventMan.getFrameRate())
+					+ "\n");
+
+			
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		finally {
+			
+			writer.close();
+		}
+	}
+	
+	
 	/**
 	 * Constructor
 	 */
 	public Settings(WeakEventManager eventMan) {
 		
 		super();
+		
+		// Store reference to the event manager
+		// (we need it while saving/loading data)
+		this.eventMan = eventMan;
 		
 		// Get audio manager
 		AudioManager audioMan = eventMan.getAudioManager();
@@ -132,6 +192,13 @@ public class Settings extends MenuContainer {
 				
 				timer = TRANSITION_TIME;
 				leaving = true;
+				
+				// Save settings
+				try {
+					
+					saveSettings(DEFAULT_PATH);
+				}
+				catch(Exception e) {}
 			}
 		};
 		leftCbs[4] = null;
@@ -156,8 +223,12 @@ public class Settings extends MenuContainer {
 		
 		buttons.setCursorPos(BUTTON_COUNT-1);
 		
-		// TODO: Read settings.xml
-		// Get settings
+		// Read settings
+		try {
+			
+			load();
+		}
+		catch(Exception e) {}
 	}
 	
 	
@@ -209,4 +280,61 @@ public class Settings extends MenuContainer {
 		tr.pop();
 	}
 
+	
+	/**
+	 * Load settings
+	 * @param path Path
+	 * @throws Exception If fails to close reader
+	 */
+	public void load(String path) throws Exception {
+		
+		BufferedReader reader = null;
+		try {
+			
+			reader = new BufferedReader(new FileReader(path));
+			
+			// Read fullscreen
+			boolean state = Integer.parseInt(reader.readLine()) == 1;
+			if(state != eventMan.getFullscreenState())
+				eventMan.toggleFullscreen();
+			
+			// Read music volume
+			eventMan.getAudioManager().setMusicVolume(
+					Integer.parseInt(reader.readLine())
+					);
+			
+			// Read sound volume
+			eventMan.getAudioManager().setSoundVolume(
+					Integer.parseInt(reader.readLine())
+					);
+			
+			// Read fps
+			eventMan.setFrameRate(
+					Integer.parseInt(reader.readLine())
+					);
+		}
+		catch(FileNotFoundException e) {
+			
+			System.out.println("Could not find " + path 
+					+ ", maybe because it does not exist yet?");
+		}
+		catch(Exception e) {
+			
+			e.printStackTrace();
+		}
+		finally {
+			
+			reader.close();
+		}
+	}
+	
+	
+	/**
+	 * Load settings in the default location
+	 * @throws Exception If fails to close the reader object
+	 */
+	public void load() throws Exception {
+	
+		load(DEFAULT_PATH);
+	}
 }

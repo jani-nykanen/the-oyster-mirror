@@ -33,10 +33,11 @@ public class Global extends Scene {
 		trans = new Transition();
 		saveMan = new SaveManager();
 		
-		// Load save data if exists
+		// Load save data & settings if exists
 		try {
 			
 			saveMan.loadGame(SAVE_DATA_PATH);
+			(new Settings(eventMan)).load();
 		}
 		catch(Exception e) { }
 	}

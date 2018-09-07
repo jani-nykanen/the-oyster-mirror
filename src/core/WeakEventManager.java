@@ -44,6 +44,16 @@ public class WeakEventManager {
 	
 	
 	/**
+	 * Get fullscreen state
+	 * @return State
+	 */
+	public boolean getFullscreenState() {
+		
+		return app.isFullscreenEnabled();
+	}
+	
+	
+	/**
 	 * Get frame limit
 	 * @return Frame limit
 	 */
