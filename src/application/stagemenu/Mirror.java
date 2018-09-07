@@ -16,9 +16,16 @@ public class Mirror {
 
 	/** Mirror bitmap */
 	static private Bitmap bmpMirror;
+	/** Icons bitmap */
+	static private Bitmap bmpIcons;
 	
 	/** Size factor */
 	private float sizeFactor = 0.0f;
+	
+	/** Cursor position */
+	private Vector2 cursorPos;
+	/** Cursor floating factor */
+	private float floatFactor;
 	
 	
 	/**
@@ -27,7 +34,9 @@ public class Mirror {
 	 */
 	static public void init(AssetPack assets) {
 		
+		// Get bitmaps
 		bmpMirror = assets.getBitmap("mirror");
+		bmpIcons = assets.getBitmap("icons");
 	}
 	
 
@@ -77,11 +86,47 @@ public class Mirror {
 	
 	
 	/**
+	 * Draw cursor
+	 * @param g Graphics object
+	 * @param dx Destination x
+	 * @param dy Destination y
+	 */
+	private void drawCursor(Graphics g, float dx, float dy) {
+
+		final float MARKER_SCALE_X= 1.5f;
+		final float MARKER_SCALE_Y = 0.75f;
+		final float CURSOR_SCALE = 1.0f;
+		
+		final float FLOAT_AMPLITUDE = 8.0f;
+		
+		// Draw marker
+		float w = 64.0f * MARKER_SCALE_X;
+		float h = 64.0f * MARKER_SCALE_Y;
+		float x = dx + cursorPos.x - w/2;
+		float y = dy + cursorPos.y - h/2;
+		g.drawScaledBitmapRegion(bmpIcons, 64, 0, 64, 64, 
+				x,y, w,h, Flip.NONE);
+		
+		// Draw cursor
+		float cursorOff = -FLOAT_AMPLITUDE + (float)Math.sin(floatFactor) * FLOAT_AMPLITUDE;
+		w = 64.0f * CURSOR_SCALE;
+		h = 64.0f * CURSOR_SCALE;
+		x = dx + cursorPos.x - w/2;
+		y = dy + cursorPos.y - h + cursorOff;
+		g.drawScaledBitmapRegion(bmpIcons, 0, 0, 64, 64, 
+				x, y, w, h, Flip.NONE);
+		
+	}
+	
+	
+	/**
 	 * Constructor
 	 */
 	public Mirror() {
 		
 		sizeFactor = 0.0f;
+		cursorPos = new Vector2();
+		floatFactor = 0.0f;
 	}
 	
 	
@@ -92,9 +137,13 @@ public class Mirror {
 	public void update(float tm) {
 		
 		final float SIZE_FACTOR_SPEED = 0.025f;
+		final float FLOAT_FACTOR_SPEED = 0.05f;
 
 		// Update size factor
 		sizeFactor += SIZE_FACTOR_SPEED * tm;
+		
+		// Update floating factor
+		floatFactor += FLOAT_FACTOR_SPEED * tm;
 	}
 	
 	
@@ -158,10 +207,24 @@ public class Mirror {
 		g.fillRect(x+80, y+80, WIDTH-160, HEIGHT-160);
 		g.setColor();
 		
-
 		// Draw mirror frame (base)
 		drawMirrorFrame(g, x, y, scaleFactor, scaleValue1, width, height, false);
 		
 		g.toggleAutocrop(true);
+		
+		// Draw cursor
+		drawCursor(g, x, y);
+	}
+
+
+	/**
+	 * Set cursor position
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 */
+	public void setCursorPosition(float x, float y) {
+		
+		cursorPos.x = x;
+		cursorPos.y = y;
 	}
 }

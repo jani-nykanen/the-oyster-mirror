@@ -182,6 +182,12 @@ public final class Graphics {
 		    if(deltaX > DELTA_MAX) deltaX = DELTA_MAX;
 		    if(deltaY > DELTA_MAX) deltaY = DELTA_MAX;
 	    }
+	    // Otherwise we just remove "half" a pixel
+	    else {
+	    	
+	    	deltaX = 0.5f / sw;
+	    	deltaY = 0.5f / sh;
+	    }
 	    
 	    // Pass size data to the shader
 	    shaderDefault.setVertexUniforms(new Vector2(dx, dy), new Vector2(dw, dh));
