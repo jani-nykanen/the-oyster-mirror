@@ -61,7 +61,7 @@ public class StageMenu extends Scene {
 		// Fade in and quit
 		leaving = true;
 		trans.activate(Transition.Mode.In, Transition.Type.Fade, 
-				2.0f, new RGBFloat(0, 0, 0), 
+				2.0f, new RGBFloat(1, 1, 1), 
 		new VoidCallback() {
 			@Override
 			public void execute(int index) {

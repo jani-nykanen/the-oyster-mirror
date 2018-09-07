@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assets bitmap_path="assets/bitmaps/" tilemap_path="assets/tilemaps/">
+    <bitmap name="font" path="font.png" />
+    <bitmap name="static" path="static.png" />
+   	<bitmap name="lava" path="lava.png" />
+   	<bitmap name="movable" path="movable.png" />
+   	<bitmap name="collectibles" path="collectibles.png" />
+   	<bitmap name="player" path="player.png" />
+   	<bitmap name="cursor" path="cursor.png" />
+   	
+   	<tilemap name="1" path="1.tmx" />
+   	<tilemap name="2" path="2.tmx" />
+   	<tilemap name="3" path="3.tmx" />
+   	<tilemap name="4" path="4.tmx" />
+   	<tilemap name="5" path="5.tmx" />
+   	<tilemap name="6" path="6.tmx" />
+   	<tilemap name="7" path="7.tmx" />
+   	<tilemap name="8" path="8.tmx" />
+   	<tilemap name="9" path="9.tmx" />
+   	<tilemap name="10" path="10.tmx" />
+   	<tilemap name="11" path="11.tmx" />
+   	<tilemap name="12" path="12.tmx" />
+   	<tilemap name="13" path="13.tmx" />!
+   	<tilemap name="14" path="14.tmx" />
+   	<tilemap name="15" path="15.tmx" />
+   	<tilemap name="16" path="16.tmx" />
+   	<tilemap name="17" path="17.tmx" />
+   	<tilemap name="18" path="18.tmx" />
+   	<tilemap name="19" path="19.tmx" />
+   	<tilemap name="20" path="20.tmx" />
+   	<tilemap name="21" path="21.tmx" />
+   	<tilemap name="22" path="22.tmx" />
+   	<tilemap name="23" path="23.tmx" />
+   	<tilemap name="24" path="24.tmx" />
+   	<tilemap name="25" path="25.tmx" />
+   	<tilemap name="26" path="26.tmx" />
+   	<tilemap name="27" path="27.tmx" />
+   	<tilemap name="28" path="28.tmx" />
+   	<tilemap name="29" path="29.tmx" />
+   	<tilemap name="30" path="30.tmx" />
+   	
+</assets>
