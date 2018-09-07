@@ -286,6 +286,9 @@ public class StageMenu extends Scene {
 	@Override
 	public void init(AssetPack assets) throws Exception {
 
+		final float MIRROR_WIDTH = 384.0f;
+		final float MIRROR_HEIGHT = 384.0f;
+		
 		// Set name
 		name = "stagemenu";
 		
@@ -293,7 +296,7 @@ public class StageMenu extends Scene {
 		Mirror.init(assets);
 
 		// Create mirror
-		mirror = new Mirror();
+		mirror = new Mirror(MIRROR_WIDTH, MIRROR_HEIGHT);
 		
 		// Get assets
 		bmpFont = assets.getBitmap("font");
@@ -393,6 +396,12 @@ public class StageMenu extends Scene {
 		
 		// Update buttons
 		stageButtons.update(vpad, tm);
+		// Update mirror cursor position
+		int c = stageButtons.getCursorPos();
+		if(c > 0 && c <= latestStage) {
+			
+			mirror.calculateCursorPosition(BUTTON_COUNT -1, c);
+		}
 	
 		// Update mirror
 		mirror.update(tm);

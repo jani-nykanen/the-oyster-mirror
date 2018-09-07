@@ -18,14 +18,24 @@ public class Mirror {
 	static private Bitmap bmpMirror;
 	/** Icons bitmap */
 	static private Bitmap bmpIcons;
+
 	
 	/** Size factor */
 	private float sizeFactor = 0.0f;
 	
 	/** Cursor position */
 	private Vector2 cursorPos;
+	/** Pointer position */
+	private Vector2 pointerPos;
 	/** Cursor floating factor */
 	private float floatFactor;
+	/** Has the pointer been initialized (i.e initial pos set) */
+	private boolean pointerInitialized;
+	
+	/** Width */
+	private float width;
+	/** Height */
+	private float height;
 	
 	
 	/**
@@ -93,9 +103,9 @@ public class Mirror {
 	 */
 	private void drawCursor(Graphics g, float dx, float dy) {
 
-		final float MARKER_SCALE_X= 1.5f;
-		final float MARKER_SCALE_Y = 0.75f;
-		final float CURSOR_SCALE = 1.0f;
+		final float MARKER_SCALE_X= 2.0f;
+		final float MARKER_SCALE_Y = 1.0f;
+		final float CURSOR_SCALE = 1.5f;
 		
 		final float FLOAT_AMPLITUDE = 8.0f;
 		
@@ -107,12 +117,12 @@ public class Mirror {
 		g.drawScaledBitmapRegion(bmpIcons, 64, 0, 64, 64, 
 				x,y, w,h, Flip.NONE);
 		
-		// Draw cursor
+		// Draw pointer
 		float cursorOff = -FLOAT_AMPLITUDE + (float)Math.sin(floatFactor) * FLOAT_AMPLITUDE;
 		w = 64.0f * CURSOR_SCALE;
 		h = 64.0f * CURSOR_SCALE;
-		x = dx + cursorPos.x - w/2;
-		y = dy + cursorPos.y - h + cursorOff;
+		x = dx + pointerPos.x - w/2;
+		y = dy + pointerPos.y - h + cursorOff;
 		g.drawScaledBitmapRegion(bmpIcons, 0, 0, 64, 64, 
 				x, y, w, h, Flip.NONE);
 		
@@ -120,13 +130,58 @@ public class Mirror {
 	
 	
 	/**
-	 * Constructor
+	 * Update pointer
+	 * @param tm Time mul.
 	 */
-	public Mirror() {
+	private void updatePointer(float tm) {
 		
+		final float POINTER_SPEED_FACTOR = 16.0f;
+		final float POINTER_DELTA = 1.0f;
+		
+		// Calculate distance
+		float dist = (float)Math.hypot(cursorPos.x-pointerPos.x, 
+				cursorPos.y-pointerPos.y);
+		
+		// If far enough, start moving
+		if(dist > POINTER_DELTA) {
+			
+			float speed = dist / POINTER_SPEED_FACTOR;
+			
+			float angle = (float)Math.atan2(cursorPos.y-pointerPos.y, 
+					cursorPos.x-pointerPos.x);
+			
+			float sx = (float)Math.cos(angle);
+			float sy = (float)Math.sin(angle);
+			
+			pointerPos.x += sx * speed * tm;
+			pointerPos.y += sy * speed * tm;
+		}
+		else {
+			
+			pointerPos.x = cursorPos.x;
+			pointerPos.y = cursorPos.y;
+		}
+		
+	}
+	
+	
+	/**
+	 * Constructor
+	 * @param w Width
+	 * @param h Height
+	 */
+	public Mirror(float w, float h) {
+		
+		// Set defaults
 		sizeFactor = 0.0f;
 		cursorPos = new Vector2();
+		pointerPos = new Vector2();
 		floatFactor = 0.0f;
+		pointerInitialized = false;
+		
+		// Store dimensions
+		width = w;
+		height = h;
 	}
 	
 	
@@ -144,6 +199,9 @@ public class Mirror {
 		
 		// Update floating factor
 		floatFactor += FLOAT_FACTOR_SPEED * tm;
+	
+		// Update pointer
+		updatePointer(tm);
 	}
 	
 	
@@ -155,8 +213,6 @@ public class Mirror {
 		
 		final float POS_X_P = 0.66f;
 		final float POS_Y_P = 0.45f;
-		final float WIDTH = 384.0f;
-		final float HEIGHT = 384.0f;
 		final float SCALE_MULTIPLIER1 = 0.05f;
 		final float SCALE_MULTIPLIER2 = 0.1f;
 		final float ALPHA_START = 0.3f;
@@ -166,15 +222,12 @@ public class Mirror {
 		Transformations tr = g.transform();
 		Vector2 view = tr.getViewport();
 		
-		float x = view.x * POS_X_P - WIDTH/2;
-		float y = view.y * POS_Y_P - HEIGHT/2;
+		float x = view.x * POS_X_P - width/2;
+		float y = view.y * POS_Y_P - height/2;
 		
-		float cubeWidth = WIDTH / 256.0f * 128.0f;
-		float cubeHeight = HEIGHT / 256.0f * 128.0f;
-		
-		float width = WIDTH;
-		float height = HEIGHT;
-		
+		float cubeWidth = width / 256.0f * 128.0f;
+		float cubeHeight = height / 256.0f * 128.0f;
+
 		g.setColor();
 		g.toggleAutocrop(false);
 		
@@ -204,7 +257,7 @@ public class Mirror {
 		// Draw "glass"
 		float alpha = ALPHA_START + ALPHA_FACTOR * scaleFactor;
 		g.setColor(0, 0, 0.5f, alpha);
-		g.fillRect(x+80, y+80, WIDTH-160, HEIGHT-160);
+		g.fillRect(x+80, y+80, width-160, height-160);
 		g.setColor();
 		
 		// Draw mirror frame (base)
@@ -213,7 +266,8 @@ public class Mirror {
 		g.toggleAutocrop(true);
 		
 		// Draw cursor
-		drawCursor(g, x, y);
+		if(pointerInitialized)
+			drawCursor(g, x, y);
 	}
 
 
@@ -224,7 +278,35 @@ public class Mirror {
 	 */
 	public void setCursorPosition(float x, float y) {
 		
+		if(!pointerInitialized) {
+			
+			pointerPos.x = x;
+			pointerPos.y = y;
+			pointerInitialized = true;
+		}
+		
 		cursorPos.x = x;
 		cursorPos.y = y;
+	}
+	
+	
+	/**
+	 * Calculate cursor position to be in a spiral
+	 * @param n Amount of intervals
+	 * @param k Current position
+	 */
+	public void calculateCursorPosition(int n, int k) {
+		
+		final float RADIUS = 256.0f;
+		
+		float t = (float)(n-k) * ( ( (float)Math.PI * 2.0f) / (float)n );
+		
+		float x = (float)Math.cos(t * 4.0f) * 0.1f * t * RADIUS;
+		float y = (float)Math.sin(t * 4.0f) * 0.1f * t * RADIUS;
+
+		x += width / 2;
+		y += height / 2;
+		
+		setCursorPosition(x, y);
 	}
 }
