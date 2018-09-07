@@ -28,9 +28,10 @@ public class StageClearScreen {
 	/** Start time */
 	static private final float START_TIME = 60.0f;
 	/** Amount of buttons */
-	static private final int BUTTON_COUNT = 2;
+	static private final int BUTTON_COUNT = 3;
 	/** Button text */
 	static private String[] BUTTON_TEXT = new String[] {
+			"Next Stage",
 			"Stage menu",
 			"Play again"
 	};
@@ -185,8 +186,17 @@ public class StageClearScreen {
 
 		// Set button callbacks
 		VoidCallback[] cbs = new VoidCallback[BUTTON_COUNT];
-		// Stage menu
+		// Next stage
 		cbs[0] = new VoidCallback() {
+			@Override
+			public void execute(int index) {
+						
+				restarting = false;
+				game.quit(true);
+			}
+		};
+		// Stage menu
+		cbs[1] = new VoidCallback() {
 			@Override
 			public void execute(int index) {
 				
@@ -195,7 +205,7 @@ public class StageClearScreen {
 			}
 		};
 		// Restart
-		cbs[1] = new VoidCallback() {
+		cbs[2] = new VoidCallback() {
 			@Override
 			public void execute(int index) {
 				

@@ -452,10 +452,14 @@ public class StageMenu extends Scene {
 	@Override
 	public void changeTo() {
 		
+		final int REQUIRED_INFO_LENGTH = 3;
+		
 		// Get stage completion information
 		int[] info = (int[])param;
-		if(info != null) {
+		if(info != null && info.length >= REQUIRED_INFO_LENGTH) {
 
+			boolean toNext = info[2] == 1;
+			
 			// Save game
 			try {
 				
@@ -482,6 +486,18 @@ public class StageMenu extends Scene {
 			catch(Exception e) {
 				
 				e.printStackTrace();
+			}
+			
+			// Move to the next stage
+			if(toNext && stageIndex < BUTTON_COUNT -1) {
+				
+				++ stageIndex;
+				
+				// Move cursor
+				stageButtons.setCursorPos(stageButtons.getCursorPos() +1);
+				
+				sceneMan.changeScene("game", 
+						(Object)new int[] {stageIndex});	
 			}
 		}
 

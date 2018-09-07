@@ -259,8 +259,9 @@ public class GameField extends Scene {
 	
 	/**
 	 * Go back to the stage menu
+	 * @param toNext If directly go to the next stage
 	 */
-	public void quit() {
+	public void quit(boolean toNext) {
 
 		leaving = true;
 		
@@ -269,15 +270,25 @@ public class GameField extends Scene {
 			new VoidCallback() {
 				@Override
 				public void execute(int index) {
-					
+
 					// Pass stage index & completion value
 					int[] params = (new int[] {
 						stage.getStageIndex(), 
 						victory ? (timeMan.getTurn() <= stage.getTurnLimit() ? 2 : 1) : 0,
+						toNext ? 1 : 0
 					});
 					sceneMan.changeScene("stagemenu", params);	
 				}
 		});
+	}
+	
+	
+	/**
+	 * Go back to the stage menu
+	 */
+	public void quit() {
+		
+		quit(false);
 	}
 	
 }
