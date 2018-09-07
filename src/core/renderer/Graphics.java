@@ -33,6 +33,8 @@ public final class Graphics {
 	
 	/** Global alpha */
 	private float globalAlpha = 1.0f;
+	/** Is "autocrop" enabled */
+	private boolean autocrop = true;
 	
 	
 	/**
@@ -167,11 +169,19 @@ public final class Graphics {
 	    sx += sourceTranslation.x;
 	    sy += sourceTranslation.y;
 	    
-	    float deltaX = DELTA_JUMP / bmp.getWidth() * (sw / (float)bmp.getWidth());
-	    float deltaY = DELTA_JUMP / bmp.getHeight() * (sh / (float)bmp.getHeight());
+	    float deltaX = 0.0f;
+	    float deltaY = 0.0f;
 	    
-	    if(deltaX > DELTA_MAX) deltaX = DELTA_MAX;
-	    if(deltaY > DELTA_MAX) deltaY = DELTA_MAX;
+	    // "Crop". Required when linear filtering is on for
+	    // drawing tiles etc
+	    if(autocrop) {
+	    	
+		    deltaX = DELTA_JUMP / bmp.getWidth() * (sw / (float)bmp.getWidth());
+		    deltaY = DELTA_JUMP / bmp.getHeight() * (sh / (float)bmp.getHeight());
+		    
+		    if(deltaX > DELTA_MAX) deltaX = DELTA_MAX;
+		    if(deltaY > DELTA_MAX) deltaY = DELTA_MAX;
+	    }
 	    
 	    // Pass size data to the shader
 	    shaderDefault.setVertexUniforms(new Vector2(dx, dy), new Vector2(dw, dh));
@@ -426,5 +436,15 @@ public final class Graphics {
 	public void setGlobalAlpha() {
 		
 		setGlobalAlpha(1.0f);
+	}
+	
+	
+	/**
+	 * Enable or disable auto-crop feature
+	 * @param state State
+	 */
+	public void toggleAutocrop(boolean state) {
+		
+		autocrop = state;
 	}
 }

@@ -40,6 +40,8 @@ public class StageMenu extends Scene {
 	private Transition trans;
 	/** Save game manager */
 	private SaveManager saveMan;
+	/** Mirror aka map */
+	private Mirror mirror;
 	
 	/** Stage index */
 	private int stageIndex = 0;
@@ -287,6 +289,12 @@ public class StageMenu extends Scene {
 		// Set name
 		name = "stagemenu";
 		
+		// Initialize components
+		Mirror.init(assets);
+
+		// Create mirror
+		mirror = new Mirror();
+		
 		// Get assets
 		bmpFont = assets.getBitmap("font");
 		
@@ -385,6 +393,9 @@ public class StageMenu extends Scene {
 		
 		// Update buttons
 		stageButtons.update(vpad, tm);
+	
+		// Update mirror
+		mirror.update(tm);
 		
 		// Check if quit button pressed
 		if(vpad.getButtonByName("quit") == State.Pressed) {
@@ -436,6 +447,9 @@ public class StageMenu extends Scene {
 		
 		// Draw title
 		drawTitle(g);
+		
+		// Draw mirror
+		mirror.draw(g);
 		
 		// Draw info box
 		drawInfoBox(g);
