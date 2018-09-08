@@ -51,6 +51,8 @@ public class StageMenu extends Scene {
 	private int[] difficulties;
 	/** Is leaving */
 	private boolean leaving = false;
+	/** If entering (from main menu) */
+	private boolean entering = false;
 	/** Latest stage */
 	private int latestStage = 1;
 	
@@ -68,7 +70,8 @@ public class StageMenu extends Scene {
 			@Override
 			public void execute(int index) {
 			
-				eventMan.quit();
+				// eventMan.quit();
+				sceneMan.changeScene("title");
 			}
 		});
 	}
@@ -392,7 +395,10 @@ public class StageMenu extends Scene {
 	public void update(Gamepad vpad, float tm) {
 		
 		// If fading, wait
-		if(trans.isActive()) return;
+		if(trans.isActive())
+			return;
+		else
+			entering = false;
 		
 		// Update buttons
 		stageButtons.update(vpad, tm);
@@ -436,6 +442,10 @@ public class StageMenu extends Scene {
 				
 				scale = 1.0f - FADE_SCALE* (1.0f-trans.getTimer());
 			}
+			else if(entering) {
+				
+				scale = 1.0f - FADE_SCALE* trans.getTimer();
+			}
 			else {
 				
 				if(trans.getMode() == Mode.Out)
@@ -477,9 +487,17 @@ public class StageMenu extends Scene {
 		
 		final int REQUIRED_INFO_LENGTH = 3;
 		
+		leaving = false;
+		entering = false;
+		
 		// Get stage completion information
 		int[] info = (int[])param;
-		if(info != null && info.length >= REQUIRED_INFO_LENGTH) {
+		
+		if(info != null && info.length == 1 && info[0] == 1) {
+			
+			entering = true;
+		}
+		else if(info != null && info.length >= REQUIRED_INFO_LENGTH) {
 
 			boolean toNext = info[2] == 1;
 			

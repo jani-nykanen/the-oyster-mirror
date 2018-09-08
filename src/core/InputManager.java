@@ -24,6 +24,9 @@ public class InputManager {
 	/** Joystick buttons */
 	private State[] joyStates = new State[MAX_JOY_BUTTON];
 	
+	/** If any key/button was pressed */
+	private boolean anyPressed = false;
+	
 	
 	/**
 	 * Update a state array
@@ -81,6 +84,7 @@ public class InputManager {
 			return;
 		
 		keyStates[key] = State.Pressed;
+		anyPressed = true;
 	}
 	
 	
@@ -121,6 +125,7 @@ public class InputManager {
 			return;
 				
 		joyStates[button] = State.Pressed;
+		anyPressed = true;
 	}
 	
 	
@@ -147,6 +152,8 @@ public class InputManager {
 		updateStateArray(keyStates);
 		// Update joystick button states
 		updateStateArray(joyStates);
+		
+		anyPressed = false;
 	}
 
 
@@ -179,6 +186,16 @@ public class InputManager {
 	public State getButtonState(int button) {
 		
 		return getStateArrayValue(joyStates, button);
+	}
+	
+	
+	/**
+	 * If any key or button was pressed during the frame
+	 * @return True, if pressed
+	 */
+	public boolean getIfAnyPressed() {
+		
+		return anyPressed;
 	}
 	
 	

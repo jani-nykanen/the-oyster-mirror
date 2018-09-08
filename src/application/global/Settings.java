@@ -16,7 +16,6 @@ import core.audio.AudioManager;
 import core.renderer.Graphics;
 import core.renderer.Transformations;
 import core.types.Vector2;
-import core.utility.CSVParser;
 import core.utility.VoidCallback;
 
 /**

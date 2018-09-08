@@ -65,6 +65,9 @@ public class Gamepad {
 	/** Gamepad direction*/
 	private Direction dir = Direction.None;
 	
+	/** If any button pressed */
+	private boolean anyPressed = false;
+	
 	
 	/**
 	 * Determine stick direction
@@ -211,6 +214,9 @@ public class Gamepad {
 		
 		// Determine direction
 		determineDirection();
+		
+		// Store if any button pressed
+		anyPressed = input.getIfAnyPressed();
 	}
 	
 	
@@ -275,6 +281,16 @@ public class Gamepad {
 	public Vector2 getDelta() {
 		
 		return delta;
+	}
+	
+	
+	/**
+	 * If any key or button was pressed during the frame
+	 * @return True, if pressed
+	 */
+	public boolean anyButtonPressed() {
+		
+		return anyPressed;
 	}
 	
 }
