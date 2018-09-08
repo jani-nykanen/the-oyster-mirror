@@ -299,7 +299,7 @@ public class VerticalButtonList {
 			if(b.isDisabled())
 				g.setColor(0.75f, 0.75f, 0.75f);
 			else
-				g.setColor(2.0f - tfactor, 2.0f - tfactor, 1.0f - tfactor);
+				g.setColor(1.0f, 1.0f, 1.0f - tfactor);
 			// Draw text
 			g.drawText(bmp,b.getText(), dx + tfactor*yoff, 
 					y, xoff, 0.0f, false, scale);
