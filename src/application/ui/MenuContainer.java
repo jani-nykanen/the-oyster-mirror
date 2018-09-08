@@ -150,4 +150,18 @@ public abstract class MenuContainer {
 		
 		return active && timer <= 0.0f;
 	}
+	
+	
+	/**
+	 * Get timer value (in [0,1])
+	 * @return Timer value
+	 */
+	public float getTimerValue() {
+		
+		float t = timer / TRANSITION_TIME;
+		if(leaving) 
+			t = 1.0f - t;
+		
+		return t;
+	}
 }

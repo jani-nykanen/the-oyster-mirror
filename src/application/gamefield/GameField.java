@@ -84,9 +84,7 @@ public class GameField extends Scene {
 		// Create "Stage clear" object
 		StageClearScreen.init(assets);
 		stageClear = new StageClearScreen(this);
-		
-		// Fade in
-		trans.activate(Transition.Mode.Out, Transition.Type.Fade, 2.0f, new RGBFloat(), null);
+
 	}
 	
 

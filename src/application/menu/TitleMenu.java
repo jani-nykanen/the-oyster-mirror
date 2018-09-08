@@ -3,9 +3,12 @@ package application.menu;
 import application.Gamepad;
 import application.Scene;
 import application.global.Global;
+import application.global.Settings;
 import application.global.Transition;
 import application.global.Transition.Mode;
 import application.global.Transition.Type;
+import application.ui.Button;
+import application.ui.VerticalButtonList;
 import core.State;
 import core.renderer.Bitmap;
 import core.renderer.Flip;
@@ -25,19 +28,36 @@ import core.utility.VoidCallback;
  */
 public class TitleMenu extends Scene {
 
+	/** Initial phase timer */
+	static private final float INITIAL_PHASE_TIME = 60.0f;
+	/** Button count */
+	static private final int BUTTON_COUNT = 4;
+	
 	/** Logo bitmap */
 	private Bitmap bmpLogo;
 	/** Font bitmap */
 	private Bitmap bmpFont;
 	
 	/** Text alpha factor */
-	private float textAlphaFactor;
+	private float textAlphaFactor = (float)Math.PI + (float)Math.PI/2.0f;
 	
 	/** Transition object */
 	private Transition trans;
+	/** Settings */
+	private Settings settings;
 	
 	/** Is leaving */
-	private boolean leaving =false;
+	private boolean leaving = false;
+	/** If entering for the first time */
+	private boolean enteringFirstTime = true;
+	
+	/** Title phase */
+	private int phase = 0;
+	/** Phase timer */
+	private float phaseTimer = INITIAL_PHASE_TIME;
+	
+	/** Buttons */
+	private VerticalButtonList buttons;
 	
 	
 	/**
@@ -84,18 +104,35 @@ public class TitleMenu extends Scene {
 	 */
 	private void drawLogo(Graphics g) {
 
-		final float SCALE = 1.25f;
-		final float YOFF = -64.0f;
+		final float SCALE1 = 1.25f;
+		final float SCALE2 = 1.0f;
+		final float YOFF1 = -64.0f;
+		final float YOFF2 = -128.0f;
 		
-		// Calculate position & scale
 		Transformations tr = g.transform();
 		Vector2 view = tr.getViewport();
 		
-		float w = bmpLogo.getWidth() * SCALE;
-		float h = bmpLogo.getHeight() * SCALE;
+		// Calculate scale & y position
+		float scale = SCALE1;
+		float yoff = YOFF1;
+		if(phase == 1 && phaseTimer > 0.0f) {
+			
+			float t = phaseTimer / INITIAL_PHASE_TIME;
+			scale = SCALE1 * t + (1-t) * SCALE2;
+			yoff = YOFF1 * t + (1-t) * YOFF2;
+		}
+		else if(phase >= 2) {
+			
+			scale = SCALE2;
+			yoff = YOFF2;
+		}
 		
+		float w = bmpLogo.getWidth() * scale;
+		float h = bmpLogo.getHeight() * scale;
+		
+		// Calculate position
 		float x = view.x/2 - w/2;
-		float y = view.y/2 - h/2 + YOFF;
+		float y = view.y/2 - h/2 + yoff;
 		
 		// Draw
 		g.toggleAutocrop(false);
@@ -123,9 +160,6 @@ public class TitleMenu extends Scene {
 		final float XOFF = -26.0f;
 		final float SHADOW_OFF = 8.0f;
 		final float SHADOW_ALPHA = 0.30f;
-		
-		Transformations tr = g.transform();
-		Vector2 view = tr.getViewport();
 		
 		// Draw shadow
 		g.setColor(0, 0, 0, SHADOW_ALPHA);
@@ -161,15 +195,13 @@ public class TitleMenu extends Scene {
 		// Set alpha
 		float s = (float)Math.sin(textAlphaFactor);
 		float t = (1.0f-MIN_ALPHA) / 2.0f;
-		float alpha = MIN_ALPHA + (1.0f-t) + (float)Math.sin(textAlphaFactor) * t / 2.0f ;
+		float alpha = MIN_ALPHA + (1.0f-t) + (float)Math.sin(textAlphaFactor) * t ;
 
 		// Set scale'
 		float scale = BASE_SCALE * (1.0f + s * SCALE_FACTOR);
 		
 		// Draw text with shadow
 		drawShadowedText(g, TEXT, x, y, scale, new RGBAFloat(1.0f, 1.0f, 0.0f, alpha), true);
-	
-		g.setGlobalAlpha();
 	}
 	
 	
@@ -195,6 +227,127 @@ public class TitleMenu extends Scene {
 	}
 	
 	
+	/**
+	 * Draw buttons
+	 * @param g Graphics object
+	 */
+	private void drawButtons(Graphics g) {
+		
+		final float X_POS = -192;
+		final float Y_POS = 64;
+		final float XOFF = -26;
+		final float YOFF = 56;
+		final float SCALE = 0.75f;
+		final float SHADOW_OFF = 8.0f;
+		
+		Transformations tr = g.transform();
+		Vector2 view = tr.getViewport();
+		
+		buttons.draw(g, bmpFont, view.x/2 + X_POS, view.y/2+Y_POS, 
+				XOFF, YOFF, SCALE, false, SHADOW_OFF);
+	}
+	
+	
+	/**
+	 * Update different phases
+	 * @param vpad Gamepad
+	 * @param tm Time mul.
+	 */
+	private void updatePhases(Gamepad vpad, float tm) {
+
+	    // Update phases
+		switch(phase) {
+			
+		case 1:	
+			
+			// Check if any button was pressed
+			if(vpad.anyButtonPressed()) {
+									
+				phaseTimer = INITIAL_PHASE_TIME;
+			}
+					
+			break;
+				
+		case 2:	
+			
+			// Update buttons
+			buttons.update(vpad, tm);
+				
+			// Check if any button was pressed
+			if(vpad.anyButtonPressed()) {
+									
+				// Go to the stage menu
+				// goToStageMenu();
+			}	
+			break;
+				
+		default:
+			break;
+			
+		}
+	}
+	
+	
+	/**
+	 * Create buttons
+	 */
+	private void createButtons() {
+	
+		final String[] BUTTON_NAMES = new String[] {
+				
+			"Start game",
+			"Settings",
+			"Clear data",
+			"Quit"
+		};
+		
+		buttons = new VerticalButtonList();
+		
+		// Set callbacks
+		VoidCallback[] cbs = new VoidCallback[BUTTON_COUNT];
+		// "Start game"
+		cbs[0] = new VoidCallback() {
+			@Override
+			public void execute(int index) {
+				
+				goToStageMenu();
+			}
+		};
+		// "Settings"
+		cbs[1] = new VoidCallback() {
+			@Override
+			public void execute(int index) {
+				
+				settings.activate();
+			}
+		};
+		// "Clear data"
+		cbs[2] = new VoidCallback() {
+			@Override
+			public void execute(int index) {
+				
+				// ...
+			}
+		};
+		// "Quit"
+		cbs[3] = new VoidCallback() {
+			@Override
+			public void execute(int index) {
+				
+				quit();
+			}
+		};
+		
+		// Add buttons
+		for(int i = 0; i < BUTTON_COUNT; ++ i) {
+			
+			buttons.addButton(new Button(
+					BUTTON_NAMES[i],
+					cbs[i]));
+		}
+	}
+	
+	
 	@Override
 	public void init(AssetPack assets) throws Exception {
 		
@@ -204,13 +357,19 @@ public class TitleMenu extends Scene {
 		
 		// Set name
 		name = "title";
-	
-		// Set defaults
-		textAlphaFactor = 0.0f;
-		
+
 		// Get global objects
 		Global global = (Global)sceneMan.getGlobalScene();
 		trans = global.getTransition();
+		
+		// Create components
+		settings = new Settings(eventMan);
+		
+		// Create buttons
+		createButtons();
+		
+		// Fade in
+		trans.activate(Transition.Mode.Out, Transition.Type.Fade, 1.0f, new RGBFloat(), null);
 	}
 
 	
@@ -219,22 +378,48 @@ public class TitleMenu extends Scene {
 		
 		final float TEXT_ALPHA_SPEED = 0.05f;
 		
-		if(trans.isActive()) return;
+		// If transition active, do nothing
+		if(trans.isActive()) {
+			
+			return;
+		}
+		else {
+			
+			enteringFirstTime = false;
+		}
+		
+		// If settings active, update it and ignore
+		// the rest
+		if(settings.isActive()) {
+			
+			settings.update(vpad, tm);
+			return;
+		}
+		
+		// Update phase timer
+		if(phaseTimer > 0.0f) {
+			
+			phaseTimer -= 1.0f * tm;
+			if(phaseTimer <= 0.0f) {
+				
+				++ phase;
+			}
+			return;
+		}
+		
 		
 		// Update text alpha
 		textAlphaFactor += TEXT_ALPHA_SPEED * tm;
 		
 		// If quit button pressed, quit
 		if(vpad.getButtonByName("quit") == State.Pressed) {
-			
+						
 			quit();
 		}
-		// Check if any button was pressed
-		else if(vpad.anyButtonPressed()) {
-			
-			// Go to the stage menu
-			goToStageMenu();
-		}
+		
+		// Update phases
+		updatePhases(vpad, tm);
+		
 	}
 	
 
@@ -242,7 +427,9 @@ public class TitleMenu extends Scene {
 	public void draw(Graphics g) {
 		
 		final float FADE_SCALE_IN = 0.5f;
+		final float FADE_SCALE_IN_FIRST = 1.0f;
 		final float FADE_SCALE_OUT = 0.25f;
+		final float BG_ALPHA = 0.5f;
 		
 		g.clearScreen(1, 1, 1);
 		
@@ -252,12 +439,20 @@ public class TitleMenu extends Scene {
 		tr.identity();
 		
 		// If fading in, scale
-		if(trans.isActive() && trans.getMode() == Mode.In) {
+		if(trans.isActive()) {
 		
-			float scale = 1.0f + FADE_SCALE_IN* (1.0f-trans.getTimer());
-			if(leaving) {
+			float scale = 1.0f;
+			if(trans.getMode() == Mode.In) {
 				
-				scale = 1.0f - FADE_SCALE_OUT* (1.0f-trans.getTimer());
+				if(leaving) 
+					scale = 1.0f - FADE_SCALE_OUT* (1.0f-trans.getTimer());
+				
+				else
+					scale = 1.0f + FADE_SCALE_IN* (1.0f-trans.getTimer());
+			}
+			else if(enteringFirstTime) {
+				
+				scale = 1.0f + FADE_SCALE_IN_FIRST* (trans.getTimer());
 			}
 			
 			tr.translate(view.x / 2, view.y/2);
@@ -268,10 +463,57 @@ public class TitleMenu extends Scene {
 		
 		// Draw logo
 		drawLogo(g);
+		
+		// Draw no further, if the first phase
+		// and fading
+		if(phase == 0 && trans.isActive()) return;
+		
+		// Set transparency
+		float alpha = 1.0f;
+		if(phaseTimer > 0.0f) {
+			
+			alpha = 1.0f - 1.0f / INITIAL_PHASE_TIME * phaseTimer;
+		}
+		
+		
+		if(phase == 0) {
+			
+			g.setGlobalAlpha(alpha);
+		}
+			
 		// Draw copyright
 		drawCopyright(g);
+
 		// Draw "Press any key"
-		drawPressAnyKey(g);
+		if(phase < 2 
+				&& !(phase == 1 && phaseTimer > 0.0f)) {
+			
+			drawPressAnyKey(g);
+		}
+		
+		// Draw buttons
+		if(phase == 2 || (phase == 1 && phaseTimer > 0.0f)) {
+			
+			// Set alpha
+			g.setGlobalAlpha(alpha);
+			
+			// Draw buttons
+			drawButtons(g);
+		}
+		
+		g.setGlobalAlpha();
+		
+		// Draw settings
+		if(settings.isActive()) {
+			
+			// Draw background
+			float t = 1.0f - settings.getTimerValue();
+			g.setColor(0, 0, 0, t * BG_ALPHA);
+			g.fillRect(0, 0, view.x, view.y);
+			g.setColor();
+			
+			settings.draw(g);
+		}
 	}
 
 	

@@ -30,6 +30,11 @@ public class Settings extends MenuContainer {
 	/** Amount of buttons */
 	static final private int BUTTON_COUNT = 5;
 	
+	/** This is used to make sure the settings are read only once per
+	 * session.
+	 */
+	static private boolean settingsRead = false;
+	
 	/** Button texts */
 	static final private String[] BUTTON_TEXT = new String[] {
 		
@@ -225,7 +230,11 @@ public class Settings extends MenuContainer {
 		// Read settings
 		try {
 			
-			load();
+			if(!settingsRead) {
+				
+				load();
+				settingsRead = true;
+			}
 		}
 		catch(Exception e) {}
 	}
