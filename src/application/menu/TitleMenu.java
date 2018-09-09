@@ -31,7 +31,7 @@ import core.utility.VoidCallback;
 public class TitleMenu extends Scene {
 
 	/** Initial phase timer */
-	static private final float INITIAL_PHASE_TIME = 60.0f;
+	static private final float INITIAL_PHASE_TIME = 30.0f;
 	/** Button count */
 	static private final int BUTTON_COUNT = 4;
 	
@@ -390,9 +390,7 @@ public class TitleMenu extends Scene {
 		
 		// Create buttons
 		createButtons();
-		
-		// Fade in
-		trans.activate(Transition.Mode.Out, Transition.Type.Fade, 1.0f, new RGBFloat(), null);
+
 	}
 
 	
@@ -460,8 +458,7 @@ public class TitleMenu extends Scene {
 		final float FADE_SCALE_IN = 0.5f;
 		final float FADE_SCALE_IN_FIRST = 1.0f;
 		final float FADE_SCALE_OUT = 0.25f;
-		final float BG_ALPHA = 0.5f;
-		
+
 		g.clearScreen(1, 1, 1);
 		
 		Transformations tr = g.transform();

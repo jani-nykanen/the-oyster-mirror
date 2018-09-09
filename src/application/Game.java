@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import application.gamefield.GameField;
 import application.global.Global;
+import application.menu.Intro;
 import application.menu.TitleMenu;
 import application.stagemenu.StageMenu;
 import application.ui.MenuContainer;
@@ -94,7 +95,9 @@ public class Game extends ApplicationListener {
 		scenes.addGlobalScene(new Global());
 		scenes.addScene(new GameField());
 		scenes.addScene(new StageMenu());
-		scenes.addScene(new TitleMenu(), true);
+		scenes.addScene(new TitleMenu());
+		scenes.addScene(new Intro(), true);
+		
 		
 		// Create virtual gamepad
 		vpad = new Gamepad();
