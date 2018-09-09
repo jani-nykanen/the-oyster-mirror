@@ -73,7 +73,7 @@ public abstract class MenuContainer {
 	 * @param vpad Virtual game pad
 	 * @param tm Time multiplier
 	 */
-	public abstract void updateEvent(Gamepad vpad, float tm);
+	protected abstract void updateEvent(Gamepad vpad, float tm);
 	
 	
 	/**

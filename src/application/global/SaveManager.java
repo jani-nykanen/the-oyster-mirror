@@ -53,7 +53,7 @@ public class SaveManager {
 	 */
 	public SaveManager() {
 		
-		// ...
+		reset();
 	}
 	
 	
@@ -116,6 +116,19 @@ public class SaveManager {
 			
 			reader.close();
 		}
+	}
+	
+	
+	
+	/**
+	 * Reset data
+	 */
+	public void reset() {
+		
+		for(int i = 0; i < completion.length; ++ i)
+			completion[i] = 0;
+		
+		currentStage = 1;
 	}
 	
 	

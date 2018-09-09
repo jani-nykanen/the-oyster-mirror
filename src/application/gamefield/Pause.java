@@ -109,7 +109,7 @@ public class Pause extends MenuContainer {
 	
 	
 	@Override
-	public void updateEvent(Gamepad vpad, float tm) {
+	protected void updateEvent(Gamepad vpad, float tm) {
 		
 		// If settings active, update it
 		// and ignore pause menu

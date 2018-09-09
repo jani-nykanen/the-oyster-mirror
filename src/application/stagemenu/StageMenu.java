@@ -78,6 +78,50 @@ public class StageMenu extends Scene {
 	
 	
 	/**
+	 * Calculate cursor y translation
+	 * @return Translation
+	 */
+	private float calculateCursorTranslation() {
+		
+		float p = BUTTONS_YPOS + 
+				BUTTONS_YOFF * (latestStage + (latestStage == BUTTON_COUNT-1 ? 1 : 2)) 
+					-Global.DEFAULT_VIEW_HEIGHT;
+		if(p < 0) p = 0;
+		
+		return p;
+	}
+	
+	
+	/**
+	 * Reset buttons
+	 */
+	private void resetButtons() {
+		
+		latestStage = saveMan.getCurrentStageIndex();
+		
+		// Reset buttons
+		Button b;
+		for(int i = 1; i < BUTTON_COUNT; ++ i) {
+			
+			updateButtonText(i, saveMan.getCompletionInfo(i));
+			
+			b = stageButtons.getButton(i);
+			if(i > latestStage) {
+				
+				b.disable();
+			}
+		}
+		
+		// Set cursor position
+		stageButtons.setCursorPos(latestStage);
+		
+		// Calculate cursor position
+		stageButtons.setYTranslation(-calculateCursorTranslation());
+		
+	}
+	
+	
+	/**
 	 * Get difficulty string (i.e stars)
 	 * @param dif Difficulty level (from 1 to n)
 	 * @return Difficulty string
@@ -383,11 +427,7 @@ public class StageMenu extends Scene {
 		stageButtons.setCursorPos(latestStage);
 		
 		// Calculate button menu y translation
-		float p = BUTTONS_YPOS + 
-				BUTTONS_YOFF * (latestStage + (latestStage == BUTTON_COUNT-1 ? 1 : 2)) 
-				-Global.DEFAULT_VIEW_HEIGHT;
-		if(p < 0) p = 0;
-		stageButtons.setYTranslation(-p);
+		stageButtons.setYTranslation(-calculateCursorTranslation());
 	}
 
 	
@@ -489,12 +529,15 @@ public class StageMenu extends Scene {
 		
 		leaving = false;
 		entering = false;
+
 		
 		// Get stage completion information
 		int[] info = (int[])param;
 		
 		if(info != null && info.length == 1 && info[0] == 1) {
 			
+			// Reset buttons and set the entering flag
+			resetButtons();
 			entering = true;
 		}
 		else if(info != null && info.length >= REQUIRED_INFO_LENGTH) {

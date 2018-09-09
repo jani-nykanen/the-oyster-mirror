@@ -3,11 +3,13 @@ package application.menu;
 import application.Gamepad;
 import application.Scene;
 import application.global.Global;
+import application.global.SaveManager;
 import application.global.Settings;
 import application.global.Transition;
 import application.global.Transition.Mode;
 import application.global.Transition.Type;
 import application.ui.Button;
+import application.ui.MenuContainer;
 import application.ui.VerticalButtonList;
 import core.State;
 import core.renderer.Bitmap;
@@ -41,10 +43,14 @@ public class TitleMenu extends Scene {
 	/** Text alpha factor */
 	private float textAlphaFactor = (float)Math.PI + (float)Math.PI/2.0f;
 	
+	/** Save manager */
+	private SaveManager saveMan;
 	/** Transition object */
 	private Transition trans;
 	/** Settings */
 	private Settings settings;
+	/** Confirmation box */
+	private ConfirmBox confBox;
 	
 	/** Is leaving */
 	private boolean leaving = false;
@@ -86,13 +92,13 @@ public class TitleMenu extends Scene {
 	private void goToStageMenu() {
 		
 		trans.activate(Mode.In, Type.Fade, 2.0f, new RGBFloat(), 
-				new VoidCallback() {
-					@Override
-					public void execute(int index) {
-						
-						// Change scene
-						sceneMan.changeScene("stagemenu", new int[] {1});
-					}
+			new VoidCallback() {
+				@Override
+				public void execute(int index) {
+
+					// Change scene
+					sceneMan.changeScene("stagemenu", new int[] {1});
+				}
 		});
 		
 	}
@@ -179,10 +185,9 @@ public class TitleMenu extends Scene {
 	 */
 	private void drawPressAnyKey(Graphics g) {
 	
-		final String TEXT = "Press any key or button";
+		final String TEXT = "Press Enter or #";
 		final float YOFF = 200;
 		final float BASE_SCALE = 0.75f;
-		final float MIN_ALPHA = 0.25f;
 		final float SCALE_FACTOR = 0.05f;
 
 		// Calculate positions
@@ -194,14 +199,12 @@ public class TitleMenu extends Scene {
 		
 		// Set alpha
 		float s = (float)Math.sin(textAlphaFactor);
-		float t = (1.0f-MIN_ALPHA) / 2.0f;
-		float alpha = MIN_ALPHA + (1.0f-t) + (float)Math.sin(textAlphaFactor) * t ;
 
 		// Set scale'
 		float scale = BASE_SCALE * (1.0f + s * SCALE_FACTOR);
 		
 		// Draw text with shadow
-		drawShadowedText(g, TEXT, x, y, scale, new RGBAFloat(1.0f, 1.0f, 0.0f, alpha), true);
+		drawShadowedText(g, TEXT, x, y, scale, new RGBAFloat(1.0f, 1.0f, 0.0f), true);
 	}
 	
 	
@@ -249,6 +252,30 @@ public class TitleMenu extends Scene {
 	
 	
 	/**
+	 * Draw dark background
+	 * @param g Graphics object
+	 * @param cont Container object (e.g Settings, ConfirmBox etc)
+	 */
+	private void drawMenuContainer(Graphics g, MenuContainer cont) {
+		
+		final float BG_ALPHA = 0.5f;
+		
+		if(!cont.isActive()) return;
+		
+		Vector2 view = g.transform().getViewport();
+		
+		// Draw background
+		float t = 1.0f - cont.getTimerValue();
+		g.setColor(0, 0, 0, t * BG_ALPHA);
+		g.fillRect(0, 0, view.x, view.y);
+		g.setColor();
+		
+		// Draw container
+		cont.draw(g);
+	}
+	
+	
+	/**
 	 * Update different phases
 	 * @param vpad Gamepad
 	 * @param tm Time mul.
@@ -260,8 +287,8 @@ public class TitleMenu extends Scene {
 			
 		case 1:	
 			
-			// Check if any button was pressed
-			if(vpad.anyButtonPressed()) {
+			// Check if enter pressed
+			if(vpad.getButtonByName("confirm") == State.Pressed) {
 									
 				phaseTimer = INITIAL_PHASE_TIME;
 			}
@@ -272,13 +299,7 @@ public class TitleMenu extends Scene {
 			
 			// Update buttons
 			buttons.update(vpad, tm);
-				
-			// Check if any button was pressed
-			if(vpad.anyButtonPressed()) {
-									
-				// Go to the stage menu
-				// goToStageMenu();
-			}	
+
 			break;
 				
 		default:
@@ -326,7 +347,7 @@ public class TitleMenu extends Scene {
 			@Override
 			public void execute(int index) {
 				
-				// ...
+				confBox.activate();
 			}
 		};
 		// "Quit"
@@ -361,9 +382,11 @@ public class TitleMenu extends Scene {
 		// Get global objects
 		Global global = (Global)sceneMan.getGlobalScene();
 		trans = global.getTransition();
+		saveMan = global.getSaveManager();
 		
 		// Create components
 		settings = new Settings(eventMan);
+		confBox = new ConfirmBox(saveMan);
 		
 		// Create buttons
 		createButtons();
@@ -395,6 +418,14 @@ public class TitleMenu extends Scene {
 			settings.update(vpad, tm);
 			return;
 		}
+		
+		// If confirm box active, update and ignore
+		// the rest
+		if(confBox.isActive()) {
+			
+			confBox.update(vpad, tm);
+			return;
+		}		
 		
 		// Update phase timer
 		if(phaseTimer > 0.0f) {
@@ -504,16 +535,10 @@ public class TitleMenu extends Scene {
 		g.setGlobalAlpha();
 		
 		// Draw settings
-		if(settings.isActive()) {
-			
-			// Draw background
-			float t = 1.0f - settings.getTimerValue();
-			g.setColor(0, 0, 0, t * BG_ALPHA);
-			g.fillRect(0, 0, view.x, view.y);
-			g.setColor();
-			
-			settings.draw(g);
-		}
+		drawMenuContainer(g, settings);
+		
+		// Draw confirm box
+		drawMenuContainer(g, confBox);
 	}
 
 	

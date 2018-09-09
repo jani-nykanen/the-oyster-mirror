@@ -241,7 +241,7 @@ public class Settings extends MenuContainer {
 	
 	
 	@Override
-	public void updateEvent(Gamepad vpad, float tm) {
+	protected void updateEvent(Gamepad vpad, float tm) {
 		
 		// Update buttons
 		buttons.update(vpad, tm);
