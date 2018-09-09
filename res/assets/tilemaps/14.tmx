@@ -3,7 +3,7 @@
  <properties>
   <property name="difficulty" value="6"/>
   <property name="name" value="Thinking Ahead"/>
-  <property name="turns" value="30"/>
+  <property name="turns" value="40"/>
  </properties>
  <tileset firstgid="1" source="../../../dev/editor_tileset.tsx"/>
  <layer name="Tile layer 1" width="8" height="8">
@@ -11,9 +11,9 @@
 1,1,1,1,1,1,1,1,
 1,8,0,0,10,10,5,1,
 1,17,9,2,9,2,7,1,
-1,0,2,0,9,9,9,1,
-1,9,9,10,9,9,9,1,
-1,7,7,0,1,1,1,1,
+1,0,2,9,9,9,9,1,
+1,9,9,2,9,9,9,1,
+1,7,7,10,1,1,1,1,
 1,5,7,9,4,4,18,1,
 1,1,1,1,1,1,1,1
 </data>

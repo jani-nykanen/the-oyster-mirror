@@ -81,10 +81,10 @@ public class StageMenu extends Scene {
 	 * Calculate cursor y translation
 	 * @return Translation
 	 */
-	private float calculateCursorTranslation() {
+	private float calculateCursorTranslation(int pos) {
 		
 		float p = BUTTONS_YPOS + 
-				BUTTONS_YOFF * (latestStage + (latestStage == BUTTON_COUNT-1 ? 1 : 2)) 
+				BUTTONS_YOFF * (pos + (pos == BUTTON_COUNT-1 ? 1 : 2)) 
 					-Global.DEFAULT_VIEW_HEIGHT;
 		if(p < 0) p = 0;
 		
@@ -116,7 +116,7 @@ public class StageMenu extends Scene {
 		stageButtons.setCursorPos(latestStage);
 		
 		// Calculate cursor position
-		stageButtons.setYTranslation(-calculateCursorTranslation());
+		stageButtons.setYTranslation(-calculateCursorTranslation(latestStage));
 		
 	}
 	
@@ -427,7 +427,7 @@ public class StageMenu extends Scene {
 		stageButtons.setCursorPos(latestStage);
 		
 		// Calculate button menu y translation
-		stageButtons.setYTranslation(-calculateCursorTranslation());
+		stageButtons.setYTranslation(-calculateCursorTranslation(latestStage));
 	}
 
 	
@@ -530,7 +530,6 @@ public class StageMenu extends Scene {
 		leaving = false;
 		entering = false;
 
-		
 		// Get stage completion information
 		int[] info = (int[])param;
 		
@@ -582,9 +581,13 @@ public class StageMenu extends Scene {
 				
 				sceneMan.changeScene("game", 
 						(Object)new int[] {stageIndex});	
-			}
-		}
 
+			}
+			
+			// Calculate button menu y translation
+			stageButtons.setYTranslation( -calculateCursorTranslation(stageButtons.getCursorPos()));
+		}
+		
 	}
 
 }
