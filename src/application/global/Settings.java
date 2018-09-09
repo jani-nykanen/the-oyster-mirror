@@ -226,17 +226,6 @@ public class Settings extends MenuContainer {
 	protected void activationEvent() { 
 		
 		buttons.setCursorPos(BUTTON_COUNT-1);
-		
-		// Read settings
-		try {
-			
-			if(!settingsRead) {
-				
-				load();
-				settingsRead = true;
-			}
-		}
-		catch(Exception e) {}
 	}
 	
 	
@@ -295,6 +284,9 @@ public class Settings extends MenuContainer {
 	 * @throws Exception If fails to close reader
 	 */
 	public void load(String path) throws Exception {
+		
+		if(settingsRead) return;
+		settingsRead = true;
 		
 		BufferedReader reader = null;
 		try {

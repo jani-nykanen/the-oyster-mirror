@@ -92,7 +92,7 @@ public class StatusManager {
 		final float TEXT_Y = 10.0f;
 		final float STAGE_X = 8.0f;
 		final float SHADOW_ALPHA = 0.5f;
-		final float LIMIT_DIV = 1.625f;
+		final float LIMIT_DIV = 1.75f;
 		
 		if(shadow)
 			g.setColor(0,0,0, SHADOW_ALPHA);
