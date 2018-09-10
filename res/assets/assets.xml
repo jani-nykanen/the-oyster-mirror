@@ -12,6 +12,7 @@
    	<bitmap name="icons" path="icons.png" />
    	<bitmap name="logo" path="logo.png" />
    	<bitmap name="face" path="face.png" />
+   	<bitmap name="ending" path="ending.png" />
    	
    	<tilemap name="1" path="1.tmx" />
    	<tilemap name="2" path="2.tmx" />

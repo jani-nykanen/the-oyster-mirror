@@ -1,7 +1,8 @@
 package application;
 
-import static org.lwjgl.glfw.GLFW.*; 
+import static org.lwjgl.glfw.GLFW.*;
 
+import application.ending.Ending;
 import application.gamefield.GameField;
 import application.global.Global;
 import application.menu.Intro;
@@ -96,6 +97,7 @@ public class Game extends ApplicationListener {
 		scenes.addScene(new GameField());
 		scenes.addScene(new StageMenu());
 		scenes.addScene(new TitleMenu());
+		scenes.addScene(new Ending());
 		scenes.addScene(new Intro(), true);
 		
 		

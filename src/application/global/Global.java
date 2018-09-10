@@ -2,6 +2,7 @@ package application.global;
 
 import application.Gamepad;
 import application.Scene;
+import core.State;
 import core.renderer.Graphics;
 import core.utility.AssetPack;
 
@@ -48,6 +49,12 @@ public class Global extends Scene {
 		
 		// Update transitions
 		trans.update(tm);
+		
+		// TODO Remove
+		if(vpad.getButtonByName("_debug") == State.Pressed) {
+			
+			sceneMan.changeScene("ending", new int[] {1});
+		}
 	}
 	
 

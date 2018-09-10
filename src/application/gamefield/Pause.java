@@ -166,7 +166,6 @@ public class Pause extends MenuContainer {
 		final float BUTTONS_SCALE = 0.8f;
 		final float BUTTONS_SHADOW = 4.0f;
 		
-
 		// Calculate scale value
 		float scale = timer > 0.0f ? 1.0f - timer / TRANSITION_TIME : 1.0f;
 		if(leaving)
