@@ -22,10 +22,13 @@ public class SaveManager {
 	 * 0 = none
 	 * 1 = gray
 	 * 2 = gold */
-	private int[] completion = new int[StageMenu.BUTTON_COUNT];
+	private int[] completion = new int[StageMenu.BUTTON_COUNT -1];
 	
 	/** The "current" stage i.e the latest unlocked stage */
-	private int currentStage =1;
+	private int currentStage = 1;
+	
+	/** Ending state (see StageMenu) */
+	private int endingState = 0;
 	
 	
 	/**
@@ -75,6 +78,8 @@ public class SaveManager {
 			writeCSVData(completion, writer);
 			// Write latest unlocked stage
 			writer.write(Integer.toString(currentStage) + "\n");
+			// Write ending state
+			writer.write(Integer.toString(endingState) + "\n");
 			
 		} catch (Exception e) {
 
@@ -102,6 +107,11 @@ public class SaveManager {
 			completion = (new CSVParser()).parseInt(reader.readLine());
 			// Read latest stage data
 			currentStage = Integer.parseInt(reader.readLine());
+			// Read the ending state
+			String line = reader.readLine();
+			if(line != null)
+				endingState = Integer.parseInt(line);
+			
 		}
 		catch(FileNotFoundException e) {
 			
@@ -182,5 +192,41 @@ public class SaveManager {
 	public void increaseStageIndex() {
 		
 		++ currentStage;
+	}
+	
+	
+	/**
+	 * Get the ending state
+	 * @return Ending state
+	 */
+	public int getEndingState() {
+		
+		return endingState;
+	}
+
+
+	/**
+	 * Set the ending state
+	 * @param value Value
+	 */
+	public void setEndingState(int value) {
+		
+		endingState = value;
+	}
+	
+	
+	/**
+	 * Get the amount of golden stars
+	 * @return The amount of golden stars
+	 */
+	public int getGoldenStarCount() {
+		
+		int c = 0;
+		for(int compl : completion) {
+			
+			c += compl == 2 ? 1 : 0;
+		}
+		
+		return c;
 	}
 }

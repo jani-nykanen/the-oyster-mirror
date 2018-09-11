@@ -56,6 +56,10 @@ public class StageMenu extends Scene {
 	/** Latest stage */
 	private int latestStage = 1;
 	
+	/** Ending state (i.e 0 if not played, 
+	 * 1 if bad played, 2 if good (and thus all) played */
+	private int endingPlayed = 0;
+	
 	
 	/**
 	 * Quit
@@ -548,6 +552,22 @@ public class StageMenu extends Scene {
 				
 				if(saveMan.updateCompletionData(info[0], info[1])) {
 					
+					// If all the stars gained, play the good ending
+					if(saveMan.getGoldenStarCount() == BUTTON_COUNT-1 && endingPlayed < 2) {
+						
+						endingPlayed = 2;
+						sceneMan.changeScene("ending", new int[] {1});
+						saveMan.setEndingState(2);
+					}
+					// If master puzzle solved for the first time,
+					// play the bad ending
+					else if(info[0] == 35 && endingPlayed < 1) {
+						
+						endingPlayed = 1;
+						sceneMan.changeScene("ending", new int[] {0});
+						saveMan.setEndingState(1);
+					}
+					
 					// Save game
 					updateButtonText(info[0], info[1]);
 					
@@ -570,6 +590,10 @@ public class StageMenu extends Scene {
 				
 				e.printStackTrace();
 			}
+
+			
+			
+			
 			
 			// Move to the next stage
 			if(toNext && stageIndex < BUTTON_COUNT -1) {
