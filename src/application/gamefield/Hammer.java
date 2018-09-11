@@ -12,6 +12,8 @@ public class Hammer extends Collectible {
 		
 		super(pos);
 		id = 4;
+		
+		animationMode = AnimationMode.Float;
 	}
 
 	

@@ -1,7 +1,9 @@
-Possibly a puzzle game, the third entry in Oyster Sauce "saga".
+## The Oyster Mirror
 
-![](https://files.64digits.com/Jani_Nykanen/final_Stage.png)
+**The Oyster Mirror** is a puzzle game with 35 different stages. And stuff.
 
-Yes, it's a puzzle game.
+If you want to build the game by yourself, just clone this repo to some directory and import it as an Eclipse project. You must have LWJGL installed.
+
+(*A proper description & better build instructions coming soon*)
 
 (c) 2018 Jani Nykänen

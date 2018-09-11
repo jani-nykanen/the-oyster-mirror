@@ -194,8 +194,8 @@ public class GameField extends Scene {
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
 		
+		// ...
 	}
 	
 

@@ -5,7 +5,7 @@ import core.types.Point;
 /**
  * A purple gem. Used to turn on/off
  * those purple walls
- * @author jani
+ * @author Jani Nykänen
  *
  */
 public class Gem extends Collectible {

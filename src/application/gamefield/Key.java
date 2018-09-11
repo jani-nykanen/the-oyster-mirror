@@ -18,6 +18,7 @@ public class Key extends Collectible {
 		super(pos);
 		
 		id = 0;
+		animationMode = AnimationMode.Float;
 	}
 
 	

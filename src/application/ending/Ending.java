@@ -258,6 +258,7 @@ public class Ending extends Scene {
 	@Override
 	public void destroy() {
 
+		// ...
 	}
 
 	

@@ -19,7 +19,7 @@ public class Star extends Collectible {
 		super(pos);
 		
 		id = 2;
-		animationMode = 1;
+		animationMode = AnimationMode.Shrink;
 	}
 	
 	

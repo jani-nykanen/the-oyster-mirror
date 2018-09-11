@@ -12,7 +12,7 @@ public class Emerald extends Collectible {
 		
 		super(pos);
 		id = 5;
-		animationMode = 1;
+		animationMode = AnimationMode.Shrink;
 	}
 	
 

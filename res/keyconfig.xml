@@ -4,5 +4,4 @@
     <button name="reset" key="82" joy="3" />
     <button name="confirm" key="257" joy="7" />
     <button name="quit" key="256" joy="6" />
-    <button name="_debug" key="69" joy="-1" />
 </keyconfig>

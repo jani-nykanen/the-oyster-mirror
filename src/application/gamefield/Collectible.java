@@ -17,12 +17,19 @@ public abstract class Collectible extends NonPlayerFieldObject {
 	/** Collectibles bitmap */
 	static private Bitmap bmpCollectibles;
 	
+	/** Animation mode */
+	public enum AnimationMode {
+		
+		Float,
+		Shrink
+	};
+	
 	/** Collectible id */
 	protected int id = 0;
 	/** Animation mode 
 	 * TODO: Enumeration?
 	 */
-	protected int animationMode = 0;
+	protected AnimationMode animationMode = AnimationMode.Float;
 	
 	/** Float timer */
 	private float floatTimer = 0.0f;
@@ -115,12 +122,12 @@ public abstract class Collectible extends NonPlayerFieldObject {
 		
 		float s = (float)Math.sin(floatTimer);
 		float c = 1.0f;
-		if(animationMode == 0) {
+		if(animationMode == AnimationMode.Float) {
 			
 			floatPos = s * FLOAT_AMPLITUDE;
 			c = 1.0f + (float)Math.sin(shineTimer)*COLOR_MOD;
 		}
-		else if(animationMode == 1) {
+		else if(animationMode == AnimationMode.Shrink) {
 			
 			sx = 1.0f + s * SCALE_FACTOR;
 			sy = 1.0f + s * SCALE_FACTOR;
