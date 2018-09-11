@@ -1,5 +1,7 @@
 ## The Oyster Mirror
 
+[Play on itch.io](https://jani-nykanen.itch.io/the-oyster-mirror)
+
 **The Oyster Mirror** is a puzzle game with 35 different stages. And stuff.
 
 If you want to build the game by yourself, just clone this repo to some directory and import it as an Eclipse project. You must have LWJGL installed.
